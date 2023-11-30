@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react"
 import { Button } from "@components/ui/Button"
 
 const meta = {
-  title: "Example/Button",
+  title: "Button",
   component: Button,
   argTypes: {
     color: {
