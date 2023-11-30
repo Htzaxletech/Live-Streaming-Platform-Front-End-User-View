@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-foreground: 18 20 18;
+    --color-foreground-secondary: 42 40 42;
+    --color-foreground-placeholder: 112 112 114;
+
+    --color-background-body: 247 247 247;
+    --color-background-base: 255 255 255;
+    --color-background-float: 220 221 224;
+    --color-background-item: 18 20 18;
+
+    --color-border: 150 152 150;
+  }
+
+  :root.dark {
+    --color-foreground: 255 255 255;
+    --color-foreground-secondary: 213 213 213;
+    --color-foreground-placeholder: 155 155 157;
+
+    --color-background-body: 18 20 18;
+    --color-background-base: 31 31 36;
+    --color-background-float: 38 38 38;
+    --color-background-item: 240 242 240;
+
+    --color-border: 79 79 79;
+  }
+}

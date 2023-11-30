@@ -1,0 +1,15 @@
+{
+  "navbar": {
+    "link1": "Following",
+    "link2": "Browse"
+  },
+  "title": {
+    "part1": "Title One",
+    "part2": "Edit <1>src/App.js</1> and save to reload."
+  },
+  "counter_one": "Changed language just once",
+  "counter_other": "Changed language already {{count}} times",
+  "footer": {
+    "date": "Today is {{date, DATE_HUGE}}"
+  }
+}
