@@ -28,8 +28,8 @@ const button = tv({
       white: ["bg-white text-black", "hover:bg-white/90", "active:bg-white/80"],
     },
     size: {
-      md: ["h-[30px]"],
-      lg: ["h-[36px]"],
+      md: ["h-[30px] min-w-[30px]"],
+      lg: ["h-[36px] min-w-[36px]"],
     },
     variant: {
       solid: [""],
@@ -38,6 +38,9 @@ const button = tv({
         "hover:bg-foreground/10",
         "active:bg-foreground/20",
       ],
+    },
+    iconOnly: {
+      true: ["justify-center", "px-0 py-0"],
     },
   },
   compoundVariants: [
@@ -60,12 +63,12 @@ const button = tv({
 })
 
 const Button: FC<ButtonProps> = forwardRef(
-  ({ children, className, color, size, variant, ...props }, ref) => {
+  ({ children, className, color, size, variant, iconOnly, ...props }, ref) => {
     return (
       <button
         ref={ref}
         {...props}
-        className={button({ color, size, variant, class: className })}
+        className={button({ color, size, variant, iconOnly, class: className })}
       >
         {children}
       </button>
