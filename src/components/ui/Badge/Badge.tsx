@@ -28,7 +28,13 @@ const badge = tv({
 
 const Badge: FC<BadgeProps> = ({ children, className, color, ...props }) => {
   return (
-    <span {...props} className={badge({ color, class: className })}>
+    <span
+      {...props}
+      className={badge({
+        color,
+        class: [className, children ? null : "px-0 py-0"],
+      })}
+    >
       {children}
     </span>
   )
