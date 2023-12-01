@@ -6,13 +6,16 @@ const meta = {
   component: Button,
   argTypes: {
     color: {
-      options: ["default", "primary"],
+      options: ["default", "primary", "white"],
       control: { type: "select" },
     },
-    // size: {
-    //   options: ["md", "lg"],
-    //   control: { type: "radio" },
-    // },
+    variant: {
+      options: ["solid", "light"],
+      control: { type: "select" },
+    },
+    disabled: {
+      control: "boolean",
+    },
   },
 } satisfies Meta<typeof Button>
 
@@ -27,10 +30,40 @@ export const Default: Story = {
   },
 }
 
+export const DefaultLight: Story = {
+  args: {
+    children: "Button",
+    color: "default",
+    size: "md",
+    variant: "light",
+    disabled: false,
+  },
+}
+
 export const Primary: Story = {
   args: {
     children: "Button",
     color: "primary",
     size: "md",
+    disabled: false,
+  },
+}
+
+export const PrimaryLight: Story = {
+  args: {
+    children: "Button",
+    color: "primary",
+    size: "md",
+    variant: "light",
+    disabled: false,
+  },
+}
+
+export const White: Story = {
+  args: {
+    children: "Button",
+    color: "white",
+    size: "md",
+    disabled: false,
   },
 }

@@ -17,7 +17,7 @@ const badge = tv({
   ],
   variants: {
     color: {
-      default: ["text-black bg-foreground/40"],
+      default: ["text-black bg-foreground/10 dark:bg-foreground/60"],
       danger: ["bg-danger text-white"],
     },
   },
