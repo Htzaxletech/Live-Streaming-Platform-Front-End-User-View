@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react"
 import { Switch } from "@components/ui/Switch"
 
 const meta = {
-  title: "Switch",
+  title: "Primitives/Switch",
   component: Switch,
 } satisfies Meta<typeof Switch>
 

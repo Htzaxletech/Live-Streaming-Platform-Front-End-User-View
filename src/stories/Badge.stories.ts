@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react"
 import { Badge } from "@components/ui/Badge"
 
 const meta = {
-  title: "Badge",
+  title: "Primitives/Badge",
   component: Badge,
   argTypes: {
     color: {

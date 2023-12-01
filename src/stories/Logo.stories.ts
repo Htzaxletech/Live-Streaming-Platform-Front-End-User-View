@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react"
 import Logo from "@components/shared/Logo"
 
 const meta = {
-  title: "Logo",
+  title: "Shared/Logo",
   component: Logo,
   argTypes: {},
 } satisfies Meta<typeof Logo>

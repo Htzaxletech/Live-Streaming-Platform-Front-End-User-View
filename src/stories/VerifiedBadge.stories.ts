@@ -1,10 +1,11 @@
-import UserMenu from "@components/shared/UserMenu"
 import type { Meta, StoryObj } from "@storybook/react"
 
+import { VerifiedBadge } from "@components/shared/VerifiedBadge"
+
 const meta = {
-  title: "Shared/Dropdown Menu",
-  component: UserMenu,
-} satisfies Meta<typeof UserMenu>
+  title: "Shared/VerifiedBadge",
+  component: VerifiedBadge,
+} satisfies Meta<typeof VerifiedBadge>
 
 export default meta
 type Story = StoryObj<typeof meta>
