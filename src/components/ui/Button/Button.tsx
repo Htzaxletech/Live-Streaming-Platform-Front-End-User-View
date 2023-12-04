@@ -1,9 +1,9 @@
 import { FC, ComponentPropsWithRef, forwardRef } from "react"
 import { tv, type VariantProps } from "tailwind-variants"
 
-type ButtonVariants = VariantProps<typeof button>
+type ButtonVariantProps = VariantProps<typeof button>
 
-type ButtonProps = ButtonVariants & ComponentPropsWithRef<"button">
+type ButtonProps = ButtonVariantProps & ComponentPropsWithRef<"button">
 
 const button = tv({
   base: [
