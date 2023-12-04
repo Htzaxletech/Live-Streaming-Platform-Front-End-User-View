@@ -23,5 +23,6 @@ export const Default: Story = {
     size: "md",
     startContent: <RiSearchLine />,
     endContent: <RiChatSmileLine />,
+    disabled: false,
   },
 }

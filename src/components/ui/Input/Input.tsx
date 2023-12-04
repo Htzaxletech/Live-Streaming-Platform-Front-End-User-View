@@ -31,6 +31,9 @@ const input = tv({
       sm: { root: ["h-[30px]", "px-1", "gap-1"] },
       md: { root: ["h-9", "px-2", "gap-2"] },
     },
+    disabled: {
+      true: { root: "!opacity-70 !pointer-events-none" },
+    },
   },
   defaultVariants: {
     size: "md",
@@ -40,11 +43,19 @@ const input = tv({
 const { root, inputBox } = input()
 
 const Input: FC<InputProps> = forwardRef(
-  ({ startContent, endContent, className, size, ...props }, forwardedRef) => {
+  (
+    { disabled, startContent, endContent, className, size, ...props },
+    forwardedRef
+  ) => {
     return (
-      <div className={root({ size, class: className })}>
+      <div className={root({ disabled, size, class: className })}>
         {startContent}
-        <input {...props} ref={forwardedRef} className={inputBox()}></input>
+        <input
+          {...props}
+          disabled={disabled}
+          ref={forwardedRef}
+          className={inputBox()}
+        ></input>
         {endContent}
       </div>
     )
