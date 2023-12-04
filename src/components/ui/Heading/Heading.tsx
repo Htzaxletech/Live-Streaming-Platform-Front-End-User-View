@@ -19,7 +19,7 @@ const heading = tv({
 type HeadingVariantProps = VariantProps<typeof heading> &
   HTMLAttributes<HTMLHeadingElement>
 
-interface HeadingProps extends HeadingVariantProps {
+export interface HeadingProps extends HeadingVariantProps {
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
   children?: ReactNode
 }
