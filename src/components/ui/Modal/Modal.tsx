@@ -55,7 +55,7 @@ export const Content = forwardRef(
         className={content({ size, class: className })}
       >
         {children}
-        <Dialog.Close aria-label="Close" className={close()}>
+        <Dialog.Close asChild aria-label="Close" className={close()}>
           <Button variant="light" className="text-xl" iconOnly={true}>
             <IoCloseSharp />
           </Button>

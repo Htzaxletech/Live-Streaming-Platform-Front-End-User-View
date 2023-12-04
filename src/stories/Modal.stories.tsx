@@ -8,7 +8,7 @@ const meta = {
   decorators: [
     (story) => (
       <Modal.Root defaultOpen={true}>
-        <Modal.Trigger>Trigger</Modal.Trigger>
+        <Modal.Trigger className="text-foreground">Trigger</Modal.Trigger>
         {story()}
       </Modal.Root>
     ),
