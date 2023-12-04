@@ -14,7 +14,7 @@ const input = tv({
     root: [
       "flex",
       "items-center",
-      "w-fit",
+      "w-56",
       "outline-none",
       "text-xl",
       "bg-background-base",
@@ -24,7 +24,7 @@ const input = tv({
       "hover:ring-[1px] hover:ring-border",
       "focus-within:!ring focus-within:!ring-primary",
     ],
-    inputBox: ["text-sm", "h-full", "bg-transparent", "outline-none"],
+    inputBox: ["text-sm", "w-full h-full", "bg-transparent", "outline-none"],
   },
   variants: {
     size: {
