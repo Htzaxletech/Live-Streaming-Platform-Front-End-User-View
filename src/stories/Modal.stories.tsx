@@ -13,6 +13,12 @@ const meta = {
       </Modal.Root>
     ),
   ],
+  argTypes: {
+    size: {
+      options: ["md", "lg"],
+      control: { type: "radio" },
+    },
+  },
 } satisfies Meta<typeof Modal.Content>
 
 export default meta
@@ -21,5 +27,6 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     children: "Content",
+    size: "md",
   },
 }

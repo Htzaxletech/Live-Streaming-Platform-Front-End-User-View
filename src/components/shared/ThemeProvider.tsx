@@ -1,10 +1,9 @@
 import { PropsWithChildren, createContext, useState } from "react"
-import store from "store2"
 
-import { setDocumentTheme } from "@utils/theme"
+import themeUtils from "@utils/theme"
 
-const initialTheme: string = store.get("theme") || "light"
-setDocumentTheme(initialTheme)
+const initialTheme: string = themeUtils.getCurrentTheme()
+themeUtils.setTheme(initialTheme)
 
 export const ThemeContext = createContext({
   theme: initialTheme,
@@ -14,16 +13,16 @@ export const ThemeContext = createContext({
 const ThemeProvider = ({ children }: PropsWithChildren) => {
   const [theme, setTheme] = useState(initialTheme)
 
-  const handToggleTheme = () => {
+  const handleToggleTheme = () => {
     setTheme((prev) => {
       const currentTheme = prev === "dark" ? "light" : "dark"
-      setDocumentTheme(currentTheme)
+      themeUtils.setTheme(currentTheme)
       return currentTheme
     })
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme: handToggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme: handleToggleTheme }}>
       {children}
     </ThemeContext.Provider>
   )

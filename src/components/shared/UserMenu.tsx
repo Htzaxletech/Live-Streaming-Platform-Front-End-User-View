@@ -1,6 +1,6 @@
 import { Dropdown } from "@components/ui/Dropdown"
 
-const User = () => {
+const UserMenu = () => {
   return (
     <Dropdown.Root>
       <Dropdown.Trigger className="text-foreground">Trigger</Dropdown.Trigger>
@@ -25,4 +25,4 @@ const User = () => {
   )
 }
 
-export default User
+export default UserMenu

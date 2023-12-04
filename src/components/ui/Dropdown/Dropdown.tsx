@@ -1,3 +1,4 @@
+import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react"
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import { tv } from "tailwind-variants"
 
@@ -28,33 +29,47 @@ const dropdown = tv({
 
 const { content, group, item, separator } = dropdown()
 
-export const Root = (props: DropdownMenu.DropdownMenuProps) => (
-  <DropdownMenu.Root {...props}>{props.children}</DropdownMenu.Root>
-)
-export const Trigger = (props: DropdownMenu.DropdownMenuTriggerProps) => (
-  <DropdownMenu.Trigger {...props}>{props.children}</DropdownMenu.Trigger>
-)
-export const Portal = (props: DropdownMenu.DropdownMenuPortalProps) => (
-  <DropdownMenu.Portal {...props}>{props.children}</DropdownMenu.Portal>
-)
-export const Content = (props: DropdownMenu.DropdownMenuContentProps) => (
+export const Content = forwardRef<
+  ElementRef<typeof DropdownMenu.Content>,
+  ComponentPropsWithoutRef<typeof DropdownMenu.Content>
+>((props, forwardedRef) => (
   <DropdownMenu.Content
     {...props}
+    ref={forwardedRef}
     className={content({ class: props.className })}
   >
     {props.children}
   </DropdownMenu.Content>
-)
-export const Group = (props: DropdownMenu.DropdownMenuGroupProps) => (
-  <DropdownMenu.Group {...props} className={group({ class: props.className })}>
+))
+
+Content.displayName = "DropdownConent"
+
+export const Group = forwardRef<
+  ElementRef<typeof DropdownMenu.Group>,
+  ComponentPropsWithoutRef<typeof DropdownMenu.Group>
+>((props, forwardedRef) => (
+  <DropdownMenu.Group
+    {...props}
+    ref={forwardedRef}
+    className={group({ class: props.className })}
+  >
     {props.children}
   </DropdownMenu.Group>
-)
-export const Item = (props: DropdownMenu.DropdownMenuItemProps) => (
-  <DropdownMenu.Item {...props} className={item({ class: props.className })}>
+))
+
+export const Item = forwardRef<
+  ElementRef<typeof DropdownMenu.Item>,
+  ComponentPropsWithoutRef<typeof DropdownMenu.Item>
+>((props, forwardedRef) => (
+  <DropdownMenu.Item
+    {...props}
+    ref={forwardedRef}
+    className={item({ class: props.className })}
+  >
     {props.children}
   </DropdownMenu.Item>
-)
+))
+
 export const Separator = (props: DropdownMenu.DropdownMenuSeparatorProps) => (
   <DropdownMenu.Separator
     {...props}
@@ -63,3 +78,7 @@ export const Separator = (props: DropdownMenu.DropdownMenuSeparatorProps) => (
     {props.children}
   </DropdownMenu.Separator>
 )
+
+export const Root = DropdownMenu.Root
+export const Trigger = DropdownMenu.Trigger
+export const Portal = DropdownMenu.Portal

@@ -4,7 +4,7 @@ const THEME = "theme"
 
 const documentClasses = document.documentElement.classList
 
-export const setDocumentTheme = (theme: string) => {
+const setTheme = (theme: string) => {
   if (theme === "dark") {
     documentClasses.add("dark")
     store(THEME, "dark")
@@ -13,3 +13,7 @@ export const setDocumentTheme = (theme: string) => {
     store(THEME, "light")
   }
 }
+
+const getCurrentTheme = () => store.get("theme") || "light"
+
+export default { setTheme, getCurrentTheme }
