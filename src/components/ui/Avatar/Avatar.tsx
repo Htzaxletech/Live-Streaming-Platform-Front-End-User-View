@@ -7,6 +7,7 @@ type AvatarVariantProps = VariantProps<typeof avatar> &
 
 export interface AvatarProps extends AvatarVariantProps {
   src?: string
+  alt?: string
 }
 
 const avatar = tv({
@@ -59,7 +60,7 @@ const avatar = tv({
 const { root, icon, image } = avatar()
 
 const Avatar: FC<AvatarProps> = forwardRef(
-  ({ src, color, size, className, ...props }, ref) => {
+  ({ src, alt, color, size, className, ...props }, ref) => {
     return (
       <span
         {...props}
@@ -67,7 +68,7 @@ const Avatar: FC<AvatarProps> = forwardRef(
         className={root({ color, size, class: className })}
       >
         {src ? (
-          <img src={src} alt="" className={image()}></img>
+          <img src={src} alt={alt ? alt : ""} className={image()}></img>
         ) : (
           <GoPerson className={icon({ color, size })} />
         )}
