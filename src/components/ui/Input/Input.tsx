@@ -1,4 +1,4 @@
-import { ComponentPropsWithRef, FC, ReactNode, forwardRef, useRef } from "react"
+import { ComponentPropsWithRef, FC, ReactNode, forwardRef } from "react"
 import { IoCloseSharp } from "react-icons/io5"
 import { tv, type VariantProps } from "tailwind-variants"
 
@@ -29,7 +29,7 @@ const input = tv({
       "focus-within:!ring-[2px] focus-within:!ring-primary",
     ],
     inputBox: ["text-sm", "w-full h-full", "bg-transparent", "outline-none"],
-    clearButton: ["w-7 h-7", "invisible"],
+    clearButton: ["w-7 h-7", "hidden"],
   },
   variants: {
     size: {
@@ -41,7 +41,7 @@ const input = tv({
     },
     show: {
       true: {
-        clearButton: ["visible"],
+        clearButton: ["block"],
       },
     },
   },

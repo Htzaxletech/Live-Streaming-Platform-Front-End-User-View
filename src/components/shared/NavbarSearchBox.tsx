@@ -40,6 +40,7 @@ const NavbarSearchBox = ({ className }: { className?: string }) => {
         iconOnly
         className="rounded-s-none"
         onClick={clearInputValue}
+        disabled={!searchValue}
       >
         <RiSearchLine className="w-6 h-6" />
       </Button>
