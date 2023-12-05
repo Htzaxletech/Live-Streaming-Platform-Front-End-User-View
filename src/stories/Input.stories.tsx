@@ -21,6 +21,14 @@ export const Default: Story = {
   args: {
     placeholder: "Input",
     size: "md",
+    disabled: false,
+  },
+}
+
+export const withContents: Story = {
+  args: {
+    placeholder: "Input",
+    size: "md",
     startContent: <RiSearchLine className="w-5 h-5 flex-shrink-0" />,
     endContent: <RiChatSmileLine className="w-5 h-5 flex-shrink-0" />,
     disabled: false,

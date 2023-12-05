@@ -3,7 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog"
 import { tv, type VariantProps } from "tailwind-variants"
 import { IoCloseSharp } from "react-icons/io5"
 
-import { Button } from "../Button"
+import Button from "../Button"
 
 const modal = tv({
   slots: {
