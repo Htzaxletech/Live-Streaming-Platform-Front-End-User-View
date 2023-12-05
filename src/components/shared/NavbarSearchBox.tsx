@@ -31,6 +31,7 @@ const NavbarSearchBox = ({ className }: { className?: string }) => {
         value={searchValue}
         onClear={clearInputValue}
         onChange={handleInputChange}
+        withClearButton
         autoFocus
       />
 

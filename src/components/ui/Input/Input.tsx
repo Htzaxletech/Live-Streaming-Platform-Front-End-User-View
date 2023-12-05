@@ -57,7 +57,7 @@ const Input: FC<InputProps> = forwardRef(
     {
       value,
       disabled,
-      withClearButton = true,
+      withClearButton,
       startContent,
       endContent,
       className,
