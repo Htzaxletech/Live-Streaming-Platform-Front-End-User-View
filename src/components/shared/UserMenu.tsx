@@ -4,7 +4,7 @@ const UserMenu = () => {
   return (
     <Dropdown.Root>
       <Dropdown.Trigger className="text-foreground outline-none">
-        Trigger
+        User Menu
       </Dropdown.Trigger>
 
       <Dropdown.Portal>
