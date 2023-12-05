@@ -25,7 +25,7 @@ export const Default: Story = {
   },
 }
 
-export const withContents: Story = {
+export const WithContents: Story = {
   args: {
     placeholder: "Input",
     size: "md",

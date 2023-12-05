@@ -16,7 +16,7 @@ export const Default: Story = {
   args: {},
 }
 
-export const withChildren: Story = {
+export const WithChildren: Story = {
   args: {
     children: (
       <Button color="primary" variant="light" className="gap-[5px]">

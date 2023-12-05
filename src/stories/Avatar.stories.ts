@@ -28,7 +28,7 @@ export const DefaultPrimary: Story = {
   },
 }
 
-export const withImage: Story = {
+export const WithImage: Story = {
   args: {
     size: "md",
     src: "/test-avatar.png",

@@ -1,4 +1,4 @@
-import * as Switch from "@radix-ui/react-switch"
+import * as RadixSwitch from "@radix-ui/react-switch"
 import { tv } from "tailwind-variants"
 
 const switchVariants = tv({
@@ -29,8 +29,10 @@ const switchVariants = tv({
 
 const { root, thumb } = switchVariants()
 
-export default ({ className, ...props }: Switch.SwitchProps) => (
-  <Switch.Root {...props} className={root({ class: className })}>
-    <Switch.Thumb className={thumb()} />
-  </Switch.Root>
+const Switch = ({ className, ...props }: RadixSwitch.SwitchProps) => (
+  <RadixSwitch.Root {...props} className={root({ class: className })}>
+    <RadixSwitch.Thumb className={thumb()} />
+  </RadixSwitch.Root>
 )
+
+export default Switch
