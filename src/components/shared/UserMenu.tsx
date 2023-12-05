@@ -3,7 +3,9 @@ import { Dropdown } from "@components/ui/Dropdown"
 const UserMenu = () => {
   return (
     <Dropdown.Root>
-      <Dropdown.Trigger className="text-foreground">Trigger</Dropdown.Trigger>
+      <Dropdown.Trigger className="text-foreground outline-none">
+        Trigger
+      </Dropdown.Trigger>
 
       <Dropdown.Portal>
         <Dropdown.Content>
