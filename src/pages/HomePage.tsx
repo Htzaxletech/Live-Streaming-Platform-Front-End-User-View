@@ -1,5 +1,7 @@
 import UserMenu from "@components/shared/UserMenu"
 import Button from "@components/ui/Button"
+import { CategoryLink } from "@components/ui/CategoryLink"
+import categoryimg from "../assets/images/gaming.svg"
 
 const HomePage = () => {
   return (
@@ -11,9 +13,17 @@ const HomePage = () => {
           data-tooltip-content="Tooltip"
           data-tooltip-place="top"
         >
-          <Button color="primary">Primary</Button>
+          <Button color="primary">With Tooltip</Button>
         </a>
         <UserMenu />
+        <CategoryLink
+          to="http://www.google.com"
+          color="default"
+          size="md"
+          icon={<img src={categoryimg} alt="icon" />}
+        >
+          Games
+        </CategoryLink>
       </div>
     </div>
   )
