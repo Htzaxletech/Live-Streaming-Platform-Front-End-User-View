@@ -1,7 +1,8 @@
-import { ComponentPropsWithRef, FC, forwardRef } from "react"
+import { FC, Ref, forwardRef } from "react"
+import { Link, LinkProps } from "react-router-dom"
 import { tv, type VariantProps } from "tailwind-variants"
 
-export type TagProps = VariantProps<typeof tag> & ComponentPropsWithRef<"a">
+export type TagProps = VariantProps<typeof tag> & LinkProps
 
 const tag = tv({
   base: [
@@ -11,18 +12,18 @@ const tag = tv({
     "bg-background-item/10",
     "dark:bg-background-item/20",
     "rounded-full",
-    "px-2 py-[1px]",
+    "px-2 py-[3px]",
     "hover:bg-background-item/15",
     "dark:hover:bg-background-item/25",
   ],
 })
 
 const Tag: FC<TagProps> = forwardRef(
-  ({ children, className, ...props }, ref) => {
+  ({ children, className, ...props }, ref: Ref<HTMLAnchorElement>) => {
     return (
-      <a {...props} ref={ref} className={tag({ class: className })}>
+      <Link {...props} ref={ref} className={tag({ class: className })}>
         {children}
-      </a>
+      </Link>
     )
   }
 )
