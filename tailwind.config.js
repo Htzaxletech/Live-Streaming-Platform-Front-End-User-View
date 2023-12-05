@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
 const defaultTheme = require("tailwindcss/defaultTheme")
 
 export default {
@@ -28,18 +29,18 @@ export default {
           DEFAULT: "rgb(var(--color-border) / <alpha-value>)",
         },
         primary: {
-          50: "#eafff7",
+          50: "#ebfff7",
           100: "#cdfeea",
-          200: "#a0fada",
+          200: "#9efada",
           300: "#63f2c7",
-          400: "#25e2af",
-          500: "#00c99a",
-          600: "#00a47e",
-          700: "#008369",
-          800: "#006754",
-          900: "#005546",
-          950: "#003029",
-          DEFAULT: "#00c99a",
+          400: "#26e3b1",
+          500: "#00c798",
+          600: "#00ad85",
+          700: "#008f72",
+          800: "#00705c",
+          900: "#00614f",
+          950: "#003830",
+          DEFAULT: "#00c798",
         },
         danger: {
           50: "#fff1f2",
