@@ -7,6 +7,7 @@ export type TagProps = VariantProps<typeof tag> & LinkProps
 const tag = tv({
   base: [
     "text-xs",
+    "h-fit w-fit",
     "font-semibold",
     "text-foreground-secondary",
     "bg-background-item/10",

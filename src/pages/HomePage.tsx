@@ -3,6 +3,7 @@ import Button from "@components/ui/Button"
 import { CategoryLink } from "@components/ui/CategoryLink"
 import categoryimg from "../assets/images/gaming.svg"
 import Tag from "@components/ui/Tag"
+import NavbarSearchBox from "@components/shared/NavbarSearchBox"
 
 const HomePage = () => {
   return (
@@ -28,6 +29,9 @@ const HomePage = () => {
       </div>
       <div className="flex p-5 gap-10">
         <Tag to="/directory">Directory</Tag>
+      </div>
+      <div className="flex p-5 gap-10">
+        <NavbarSearchBox />
       </div>
     </div>
   )
