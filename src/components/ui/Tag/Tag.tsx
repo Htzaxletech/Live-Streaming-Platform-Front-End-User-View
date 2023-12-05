@@ -10,11 +10,10 @@ const tag = tv({
     "font-semibold",
     "text-foreground-secondary",
     "bg-background-item/10",
-    "dark:bg-background-item/20",
     "rounded-full",
     "px-2 py-[3px]",
     "hover:bg-background-item/15",
-    "dark:hover:bg-background-item/25",
+    "active:bg-background-item/20",
   ],
 })
 

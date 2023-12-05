@@ -23,7 +23,7 @@ const dropdown = tv({
       "hover:bg-foreground/10",
       "hover:outline-none",
     ],
-    separator: ["h-[1px]", "my-2", "bg-foreground/30"],
+    separator: ["h-[0.8px]", "my-2", "bg-foreground/20"],
   },
 })
 
