@@ -4,8 +4,8 @@ import { tv } from "tailwind-variants"
 import Logo from "./Logo"
 import NavbarLink from "./NavbarLink"
 import NavbarSearchBox from "./NavbarSearchBox"
-import Button from "@components/ui/Button"
 import UserMenu from "./UserMenu"
+import Button from "@components/ui/Button"
 
 const classes = tv({
   base: ["border-2 border-black"],

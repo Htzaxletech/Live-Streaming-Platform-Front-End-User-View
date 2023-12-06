@@ -8,7 +8,7 @@ type ButtonProps = ButtonVariantProps & ComponentPropsWithRef<"button">
 const button = tv({
   base: [
     "font-semibold text-sm/none",
-    "flex flex-shrink-0",
+    "flex flex-shrink-0 whitespace-nowrap",
     "items-center justify-center",
     "px-3 rounded",
     "disabled:opacity-70 disabled:pointer-events-none",
