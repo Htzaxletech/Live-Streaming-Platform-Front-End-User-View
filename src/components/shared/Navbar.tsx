@@ -33,7 +33,7 @@ const Navbar = () => {
         <Logo />
         <NavbarLink to={"/following"}>{t("navbar.link1")}</NavbarLink>
         <NavbarLink to={"/directory"}>{t("navbar.link2")}</NavbarLink>
-        <NavbarLink to={"/channel"}>Socket</NavbarLink>
+        <NavbarLink to={"/channel/1"}>Socket</NavbarLink>
       </div>
       <div className={navCol({ class: "justify-center" })}>
         <NavbarSearchBox />

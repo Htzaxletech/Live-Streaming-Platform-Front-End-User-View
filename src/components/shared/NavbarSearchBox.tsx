@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from "react"
+import { ChangeEvent, FormEvent, useCallback, useRef, useState } from "react"
 import { tv } from "tailwind-variants"
 import { RiSearchLine } from "react-icons/ri"
 
@@ -17,13 +17,18 @@ const NavbarSearchBox = ({ className }: { className?: string }) => {
     setSearchValue(e.target.value)
   }
 
-  const clearInputValue = () => {
+  const clearInputValue = useCallback(() => {
     setSearchValue("")
     inputRef?.current?.focus()
+  }, [])
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    clearInputValue()
   }
 
   return (
-    <div className={classes({ class: className })}>
+    <form onSubmit={handleSubmit} className={classes({ class: className })}>
       <Input
         ref={inputRef}
         placeholder="Search"
@@ -40,10 +45,11 @@ const NavbarSearchBox = ({ className }: { className?: string }) => {
         className="rounded-s-none"
         onClick={clearInputValue}
         disabled={!searchValue}
+        type="submit"
       >
         <RiSearchLine className="w-6 h-6" />
       </Button>
-    </div>
+    </form>
   )
 }
 
