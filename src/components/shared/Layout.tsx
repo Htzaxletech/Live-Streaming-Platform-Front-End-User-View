@@ -7,7 +7,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   return (
     <div className="text-sm">
       <Navbar />
-      <main>{children}</main>
+      <main className="p-5">{children}</main>
       <Footer />
     </div>
   )

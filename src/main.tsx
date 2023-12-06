@@ -15,6 +15,7 @@ import FollowingPage from "@pages/FollowingPage"
 import { store } from "./store"
 import "./i18n"
 import "@styles/tailwind.css"
+import ChannelPage from "@pages/ChannelPage"
 
 const router = createBrowserRouter([
   {
@@ -34,17 +35,21 @@ const router = createBrowserRouter([
         path: "/following",
         element: <FollowingPage />,
       },
+      {
+        path: "/channel/:id",
+        element: <ChannelPage />,
+      },
     ],
   },
 ])
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider>
-        <RouterProvider router={router} />
-        <ThemedTooltip />
-      </ThemeProvider>
-    </Provider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Provider store={store}>
+    <ThemeProvider>
+      <RouterProvider router={router} />
+      <ThemedTooltip />
+    </ThemeProvider>
+  </Provider>
+  // </React.StrictMode>
 )

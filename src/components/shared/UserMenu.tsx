@@ -7,7 +7,7 @@ import ThemeSwitch from "./ThemeSwitch"
 
 const UserMenu = () => {
   return (
-    <Dropdown.Root>
+    <Dropdown.Root modal={false}>
       <Dropdown.Trigger asChild className="text-foreground outline-none">
         <Button iconOnly variant="light">
           <GoPerson className="icon stroke-[0.8px]" />
