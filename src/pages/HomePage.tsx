@@ -1,9 +1,9 @@
-import UserMenu from "@components/shared/UserMenu"
 import Button from "@components/ui/Button"
+import UserMenu from "@components/shared/UserMenu"
 import { CategoryLink } from "@components/ui/CategoryLink"
-import categoryimg from "../assets/images/gaming.svg"
 import Tag from "@components/ui/Tag"
-import NavbarSearchBox from "@components/shared/NavbarSearchBox"
+
+import categoryimg from "../assets/images/gaming.svg"
 
 const HomePage = () => {
   return (
@@ -27,11 +27,8 @@ const HomePage = () => {
           Games
         </CategoryLink>
       </div>
-      <div className="flex p-5 gap-10">
+      <div className="flex p-5 gap-2.5">
         <Tag to="/directory">Directory</Tag>
-      </div>
-      <div className="flex p-5 gap-10">
-        <NavbarSearchBox />
       </div>
     </div>
   )

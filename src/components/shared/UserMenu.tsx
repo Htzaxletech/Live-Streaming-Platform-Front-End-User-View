@@ -1,21 +1,25 @@
+import { GoPerson } from "react-icons/go"
+
+import Button from "@components/ui/Button"
 import { Dropdown } from "@components/ui/Dropdown"
+import LanguageSwitch from "./LanguageSwitch"
+import ThemeSwitch from "./ThemeSwitch"
 
 const UserMenu = () => {
   return (
     <Dropdown.Root>
-      <Dropdown.Trigger className="text-foreground outline-none">
-        User Menu
+      <Dropdown.Trigger asChild className="text-foreground outline-none">
+        <Button iconOnly variant="light">
+          <GoPerson className="icon stroke-[0.8px]" />
+        </Button>
       </Dropdown.Trigger>
 
       <Dropdown.Portal>
-        <Dropdown.Content>
+        <Dropdown.Content align="end">
           <Dropdown.Group>
-            <Dropdown.Item>User</Dropdown.Item>
-          </Dropdown.Group>
-          <Dropdown.Separator />
-          <Dropdown.Group>
-            <Dropdown.Item>Gitem 1</Dropdown.Item>
-            <Dropdown.Item>Gitem 2</Dropdown.Item>
+            <LanguageSwitch />
+
+            <ThemeSwitch />
           </Dropdown.Group>
           <Dropdown.Separator />
           <Dropdown.Group>

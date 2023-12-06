@@ -5,16 +5,15 @@ import { tv } from "tailwind-variants"
 const dropdown = tv({
   slots: {
     content: [
-      "text-foreground",
+      "text-foreground text-[0.8125rem]",
       "bg-background-base",
       "rounded-md",
       "p-3",
-      "min-w-[200px]",
+      "min-w-[12.75rem]",
       "shadow-[0_0_0_1px_rgba(0,0,0,0.1)]",
     ],
     group: [""],
     item: [
-      "text-sm",
       "px-2",
       "h-[30px]",
       "flex",

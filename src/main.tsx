@@ -3,17 +3,18 @@ import ReactDOM from "react-dom/client"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import { Provider } from "react-redux"
 
-import { store } from "./store"
-import "./i18n"
-import "@styles/tailwind.css"
-
-import HomePage from "./pages/HomePage"
-import RootPage from "./pages/RootPage"
-import ErrorPage from "./pages/ErrorPage"
-import DirectoryPage from "./pages/DirectoryPage"
+import HomePage from "@pages/HomePage"
+import RootPage from "@pages/RootPage"
+import ErrorPage from "@pages/ErrorPage"
+import DirectoryPage from "@pages/DirectoryPage"
 
 import ThemeProvider from "@components/shared/ThemeProvider"
 import ThemedTooltip from "@components/shared/ThemedTooltip"
+import FollowingPage from "@pages/FollowingPage"
+
+import { store } from "./store"
+import "./i18n"
+import "@styles/tailwind.css"
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/directory",
         element: <DirectoryPage />,
+      },
+      {
+        path: "/following",
+        element: <FollowingPage />,
       },
     ],
   },

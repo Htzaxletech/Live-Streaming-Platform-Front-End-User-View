@@ -64,6 +64,12 @@ export default {
         55: ".55",
         85: ".85",
       },
+      height: {
+        navbar: "3.125rem",
+      },
+      spacing: {
+        2.5: "0.625rem",
+      },
     },
   },
   plugins: [],
