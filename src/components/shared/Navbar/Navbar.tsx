@@ -21,7 +21,7 @@ const classes = tv({
       "dark:shadow-[0_1px_2px_rgba(0,0,0,0.8)]",
       "bg-background-base dark:bg-background-float",
     ],
-    navCol: ["flex flex-1 h-full items-center", "gap-3 md:gap-5"],
+    navCol: ["flex flex-1 h-full items-center"],
   },
 })
 
@@ -32,9 +32,8 @@ const Navbar = () => {
 
   return (
     <nav className={nav()}>
-      <div className={navCol()}>
+      <div className={navCol({ class: "gap-3 md:gap-5" })}>
         <Logo />
-
         <NavbarLink to={"/following"}>
           <span className="block md:hidden">
             <Icon icon={IoMdHeart} />
