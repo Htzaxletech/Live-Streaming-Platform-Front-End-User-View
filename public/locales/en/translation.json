@@ -1,7 +1,9 @@
 {
   "navbar": {
     "link1": "Following",
-    "link2": "Browse"
+    "link2": "Browse",
+    "login": "Log In",
+    "signup": "Sign Up"
   },
   "title": {
     "part1": "Title One",

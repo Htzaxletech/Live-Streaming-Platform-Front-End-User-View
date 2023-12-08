@@ -39,8 +39,8 @@ const Navbar = () => {
         <NavbarSearchBox />
       </div>
       <div className={navCol({ class: "justify-end gap-2.5" })}>
-        <Button>Log In</Button>
-        <Button color="primary">Sign Up</Button>
+        <Button>{t("navbar.login")}</Button>
+        <Button color="primary">{t("navbar.signup")}</Button>
         <UserMenu />
       </div>
     </nav>

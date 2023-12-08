@@ -1,12 +1,12 @@
 import { GoPerson } from "react-icons/go"
 
 import Button from "@components/ui/Button"
-import UserMenu from "@components/shared/UserMenu"
 import { CategoryLink } from "@components/ui/CategoryLink"
 import Tag from "@components/ui/Tag"
 import Icon from "@components/shared/Icon"
 
 import categoryimg from "../assets/images/gaming.svg"
+import LanguageSwitch from "@components/shared/LanguageSwitch"
 
 const HomePage = () => {
   return (
@@ -33,6 +33,7 @@ const HomePage = () => {
         <Tag to="/directory">Directory</Tag>
         <Icon icon={GoPerson} className="text-primary" />
       </div>
+      <LanguageSwitch />
     </div>
   )
 }
