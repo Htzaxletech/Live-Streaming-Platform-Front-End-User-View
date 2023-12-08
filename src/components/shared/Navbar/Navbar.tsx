@@ -45,7 +45,7 @@ const Navbar = () => {
           <span className="block md:hidden">
             <Icon icon={IoCopyOutline} />
           </span>
-          <span className="md:block hidden">{t("navbar.link1")}</span>
+          <span className="md:block hidden">{t("navbar.link2")}</span>
         </NavbarLink>
       </div>
       <div className={navCol({ class: "justify-center hidden md:flex" })}>
