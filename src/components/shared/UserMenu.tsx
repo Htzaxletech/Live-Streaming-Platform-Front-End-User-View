@@ -2,15 +2,17 @@ import { GoPerson } from "react-icons/go"
 
 import Button from "@components/ui/Button"
 import { Dropdown } from "@components/ui/Dropdown"
+
 import LanguageSwitch from "./LanguageSwitch"
 import ThemeSwitch from "./ThemeSwitch"
+import Icon from "./Icon"
 
 const UserMenu = () => {
   return (
     <Dropdown.Root modal={false}>
       <Dropdown.Trigger asChild className="text-foreground outline-none">
         <Button iconOnly variant="light">
-          <GoPerson className="icon stroke-[0.8px]" />
+          <Icon icon={GoPerson} className="stroke-[0.4px]" />
         </Button>
       </Dropdown.Trigger>
 

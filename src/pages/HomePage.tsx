@@ -20,7 +20,6 @@ const HomePage = () => {
         >
           <Button color="primary">With Tooltip</Button>
         </a>
-        <UserMenu />
         <CategoryLink
           to="http://www.google.com"
           color="default"
