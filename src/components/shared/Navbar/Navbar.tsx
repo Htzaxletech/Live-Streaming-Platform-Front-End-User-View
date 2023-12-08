@@ -1,11 +1,14 @@
 import { useTranslation } from "react-i18next"
 import { tv } from "tailwind-variants"
+import { IoMdHeart } from "react-icons/io"
+import { IoCopyOutline } from "react-icons/io5"
 
-import Logo from "./Logo"
+import Button from "@components/ui/Button"
+import Logo from "@components/shared/Logo"
+import Icon from "@components/shared/Icon"
+import UserMenu from "@components/shared/UserMenu"
 import NavbarLink from "./NavbarLink"
 import NavbarSearchBox from "./NavbarSearchBox"
-import UserMenu from "./UserMenu"
-import Button from "@components/ui/Button"
 
 const classes = tv({
   base: ["border-2 border-black"],
@@ -18,7 +21,7 @@ const classes = tv({
       "dark:shadow-[0_1px_2px_rgba(0,0,0,0.8)]",
       "bg-background-base dark:bg-background-float",
     ],
-    navCol: ["flex flex-1 h-full items-center", "gap-5"],
+    navCol: ["flex flex-1 h-full items-center", "gap-3 md:gap-5"],
   },
 })
 
@@ -31,11 +34,21 @@ const Navbar = () => {
     <nav className={nav()}>
       <div className={navCol()}>
         <Logo />
-        <NavbarLink to={"/following"}>{t("navbar.link1")}</NavbarLink>
-        <NavbarLink to={"/directory"}>{t("navbar.link2")}</NavbarLink>
-        <NavbarLink to={"/channel/1"}>Socket</NavbarLink>
+
+        <NavbarLink to={"/following"}>
+          <span className="block md:hidden">
+            <Icon icon={IoMdHeart} />
+          </span>
+          <span className="md:block hidden">{t("navbar.link1")}</span>
+        </NavbarLink>
+        <NavbarLink to={"/directory"}>
+          <span className="block md:hidden">
+            <Icon icon={IoCopyOutline} />
+          </span>
+          <span className="md:block hidden">{t("navbar.link1")}</span>
+        </NavbarLink>
       </div>
-      <div className={navCol({ class: "justify-center" })}>
+      <div className={navCol({ class: "justify-center hidden md:flex" })}>
         <NavbarSearchBox />
       </div>
       <div className={navCol({ class: "justify-end gap-2.5" })}>

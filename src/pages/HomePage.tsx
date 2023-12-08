@@ -7,10 +7,12 @@ import Icon from "@components/shared/Icon"
 
 import categoryimg from "../assets/images/gaming.svg"
 import LanguageSwitch from "@components/shared/LanguageSwitch"
+import NavbarLink from "@components/shared/Navbar/NavbarLink"
 
 const HomePage = () => {
   return (
     <div className="flex gap-5 flex-col w-fit">
+      <NavbarLink to={"/channel/1"}>Socket</NavbarLink>
       <div className="flex p-5 gap-10">
         <Button color="default">Default</Button>
         <a
