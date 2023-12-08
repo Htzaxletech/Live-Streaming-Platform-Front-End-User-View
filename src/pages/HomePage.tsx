@@ -1,7 +1,10 @@
+import { GoPerson } from "react-icons/go"
+
 import Button from "@components/ui/Button"
 import UserMenu from "@components/shared/UserMenu"
 import { CategoryLink } from "@components/ui/CategoryLink"
 import Tag from "@components/ui/Tag"
+import Icon from "@components/shared/Icon"
 
 import categoryimg from "../assets/images/gaming.svg"
 
@@ -29,6 +32,7 @@ const HomePage = () => {
       </div>
       <div className="flex p-5 gap-2.5">
         <Tag to="/directory">Directory</Tag>
+        <Icon icon={GoPerson} className="text-primary" />
       </div>
     </div>
   )

@@ -10,9 +10,11 @@ import { socket } from "../socket"
 
 const nanoid = customAlphabet("1234567890", 6)
 
-const userID = store.get("userId")
-if (!userID) store.set("userId", nanoid())
-
+let userID = store.get("userId")
+if (!userID) {
+  userID = nanoid()
+  store.set("userId", userID)
+}
 console.log(userID)
 
 export default function ChannelPage() {
@@ -55,6 +57,7 @@ export default function ChannelPage() {
     socket.on("connect", onConnect)
     socket.on("disconnect", onDisconnect)
     socket.on("chat_list_message", onFooEvent)
+    console.log("listen events")
 
     return () => {
       socket.off("connect", onConnect)
