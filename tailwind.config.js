@@ -24,6 +24,8 @@ export default {
           item: "rgb(var(--color-background-item) / <alpha-value>)",
           "item-hover":
             "rgb(var(--color-background-item-hover) / <alpha-value>)",
+
+          
         },
         border: {
           DEFAULT: "rgb(var(--color-border) / <alpha-value>)",
@@ -55,6 +57,11 @@ export default {
           900: "#88141a",
           950: "#4b0408",
           DEFAULT: "#ff323d",
+        },
+
+        select: {
+          DEFAULT: "rgba(24,24,27,255)", // Replace with your desired color code
+          hover: "rgba(29, 28, 28, 0.4)", // Optional: Define a hover color
         },
       },
       opacity: {
