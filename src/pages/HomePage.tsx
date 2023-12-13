@@ -3,23 +3,20 @@ import { GoPerson } from "react-icons/go"
 import Button from "@components/ui/Button"
 import UserMenu from "@components/shared/UserMenu"
 import { CategoryLink } from "@components/ui/CategoryLink"
-<<<<<<< HEAD
 import Tag from "@components/ui/Tag"
 import Icon from "@components/shared/Icon"
 
 import categoryimg from "../assets/images/gaming.svg"
-=======
-import categoryimg from "../assets/images/Vector.png"
-import { Select } from "@components/ui/Select"
+
 import { BsStars } from "react-icons/bs";
 import { FaArrowDownWideShort } from "react-icons/fa6";
->>>>>>> ec3c1e5 (select)
 
 import TabComponent from "@components/ui/Tab/Tab"
 import { Tab } from "@headlessui/react";
 
 
 import { useState } from "react"
+import { Select } from "@components/ui/Select"
 const HomePage = () => {
 
 
@@ -33,32 +30,31 @@ const HomePage = () => {
 
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   return (
-    <div className="flex gap-5 flex-col w-fit">
-      <div className="flex p-5 gap-10">
-        <Button color="default">Default</Button>
-        <a
-          data-tooltip-id="my-tooltip"
-          data-tooltip-content="Tooltip"
-          data-tooltip-place="top"
-        >
-          <Button color="primary">With Tooltip</Button>
-        </a>
-        <CategoryLink
-          to="http://www.google.com"
-          color="default"
-          size="md"
-          icon={<img src={categoryimg} alt="icon" />}
-        >
-          Games
-        </CategoryLink>
-      </div>
-<<<<<<< HEAD
-      <div className="flex p-5 gap-2.5">
-        <Tag to="/directory">Directory</Tag>
-        <Icon icon={GoPerson} className="text-primary" />
-      </div>
-    </div>
-=======
+    <>
+      <div className="flex gap-5 flex-col w-fit">
+        <div className="flex p-5 gap-10">
+          <Button color="default">Default</Button>
+          <a
+            data-tooltip-id="my-tooltip"
+            data-tooltip-content="Tooltip"
+            data-tooltip-place="top"
+          >
+            <Button color="primary">With Tooltip</Button>
+          </a>
+          <CategoryLink
+            to="http://www.google.com"
+            color="default"
+            size="md"
+            icon={<img src={categoryimg} alt="icon" />}
+          >
+            Games
+          </CategoryLink>
+        </div>
+        <div className="flex p-5 gap-2.5">
+          <Tag to="/directory">Directory</Tag>
+          <Icon icon={GoPerson} className="text-primary" />
+        </div>
+      </div >
 
       <CategoryLink to="http://www.google.com" color="default" size="md" icon={<img src={categoryimg} alt="icon" />}>
         Games
@@ -87,7 +83,6 @@ const HomePage = () => {
       </Tab.Panels>
     </Tab.Group> */}
     </>
->>>>>>> ec3c1e5 (select)
   )
 }
 
