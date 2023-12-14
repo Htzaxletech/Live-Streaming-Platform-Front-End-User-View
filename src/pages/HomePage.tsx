@@ -17,6 +17,7 @@ import { Tab } from "@headlessui/react";
 
 import { useState } from "react"
 import { Select } from "@components/ui/Select"
+import MiniVideoPlayer from "@components/ui/MiniVideoPlayer"
 const HomePage = () => {
 
 
@@ -62,6 +63,10 @@ const HomePage = () => {
 
       <div className="float-right">
         <Select options={options} />
+      </div>
+
+      <div>
+        <MiniVideoPlayer></MiniVideoPlayer>
       </div>
 
       {/* <Tab.Group>
