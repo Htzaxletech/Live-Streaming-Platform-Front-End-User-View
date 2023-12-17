@@ -23,7 +23,7 @@ const MiniVideoPlayer: React.FC<MiniVideoPlayerProps> = ({ url }) => {
           // Platform-specific configurations
           twitch: {
             options: {
-              autoplay: true,  
+              autoplay: false,  
               muted: false, 
               // theme: 'dark', 
               // layout: 'video-with-chat', 

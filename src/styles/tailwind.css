@@ -35,3 +35,8 @@
     @apply w-5 h-5;
   }
 }
+
+html{
+  width: 100%;
+  overflow-x: hidden;
+}
