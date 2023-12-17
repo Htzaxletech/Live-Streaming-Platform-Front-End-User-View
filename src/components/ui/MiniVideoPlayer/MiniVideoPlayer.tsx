@@ -1,20 +1,38 @@
-import { forwardRef } from "react"
+// VideoPlayer.tsx
+import React from 'react';
+import ReactPlayer from 'react-player/twitch';
 
-import video1 from "../../../assets/images/videos/video1.mp4"
-
-const MiniVideoPlayer = forwardRef<HTMLVideoElement>(({children,...props}, ref) => {
-  return (
-    <>
-    <div className="w-[30%] h-[300px] overflow-hidden" >
-    <video className="w-full h-full" controls>
-    <source src={video1} type="video/mp4" />
-    <source src="movie.ogg" type="video/ogg" />
-    Your browser does not support the video tag.
-    </video>
-    </div>
-    </>
-  )
+interface MiniVideoPlayerProps {
+  url: string
 }
-)
 
-export default MiniVideoPlayer
+const MiniVideoPlayer: React.FC<MiniVideoPlayerProps> = ({ url }) => {
+  return (
+    <div 
+    className='bg-secondary relative w-full h-full' 
+    >
+    {/* <span className='px-2 py-1 bg-red-700 text-sm text-white rounded absolute m-1'>Live</span> */}
+      
+      <ReactPlayer
+        url={url}
+        controls
+        alt="video"
+        width="100%"
+        height="100%"
+        config={{
+          // Platform-specific configurations
+          twitch: {
+            options: {
+              autoplay: true,  
+              muted: false, 
+              // theme: 'dark', 
+              // layout: 'video-with-chat', 
+            },
+          },
+        }}
+      />
+    </div>
+  );
+};
+
+export default MiniVideoPlayer;

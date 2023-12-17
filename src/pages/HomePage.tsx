@@ -18,6 +18,8 @@ import { Tab } from "@headlessui/react";
 import { useState } from "react"
 import { Select } from "@components/ui/Select"
 import MiniVideoPlayer from "@components/ui/MiniVideoPlayer"
+
+
 const HomePage = () => {
 
 
@@ -30,10 +32,13 @@ const HomePage = () => {
 
 
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+
   return (
+    
     <>
       <div className="flex gap-5 flex-col w-fit">
         <div className="flex p-5 gap-10">
+       
           <Button color="default">Default</Button>
           <a
             data-tooltip-id="my-tooltip"
@@ -51,6 +56,12 @@ const HomePage = () => {
             Games
           </CategoryLink>
         </div>
+
+
+        <div className="container aspect-video h-[400px] ">
+        <MiniVideoPlayer url="https://www.twitch.tv/videos/106400740" ></MiniVideoPlayer>
+        </div>
+  
         <div className="flex p-5 gap-2.5">
           <Tag to="/directory">Directory</Tag>
           <Icon icon={GoPerson} className="text-primary" />
@@ -65,9 +76,7 @@ const HomePage = () => {
         <Select options={options} />
       </div>
 
-      <div>
-        <MiniVideoPlayer></MiniVideoPlayer>
-      </div>
+   
 
       {/* <Tab.Group>
       <Tab.List className="flex p-4 space-x-4 bg-gray-200">
