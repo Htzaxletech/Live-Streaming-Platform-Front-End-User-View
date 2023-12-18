@@ -1,6 +1,6 @@
 // VideoPlayer.tsx
 import React from 'react';
-import ReactPlayer from 'react-player/twitch';
+import ReactPlayer from 'react-player/youtube';
 
 interface MiniVideoPlayerProps {
   url: string
@@ -12,8 +12,9 @@ const MiniVideoPlayer: React.FC<MiniVideoPlayerProps> = ({ url }) => {
     className='bg-secondary relative w-full h-full' 
     >
     {/* <span className='px-2 py-1 bg-red-700 text-sm text-white rounded absolute m-1'>Live</span> */}
+    <ReactPlayer url='https://www.youtube.com/watch?v=LXb3EKWsInQ' />
       
-      <ReactPlayer
+      {/* <ReactPlayer
         url={url}
         controls
         alt="video"
@@ -30,7 +31,7 @@ const MiniVideoPlayer: React.FC<MiniVideoPlayerProps> = ({ url }) => {
             },
           },
         }}
-      />
+      /> */}
     </div>
   );
 };

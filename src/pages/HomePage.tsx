@@ -22,7 +22,7 @@ import Avatar from "@components/ui/Avatar"
 import ProfileAvatar from "@components/ui/ProfileAvatar"
 import ProfileHeading from "@components/shared/ProfileHeading"
 import ProfileDescription from "@components/shared/ProfileDescription"
-
+import ProfileStreamInfo from "@components/shared/ProfileStreamInfo"
 
 const HomePage = () => {
 
@@ -61,9 +61,14 @@ const HomePage = () => {
           </CategoryLink>
         </div>
 
+<div>
+  <ProfileStreamInfo isLive={false} message={"Check out this mobile legends: Bang Bang"} viewer={"52k"}/>
+</div>
 
-        <div className="container aspect-video h-[400px] ">
-        <MiniVideoPlayer url="https://www.twitch.tv/videos/106400740" ></MiniVideoPlayer>
+        <div className="container aspect-video ">
+        {/* <MiniVideoPlayer url="https://www.twitch.tv/videos/106400740" ></MiniVideoPlayer> */}
+        <MiniVideoPlayer url="https://www.youtube.com/watch?v=oUFJJNQGwhk" ></MiniVideoPlayer>
+
         </div>
   
         <div className="flex p-5 gap-2.5">
