@@ -23,6 +23,7 @@ import ProfileAvatar from "@components/ui/ProfileAvatar"
 import ProfileHeading from "@components/shared/ProfileHeading"
 import ProfileDescription from "@components/shared/ProfileDescription"
 import ProfileStreamInfo from "@components/shared/ProfileStreamInfo"
+import StreamingPage from "@components/shared/StreamingPage"
 
 const HomePage = () => {
 
@@ -60,6 +61,8 @@ const HomePage = () => {
             Games
           </CategoryLink>
         </div>
+
+        <div> <StreamingPage /></div>
 
 <div>
   <ProfileStreamInfo isLive={false} message={"Check out this mobile legends: Bang Bang"} viewer={"52k"}/>

@@ -32,6 +32,7 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
     <div className="container border">
       <div className="flex p-3 space-x-4">
         <div className="flex-shrink-0 ">
+          {/* for large size */}
           <div className="hidden md:flex justify-center items-center  ">
           <ProfileAvatar
             imageUrl="https://th.bing.com/th/id/R.8b167af653c2399dd93b952a48740620?rik=%2fIwzk0n3LnH7dA&pid=ImgRaw&r=0"
@@ -40,6 +41,7 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
             size={85}
           />
           </div>
+          {/*  for small size */}
           <div className="flex md:hidden justify-center items-center  ">
           <ProfileAvatar
             imageUrl="https://th.bing.com/th/id/R.8b167af653c2399dd93b952a48740620?rik=%2fIwzk0n3LnH7dA&pid=ImgRaw&r=0"
@@ -52,7 +54,11 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
        <div className="grow ps-2 md:ps-4 lg:ps-5">
         <div className="flex">
         <div className="grow">
-          <Heading className='text-foreground mb-1 md:mb-3 lg:mb-4 text-lg md:text-2xl'>{streamerName}</Heading>
+          <Heading className='text-foreground mb-1 md:mb-3 lg:mb-4 text-lg md:text-2xl'>
+            <Link to="/directory">
+            {streamerName}
+            </Link>
+          </Heading>
           <div className="">
             <p className='hidden md:flex text-foreground-secondary mb-2'>{streamTitle}</p>
             <div className="flex justify-start items-center">
