@@ -79,5 +79,12 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss-animate'),
+    require('@vidstack/react/tailwind.cjs'),
+    ({ addVariant }) => {
+      addVariant('hocus', ['&:hover', '&:focus-visible']);
+      addVariant('group-hocus', ['.group:hover &', '.group:focus-visible &']);
+    },
+  ],
 }
