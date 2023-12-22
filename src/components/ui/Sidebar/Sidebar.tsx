@@ -11,13 +11,18 @@ import { SidebarItem } from '../Sidebaritem';
 import johndoe from '../../../../src/assets/images/johndoe.jpg';
 import { FaRegHeart } from 'react-icons/fa';
 import { CollapsedSidebarItem } from '../CollapsedSidebarItem';
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleSidebar } from '@store/slices/sidebarSlice';
+
+import { RootState } from 'store';
+
 interface SidebarProps {
   // You can add any other props as needed
 }
 
 const sidebar = tv({
   base: [
-    'w-64 h-screen bg-background-base overflow-y-auto  absolute top-[50px] left-0',
+    'w-64 h-screen bg-background-base overflow-y-auto fixed top-[50px] left-0 z-40',
   ],
   variants: {
     collapsed: {
@@ -65,14 +70,17 @@ const contentContainer = tv({
 });
 
 const Sidebar: FC<SidebarProps> = () => {
-  const [collapsed, setCollapsed] = useState(true);
+  // const [collapsed, setCollapsed] = useState(true);
+  const collapsed = useSelector((state: RootState ) => state.sidebar.isSidebarOpen)
+  const dispatch = useDispatch();
+
 
   return (
     <div className="flex justify-between items-center">
       <div className={sidebar({ collapsed })}>
         <div className="flex">
           {!collapsed ? (
-            <div className="text-foreground flex-nowrap text-lg font-semibold absolute left-3 top-4">
+            <div className="text-foreground flex-nowrap text-lg font-semibold absolute left-3 top-4 mx-auto">
               For You
             </div>
           ) : (
@@ -81,7 +89,7 @@ const Sidebar: FC<SidebarProps> = () => {
           <button
           className="absolute right-1 top-2 hover:bg-background-item/20 text-foreground rounded-sm p-3"
             
-            onClick={() => setCollapsed(!collapsed)}
+          onClick={() => dispatch(toggleSidebar())}
           >
             {collapsed ? (
               <LuArrowRightFromLine size={20} className="" />
@@ -96,7 +104,7 @@ const Sidebar: FC<SidebarProps> = () => {
 <div>
 <div className="flex">
           {!collapsed ? (
-            <div className="text-foreground flex-nowrap text-sm absolute left-3 top-16">
+            <div className="text-foreground flex-nowrap text-sm absolute left-3 top-16 mx-auto">
               Followed Channels
             </div>
           ) : (
@@ -113,7 +121,7 @@ const Sidebar: FC<SidebarProps> = () => {
         <div className={contentContainer({ collapsed })}>
           {/* Your main content goes here */}
           {/* Example: <MainContent /> */}
-          <div className="">
+          <div className="mx-auto">
             {userDataList.map((userData) => (
               <div className="" key={userData.name}>
                 {/* Use the new component for collapsed state */}
