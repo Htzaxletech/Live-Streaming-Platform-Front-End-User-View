@@ -15,6 +15,9 @@ import ChannelPage from "@pages/ChannelPage"
 import { store } from "./store"
 import "./i18n"
 import "@styles/tailwind.css"
+import LiveStreamPage from "@pages/LiveStreamPage"
+import CategoryPage from "@pages/CategoryPage"
+import DirectoryCategoryPage from "@pages/DirectoryCategoryPage"
 
 const router = createBrowserRouter([
   {
@@ -31,8 +34,20 @@ const router = createBrowserRouter([
         element: <DirectoryPage />,
       },
       {
+        path: "/directory/:dirCategoryName",
+        element: <DirectoryCategoryPage to={""} imgUrl={""} name={""} />,
+      },
+      {
+        path: "/directory/category/:categoryName",
+        element: <CategoryPage />,
+      },
+      {
         path: "/following",
         element: <FollowingPage />,
+      },
+      {
+        path: "/livestream",
+        element: <LiveStreamPage />,
       },
       {
         path: "/channel/:id",
@@ -40,7 +55,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-])
+]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>

@@ -5,12 +5,12 @@ import Footer from "./Footer"
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (
-    <div className="text-sm">
+    <div className="text-sm min-h-screen">
       <Navbar />
-      <main className="p-5">{children}</main>
+      <main className="py-14 pb-20 px-4">{children}</main>
       <Footer />
     </div>
-  )
+  );
 }
 
 export default Layout

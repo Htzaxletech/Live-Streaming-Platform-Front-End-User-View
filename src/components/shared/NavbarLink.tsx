@@ -28,13 +28,14 @@ const NavbarLink = ({
     <Link
       {...props}
       className={navbarlink({
-        active: location.pathname === props.to,
+        // active: location.pathname === props.to,
+        active: location.pathname.startsWith(props.to as string),
         class: className,
       })}
     >
       {children}
     </Link>
-  )
+  );
 }
 
 export default NavbarLink

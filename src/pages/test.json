@@ -1,0 +1,10 @@
+{
+  "user": {
+    "title": "Stream Title",
+    "channelName": "Channel Name",
+    "categoryName": "Category Name",
+    "liveScreen": "path/to/liveScreen/image.jpg"
+  },
+  "imageId": "123",
+  "isLive": true
+}

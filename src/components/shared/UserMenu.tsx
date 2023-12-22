@@ -17,7 +17,7 @@ const UserMenu = () => {
       </Dropdown.Trigger>
 
       <Dropdown.Portal>
-        <Dropdown.Content align="end">
+        <Dropdown.Content align="end" className="z-50">
           <Dropdown.Group>
             <LanguageSwitch />
 

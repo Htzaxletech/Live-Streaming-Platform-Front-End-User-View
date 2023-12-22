@@ -7,8 +7,9 @@ const Footer = () => {
     <footer
       className={cn(
         "fixed w-full left-0 bottom-0",
-        "p-3 bg-primary-500/80 text-white",
-        "font-bold"
+        "p-3 bg-primary-500 text-white",
+        "font-bold",
+        "z-20"
       )}
     >
      <div className="flex flex-col md:flex-row justify-between items-center">
