@@ -13,6 +13,7 @@ import { FaArrowDownWideShort, FaBullseye } from "react-icons/fa6";
 
 import TabComponent from "@components/ui/Tab/Tab"
 import { Tab } from "@headlessui/react";
+import { SocialLink } from "@components/ui/SocialLink"
 
 
 import { useState } from "react"
@@ -118,25 +119,11 @@ const HomePage = () => {
        />
 
    
-
-      {/* <Tab.Group>
-      <Tab.List className="flex p-4 space-x-4 bg-gray-200">
-        <TabComponent label="Tab 1" index={0} />
-        <TabComponent label="Tab 2" index={1} />
-        <TabComponent label="Tab 3" index={2} />
-      </Tab.List>
-      <Tab.Panels>
-        <TabComponent.Panel>
-          <div>Content for Tab 1</div>
-        </TabComponent.Panel>
-        <TabComponent.Panel>
-          <div>Content for Tab 2</div>
-        </TabComponent.Panel>
-        <TabComponent.Panel>
-          <div>Content for Tab 3</div>
-        </TabComponent.Panel>
-      </Tab.Panels>
-    </Tab.Group> */}
+<div className="flex space-x-4">
+<SocialLink platform="facebook" username="example" />
+<SocialLink platform="linkedin" username="example" />
+      <SocialLink platform="twitter" username="example" />
+</div>
     </>
   )
 }

@@ -13,6 +13,7 @@ import { FaRegHeart } from 'react-icons/fa';
 import { CollapsedSidebarItem } from '../CollapsedSidebarItem';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleSidebar } from '@store/slices/sidebarSlice';
+import Button from '../Button';
 
 import { RootState } from 'store';
 
@@ -22,7 +23,7 @@ interface SidebarProps {
 
 const sidebar = tv({
   base: [
-    'w-64 h-screen bg-background-base overflow-y-auto fixed top-[50px] left-0 z-40',
+    'w-64 h-screen bg-background-base overflow-y-auto fixed top-[50px] relative left-0 z-40',
   ],
   variants: {
     collapsed: {
@@ -71,7 +72,8 @@ const contentContainer = tv({
 
 const Sidebar: FC<SidebarProps> = () => {
   // const [collapsed, setCollapsed] = useState(true);
-  const collapsed = useSelector((state: RootState ) => state.sidebar.isSidebarOpen)
+  const collapsed = useSelector((state: RootState) => state.sidebar.isSidebarCollapsed);
+
   const dispatch = useDispatch();
 
 
@@ -80,14 +82,13 @@ const Sidebar: FC<SidebarProps> = () => {
       <div className={sidebar({ collapsed })}>
         <div className="flex">
           {!collapsed ? (
-            <div className="text-foreground flex-nowrap text-lg font-semibold absolute left-3 top-4 mx-auto">
-              For You
+            <div className="text-foreground flex-nowrap text-lg font-semibold absolute left-3 top-4 mx-auto">              For You
             </div>
           ) : (
             ''
           )}
-          <button
-          className="absolute right-1 top-2 hover:bg-background-item/20 text-foreground rounded-sm p-3"
+          <Button
+          className="absolute right-1 top-3 bg-transparent hover:bg-background-item/20 text-foreground rounded-sm p-3"
             
           onClick={() => dispatch(toggleSidebar())}
           >
@@ -96,7 +97,7 @@ const Sidebar: FC<SidebarProps> = () => {
             ) : (
               <LuArrowLeftFromLine size={20} className= "" />
             )}
-          </button>
+          </Button>
         </div>
 
 
@@ -104,7 +105,7 @@ const Sidebar: FC<SidebarProps> = () => {
 <div>
 <div className="flex">
           {!collapsed ? (
-            <div className="text-foreground flex-nowrap text-sm absolute left-3 top-16 mx-auto">
+            <div className="text-foreground/50 flex-nowrap text-md tracking-wide font-semibold absolute left-3 top-16 mx-auto">
               Followed Channels
             </div>
           ) : (
@@ -114,7 +115,7 @@ const Sidebar: FC<SidebarProps> = () => {
           {collapsed ? (
             <FaRegHeart size={18} className="absolute right-5 top-16" />
           ) : (
-            <LuArrowUpDown size={16} className="absolute right-3 top-16" />
+            <LuArrowUpDown size={18} className="absolute right-3 top-16 text-foreground/50 font-bold" />
           )}
         </div>
 
@@ -123,19 +124,23 @@ const Sidebar: FC<SidebarProps> = () => {
           {/* Example: <MainContent /> */}
           <div className="mx-auto">
             {userDataList.map((userData) => (
-              <div className="" key={userData.name}>
-                {/* Use the new component for collapsed state */}
+             <div key={userData.name}>
                 {collapsed ? (
+                  <div key={userData.name}>
                   <CollapsedSidebarItem
                     profilePicture={userData.profilePicture}
                   />
+                  </div>
                 ) : (
+
+                  <div className="w-full h-full hover:bg-foreground/10" key={userData.name}>
                   <SidebarItem
                     profilePicture={userData.profilePicture}
                     name={userData.name}
                     category={userData.category}
                     viewers={userData.viewers}
                   />
+                  </div>
                 )}
               </div>
             ))}

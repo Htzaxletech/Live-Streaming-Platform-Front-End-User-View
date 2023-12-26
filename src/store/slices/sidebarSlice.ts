@@ -1,12 +1,12 @@
 // chatSlice.ts
 import { createSlice } from '@reduxjs/toolkit';
 
-interface ChatState {
-  isSidebarOpen: boolean;
+interface SidebarState {
+  isSidebarCollapsed: boolean;
 }
 
-const initialState: ChatState = {
-  isSidebarOpen: true,
+const initialState: SidebarState = {
+  isSidebarCollapsed: false,
 };
 
 const sidebarSlice = createSlice({
@@ -14,7 +14,7 @@ const sidebarSlice = createSlice({
   initialState,
   reducers: {
     toggleSidebar: (state) => {
-      state.isSidebarOpen = !state.isSidebarOpen;
+      state. isSidebarCollapsed = !state. isSidebarCollapsed;
     },
   },
 });
