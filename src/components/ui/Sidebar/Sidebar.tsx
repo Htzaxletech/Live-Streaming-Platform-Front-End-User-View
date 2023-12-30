@@ -23,7 +23,7 @@ interface SidebarProps {
 
 const sidebar = tv({
   base: [
-    'w-64 h-screen bg-background-base overflow-y-auto fixed top-[50px] relative left-0 z-40',
+    'w-64 h-screen bg-background-base overflow-y-auto fixed top-[50px] left-0 z-40',
   ],
   variants: {
     collapsed: {

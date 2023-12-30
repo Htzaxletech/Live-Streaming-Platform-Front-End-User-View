@@ -60,7 +60,7 @@ const DirectoryPage = () => {
   ];
 
   return (
-    <div>
+    <div className="py-6 pb-20 px-4">
       <Heading className="my-4 text-5xl">Browse</Heading>
       {/* <Wrapper>{TestChild}</Wrapper> */}
 

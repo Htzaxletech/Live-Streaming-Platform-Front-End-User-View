@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom/client"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import { Provider } from "react-redux"
+import { store } from "./store"
 
 import HomePage from "@pages/HomePage"
 import RootPage from "@pages/RootPage"
@@ -12,12 +13,11 @@ import ThemedTooltip from "@components/shared/ThemedTooltip"
 import FollowingPage from "@pages/FollowingPage"
 import ChannelPage from "@pages/ChannelPage"
 
-import { store } from "./store"
-import "./i18n"
-import "@styles/tailwind.css"
 import LiveStreamPage from "@pages/LiveStreamPage"
 import CategoryPage from "@pages/CategoryPage"
 import DirectoryCategoryPage from "@pages/DirectoryCategoryPage"
+import "@styles/tailwind.css"
+import "./i18n"
 
 const router = createBrowserRouter([
   {
@@ -46,7 +46,7 @@ const router = createBrowserRouter([
         element: <FollowingPage />,
       },
       {
-        path: "/livestream",
+        path: "/:id",
         element: <LiveStreamPage />,
       },
       {

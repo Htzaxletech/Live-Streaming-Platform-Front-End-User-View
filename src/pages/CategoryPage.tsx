@@ -1,9 +1,11 @@
 import CategoryHeader from "@components/shared/CategoryHeader";
 
 const CategoryPage = () => {
-  return <div>
-    <CategoryHeader />
-  </div>;
+  return (
+    <div className="py-6 pb-20 px-4">
+      <CategoryHeader />
+    </div>
+  );
 };
 
 export default CategoryPage;

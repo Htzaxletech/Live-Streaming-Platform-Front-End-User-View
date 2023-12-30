@@ -1,13 +1,14 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next"
-import { tv } from "tailwind-variants"
-import { HiDotsVertical } from "react-icons/hi";
-import Logo from "./Logo"
-import NavbarLink from "./NavbarLink"
-import NavbarSearchBox from "./NavbarSearchBox"
-import UserMenu from "./UserMenu"
-import Button from "@components/ui/Button"
+import { useEffect, useState } from "react";
+import { tv } from "tailwind-variants";
+import Logo from "./Logo";
+import NavbarSearchBox from "./NavbarSearchBox";
+import UserMenu from "./UserMenu";
+import Button from "@components/ui/Button";
 import Login from "@pages/authentication/Login";
+import NavbarMenu from "./NavbarMenu";
+import SignUp from "@pages/authentication/SignUp";
+import OTP from "@pages/authentication/OTP";
+import TwoFactor from "@pages/authentication/TwoFactor";
 
 const classes = tv({
   base: ["border-2 border-black"],
@@ -25,40 +26,93 @@ const classes = tv({
   },
 });
 
-const { nav, navCol } = classes()
+const { nav, navCol } = classes();
 
 const Navbar = () => {
-  const { t } = useTranslation()
-  const [isLoginOpen, setLoginOpen] = useState(false);
+  const [isOpenLogin, setOpenLogin] = useState(false);
+  const [isOpenSignUp, setOpenSignUp] = useState(false);
+  const [switchToSignUp, setSwitchToSignUp] = useState(false);
+  const [switchToLogin, setSwitchToLogin] = useState(false);
+  const [isOpenOTP, setOpenOTP] = useState(false);
+  const [isOpenTwoFactor, setOpenTwoFactor] = useState(false);
 
+  useEffect(() => {
+    if (switchToLogin) {
+      setSwitchToSignUp(false);
+      setOpenSignUp(false);
+      setOpenLogin(true);
+    }
+
+    if (switchToSignUp) {
+      setSwitchToLogin(false);
+      setOpenLogin(false);
+      setSwitchToSignUp(true);
+      setOpenSignUp(true);
+    }
+  }, [switchToLogin, switchToSignUp]);
+
+  useEffect(() => {
+    if (!isOpenLogin) {
+      setSwitchToSignUp(false);
+    }
+
+    if (!isOpenSignUp) {
+      setSwitchToLogin(false);
+    }
+  }, [isOpenLogin, isOpenSignUp]);
 
   return (
     <div>
-      <Login isLoginOpen={isLoginOpen} setLoginOpen={setLoginOpen} />
+      {isOpenLogin && (
+        <Login
+          isOpenLogin={isOpenLogin}
+          setOpenLogin={setOpenLogin}
+          setSwitchToSignUp={setSwitchToSignUp}
+        />
+      )}
+
+      {isOpenSignUp && (
+        <SignUp
+          isOpenSignUp={isOpenSignUp}
+          setOpenSignUp={setOpenSignUp}
+          setSwitchToLogin={setSwitchToLogin}
+          setOpenOTP={setOpenOTP}
+        />
+      )}
+
+      {isOpenOTP && <OTP isOpenOTP={isOpenOTP} setOpenOTP={setOpenOTP} />}
+
+      {isOpenTwoFactor && (
+        <TwoFactor
+          isOpenTwoFactor={isOpenTwoFactor}
+          setOpenTwoFactor={setOpenTwoFactor}
+          setOpenLogin={setOpenLogin}
+        />
+      )}
+      
       <nav className={nav()}>
         <div className={navCol()}>
-          <Logo />
-          <NavbarLink to={"/following"}>{t("navbar.link1")}</NavbarLink>
-          <NavbarLink to={"/directory"}>{t("navbar.link2")}</NavbarLink>
-          <NavbarLink to={"/channel/1"}>Socket</NavbarLink>
-          <a data-tooltip-id="my-tooltip" data-tooltip-content="More">
-            <Button className="bg-transparent p-0">
-              <HiDotsVertical className="text-xl" />
-            </Button>
-          </a>
+          <div className="w-[48px] justify-center flex">
+            <Logo />
+          </div>
+          <NavbarMenu />
         </div>
         <div className={navCol({ class: "justify-center" })}>
-          <NavbarSearchBox />
+          <NavbarSearchBox className="hidden sm:flex" />
         </div>
         <div className={navCol({ class: "justify-end gap-2.5" })}>
-          <Button onClick={() => setLoginOpen(true)}>Log In</Button>
-          <Button color="primary">Sign Up</Button>
+          <Button onClick={() => setOpenLogin(true)}>Log In</Button>
+          <Button color="primary" onClick={() => setOpenSignUp(true)}>
+            Sign Up
+          </Button>
+          <Button color="primary" onClick={() => setOpenTwoFactor(true)}>
+            2FA
+          </Button>
           <UserMenu />
         </div>
-        <Login />
       </nav>
     </div>
   );
-}
+};
 
-export default Navbar
+export default Navbar;

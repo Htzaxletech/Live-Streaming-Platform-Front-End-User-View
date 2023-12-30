@@ -22,7 +22,7 @@ const DirectoryCategoryPage: React.FC<DirectoryCategoryProps> = ({
   const { dirCategoryName } = useParams();
 
   return (
-    <div>
+    <div className="py-6 pb-20 px-4">
       <Heading
         className={`my-4 text-5xl ${
           dirCategoryName === "irl" ? "uppercase" : "capitalize"
@@ -37,8 +37,10 @@ const DirectoryCategoryPage: React.FC<DirectoryCategoryProps> = ({
       </div>
 
       <DirectoryCategory to={""} imgUrl={""} name={""} />
-      
-      <Heading size="sm" className="my-2 text-gray-900 dark:text-gray-100">Shooter</Heading>
+
+      <Heading size="sm" className="my-2 text-gray-900 dark:text-gray-100">
+        Shooter
+      </Heading>
       <LivePage />
       {/* <div className="flex">
         <div className="relative flex-grow">
@@ -57,10 +59,7 @@ const DirectoryCategoryPage: React.FC<DirectoryCategoryProps> = ({
         </div>
       </div> */}
 
-      <ShowMoreButton
-        onClick={() => alert('hi')}
-        title={"Shooter"}
-      />
+      <ShowMoreButton onClick={() => alert("hi")} title={"Shooter"} />
     </div>
   );
 };

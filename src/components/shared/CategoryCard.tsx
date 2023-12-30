@@ -9,8 +9,8 @@ const CategoryCard = ({ user, isLive, index }) => {
 
   const card = tv({
     slots: {
-      cardContainer: "mx-auto duration-300 bg-primary cursor-pointer h-56",
-      imageCover: "w-100 h-full",
+      cardContainer: "mx-auto duration-300 bg-primary cursor-pointer",
+      imageCover: "h-full",
       cardContent: "pt-2",
       flexContainer: "flex items-center gap-3",
       titleContainer: "col-span-1",
@@ -19,7 +19,7 @@ const CategoryCard = ({ user, isLive, index }) => {
       categoryName: "cursor-pointer text-soft",
       tagsContainer: "flex flex-wrap gap-2 items-center mt-2",
       liveScreenCard:
-        "relative hover:translate-x-1 hover:-translate-y-1 transition-all duration-200 h-56",
+        "relative hover:translate-x-1 hover:-translate-y-1 transition-all duration-200 h-48 w-full",
     },
   });
 
@@ -39,7 +39,7 @@ const CategoryCard = ({ user, isLive, index }) => {
   };
 
   return (
-    <div className="cursor-pointer" onClick={handleLink}>
+    <div className="cursor-pointer flex flex-col" onClick={handleLink}>
       <div className={cardContainer()}>
         <div className={liveScreenCard()}>
           <img className={imageCover()} src={game} alt={user.title} />

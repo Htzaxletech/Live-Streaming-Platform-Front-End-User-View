@@ -10,7 +10,7 @@ import LivePage from "./LivePage";
 
 const CategoryCardList = () => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-8 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-8 gap-2">
     {/* <div className="flex flex-wrap gap-2"> */}
       {Array.from({ length: 13 }).map((_, index) => (
         <CategoryCard
@@ -46,7 +46,7 @@ const BrowsePage = ({ status }) => {
           <RiSearchLine />
         </Button>
         <div>
-          <span className="font-semibold">Sort By</span>
+          <span className="font-semibold hidden sm:inline">Sort By</span>
           <Select options={options} className="z-10 h-8" />
         </div>
       </div>
