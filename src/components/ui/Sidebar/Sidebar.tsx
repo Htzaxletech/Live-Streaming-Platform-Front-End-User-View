@@ -1,164 +1,88 @@
-import React, { useState } from 'react';
-import { FC } from 'react';
-import { tv, type VariantProps } from 'tailwind-variants';
-import {
-  LuArrowDownUp,
-  LuArrowLeftFromLine,
-  LuArrowRightFromLine,
-  LuArrowUpDown,
-} from 'react-icons/lu';
-import { SidebarItem } from '../Sidebaritem';
-import johndoe from '../../../../src/assets/images/johndoe.jpg';
-import { FaRegHeart } from 'react-icons/fa';
-import { CollapsedSidebarItem } from '../CollapsedSidebarItem';
-import { useSelector, useDispatch } from 'react-redux';
-import { toggleSidebar } from '@store/slices/sidebarSlice';
-import Button from '../Button';
+import { FC } from "react";
+import { tv } from "tailwind-variants";
+import { LuArrowLeftFromLine, LuArrowRightFromLine } from "react-icons/lu";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSidebar } from "@store/slices/sidebarSlice";
+import { RootState } from "store";
+import { lazy } from "react";
+import Button from "../Button";
+import DashboardSidebar from "@components/shared/dashboard/DashboardSidebar";
 
-import { RootState } from 'store';
+const FollowedChannels = lazy(() => import("./FollowedChannels"));
 
 interface SidebarProps {
-  // You can add any other props as needed
+	status: string;
+	// You can add any other props as needed
 }
 
 const sidebar = tv({
-  base: [
-    'w-64 h-screen bg-background-base overflow-y-auto fixed top-[50px] left-0 z-40',
-  ],
-  variants: {
-    collapsed: {
-      true: ['w-[60px]', 'overflow-hidden', ],
-      false: ['w-64'],
-    },
-  },
-  defaultVariants: {},
+	base: [
+		"w-60 h-screen bg-background-base overflow-y-auto fixed top-[50px] left-0 z-40",
+	],
+	variants: {
+		collapsed: {
+			true: ["w-[60px]", "overflow-hidden"],
+			false: ["w-60"],
+		},
+	},
+	defaultVariants: {},
 });
 
-const userDataList = [
-  {
-    profilePicture: johndoe,
-    name: 'John Doe',
-    category: 'Gaming',
-    viewers: 1.2,
-  },
-  {
-    profilePicture: johndoe,
-    name: 'Jane Doe',
-    category: 'Just Chatting',
-    viewers: 1.7,
-  },
-
-  {
-    profilePicture: johndoe,
-    name: "Jack",
-    category: 'Games',
-    viewers: null
-    
-  }
-  // Add more user data as needed
+const sidebarItems = [
+	{ title: "Home", link: "/" },
+	{
+		title: "Categories",
+		link: "/categories",
+		submenus: [
+			{ title: "Category 1", link: "/categories/1" },
+			{ title: "Category 2", link: "/categories/2" },
+		],
+	},
+	{ title: "About", link: "/about" },
 ];
 
-const contentContainer = tv({
-  base: ['mt-[100px]'],
-  variants: {
-    collapsed: {
-      true: [''],
-      false: [''],
-    },
-  },
+const Sidebar: FC<SidebarProps> = ({ status }) => {
+	const collapsed = useSelector(
+		(state: RootState) => state.sidebar.isSidebarCollapsed
+	);
 
-  defaultVariants: {},
-});
+	const dispatch = useDispatch();
 
-const Sidebar: FC<SidebarProps> = () => {
-  // const [collapsed, setCollapsed] = useState(true);
-  const collapsed = useSelector((state: RootState) => state.sidebar.isSidebarCollapsed);
-
-  const dispatch = useDispatch();
-
-
-  return (
-    <div className="flex justify-between items-center">
-      <div className={sidebar({ collapsed })}>
-        <div className="flex">
-          {!collapsed ? (
-            <div className="text-foreground flex-nowrap text-lg font-semibold absolute left-3 top-4 mx-auto">              For You
-            </div>
-          ) : (
-            ''
-          )}
-          <Button
-          className="absolute right-1 top-3 bg-transparent hover:bg-background-item/20 text-foreground rounded-sm p-3"
-            
-          onClick={() => dispatch(toggleSidebar())}
-          >
-            {collapsed ? (
-              <LuArrowRightFromLine size={20} className="" />
-            ) : (
-              <LuArrowLeftFromLine size={20} className= "" />
-            )}
-          </Button>
-        </div>
-
-
-{/* Followed channels  */}
-<div>
-<div className="flex">
-          {!collapsed ? (
-            <div className="text-foreground/50 flex-nowrap text-md tracking-wide font-semibold absolute left-3 top-16 mx-auto">
-              Followed Channels
-            </div>
-          ) : (
-            ''
-          )}
-
-          {collapsed ? (
-            <FaRegHeart size={18} className="absolute right-5 top-16" />
-          ) : (
-            <LuArrowUpDown size={18} className="absolute right-3 top-16 text-foreground/50 font-bold" />
-          )}
-        </div>
-
-        <div className={contentContainer({ collapsed })}>
-          {/* Your main content goes here */}
-          {/* Example: <MainContent /> */}
-          <div className="mx-auto">
-            {userDataList.map((userData) => (
-             <div key={userData.name}>
-                {collapsed ? (
-                  <div key={userData.name}>
-                  <CollapsedSidebarItem
-                    profilePicture={userData.profilePicture}
-                  />
-                  </div>
-                ) : (
-
-                  <div className="w-full h-full hover:bg-foreground/10" key={userData.name}>
-                  <SidebarItem
-                    profilePicture={userData.profilePicture}
-                    name={userData.name}
-                    category={userData.category}
-                    viewers={userData.viewers}
-                  />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-
-</div>
-
-{/* Rommended channels  */}
-
-
-
-
-
-      </div>
-    </div>
-  );
+	return (
+		<div className="flex justify-between items-center">
+			<div className={sidebar({ collapsed })}>
+				<div className="flex">
+					{!collapsed && (
+						<>
+							{status === "user" ? (
+								<div className="text-foreground flex-nowrap text-lg font-semibold absolute left-3 top-4 mx-auto">
+									For You
+								</div>
+							) : (
+								<div className="text-foreground flex-nowrap font-semibold absolute left-3 top-4 mx-auto">
+									CREATOR DASHBOARD
+								</div>
+							)}
+						</>
+					)}
+					<Button
+						className="absolute right-1 top-3 bg-transparent hover:bg-background-item/20 text-foreground rounded-sm p-3"
+						onClick={() => dispatch(toggleSidebar())}
+					>
+						{collapsed ? (
+							<LuArrowRightFromLine size={20} className="" />
+						) : (
+							<LuArrowLeftFromLine size={20} className="" />
+						)}
+					</Button>
+				</div>
+				{status === "user" && <FollowedChannels />}
+				{status === "dashboard" && (
+					<DashboardSidebar items={sidebarItems} />
+				)}
+			</div>
+		</div>
+	);
 };
 
 export default Sidebar;

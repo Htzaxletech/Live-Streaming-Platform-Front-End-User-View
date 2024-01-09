@@ -1,7 +1,6 @@
 import React from "react";
 import ResponsiveCarousel from "../components/shared/HomeCarousel";
 
-
 const FollowingPage: React.FC = () => {
   // const { users } = useSelector((state) => state.user);
 

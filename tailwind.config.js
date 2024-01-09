@@ -77,6 +77,16 @@ export default {
       spacing: {
         2.5: "0.625rem",
       },
+      container: {
+        center: true,
+        padding: "1rem", // Add padding to the container if needed
+        screens: {
+          sm: "100%",
+          md: "100%",
+          lg: "1024px", // Customize the max-width for large screens
+          xl: "1280px", // Customize the max-width for extra-large screens
+        },
+      },
     },
   },
   plugins: [

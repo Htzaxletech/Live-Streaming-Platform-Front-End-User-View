@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import Heading from "@components/ui/Heading";
 import DirectoryCategory from "@components/shared/DirectoryCategory";
 import LivePage from "./LivePage";
-import Button from "@components/ui/Button";
-import { IoIosArrowDown } from "react-icons/io";
+// import Button from "@components/ui/Button";
+// import { IoIosArrowDown } from "react-icons/io";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 
 interface DirectoryCategoryProps {
@@ -22,27 +22,27 @@ const DirectoryCategoryPage: React.FC<DirectoryCategoryProps> = ({
   const { dirCategoryName } = useParams();
 
   return (
-    <div className="py-6 pb-20 px-4">
-      <Heading
-        className={`my-4 text-5xl ${
-          dirCategoryName === "irl" ? "uppercase" : "capitalize"
-        }`}
-      >
-        {dirCategoryName}
-      </Heading>
+		<div className="py-6 pb-20 px-4">
+			<Heading
+				className={`my-4 text-5xl ${
+					dirCategoryName === "irl" ? "uppercase" : "capitalize"
+				}`}
+			>
+				{dirCategoryName}
+			</Heading>
 
-      <div className="text-2xl mb-4 font-semibold text-gray-600">
-        Live streams of all your favorite games, from shooters to platformers
-        and everything in between
-      </div>
+			<div className="text-2xl mb-4 font-semibold text-gray-600">
+				Live streams of all your favorite games, from shooters to
+				platformers and everything in between
+			</div>
 
-      <DirectoryCategory to={""} imgUrl={""} name={""} />
+			<DirectoryCategory to={to} imgUrl={imgUrl} name={name} />
 
-      <Heading size="sm" className="my-2 text-gray-900 dark:text-gray-100">
-        Shooter
-      </Heading>
-      <LivePage />
-      {/* <div className="flex">
+			<Heading size="sm" className="my-2 text-gray-900 dark:text-gray-100">
+				Shooter
+			</Heading>
+			<LivePage />
+			{/* <div className="flex">
         <div className="relative flex-grow">
           <div className="top-1/2 border-t-2 absolute w-full"></div>
         </div>
@@ -59,8 +59,8 @@ const DirectoryCategoryPage: React.FC<DirectoryCategoryProps> = ({
         </div>
       </div> */}
 
-      <ShowMoreButton onClick={() => alert("hi")} title={"Shooter"} />
-    </div>
+			<ShowMoreButton onClick={() => alert("hi")} title={"Shooter"} />
+		</div>
   );
 };
 

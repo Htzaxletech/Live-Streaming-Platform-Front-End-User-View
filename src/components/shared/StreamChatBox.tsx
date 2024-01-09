@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Button from "@components/ui/Button";
 import Input from "@components/ui/Input";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,7 +14,7 @@ import store from "store2";
 const StreamChatBox: React.FC = () => {
   const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
   const [chatMessages, setChatMessages] = useState<unknown[]>([]);
-  const [isConnected, setIsConnected] = useState(false);
+  // const [isConnected, setIsConnected] = useState(false);
   const [message, setMessage] = useState("");
 
   const dispatch = useDispatch();
@@ -155,80 +156,82 @@ const StreamChatBox: React.FC = () => {
   };
 
   return (
-    <>
-      <div
-        className={`invisible md:visible bg-background-base w-80 top-[50px] overflow-y-auto h-full flex flex-col justify-between fixed right-0 transition-all duration-300 transform ${
-          isChatOpen ? "translate-x-0" : "translate-x-full"
-        } ease-in-out z-20`}
-      >
-        <div className="flex justify-between items-center border-b-2 gap-2 p-2">
-          {/* Toggle Button */}
-          <Button className="bg-transparent" onClick={handleToggleChat}>
-            <LuArrowRightFromLine className="text-xl" />
-          </Button>
-          <div>
-            <h5 className="uppercase font-semibold">Stream Chat</h5>
-          </div>
+		<>
+			<div
+				className={`invisible md:visible bg-background-base md:w-60 lg:w-72 top-[50px] overflow-y-auto h-full flex flex-col justify-between fixed right-0 transform ${
+					isChatOpen ? "translate-x-0" : "translate-x-full"
+				} ease-in-out z-20`}
+			>
+				<div className="flex justify-between items-center border-b-2 gap-2 p-2">
+					{/* Toggle Button */}
+					<Button className="bg-transparent" onClick={handleToggleChat}>
+						<LuArrowRightFromLine className="text-xl" />
+					</Button>
+					<div>
+						<h5 className="uppercase font-semibold">Stream Chat</h5>
+					</div>
 
-          <Button className="bg-transparent">
-            <LuUsers className="text-xl" />
-          </Button>
-        </div>
+					<Button className="bg-transparent">
+						<LuUsers className="text-xl" />
+					</Button>
+				</div>
 
-        {/* Chat Content */}
-        <div className="px-4 pt-4 h-4/6 overflow-auto">
-          {/* Chat messages */}
-          <div className="mb-2">
-            <span className="text-gray-500">Default User:</span> Hello Testing!
-          </div>
+				{/* Chat Content */}
+				<div className="px-4 pt-4 h-4/6 overflow-auto">
+					{/* Chat messages */}
+					<div className="mb-2">
+						<span className="text-gray-500">Default User:</span> Hello
+						Testing!
+					</div>
 
-          {
-            chatMessages.map((i, index) => {
-              return (
-                <div key={index} className="mb-2">
-                  <span className="text-gray-500">{i.userID}:</span>{i.message}
-                </div>
-              );
-            })
-          }
-          {/* Add more messages as needed */}
-        </div>
+					{chatMessages.map((i: any, index) => {
+						return (
+							<div key={index} className="mb-2">
+								<span className="text-gray-500">{i.userID}:</span>
+								{i.message}
+							</div>
+						);
+					})}
+					{/* Add more messages as needed */}
+				</div>
 
-        {/* Chat Footer */}
-        <div className="pt-4 px-4 h-2/6">
-          <Input
-            className="w-full"
-            placeholder="Send a message"
-            value={message}
-            onChange={handleInputChange}
-            endContent={
-              <Button className="bg-transparent">
-                <img src="/src/assets/images/emote.svg" />
-              </Button>
-            }
-          />
-          <div className="flex justify-end mt-3">
-            <Button
-              color="primary"
-              className="text-white"
-              onClick={handleSubmit}
-            >
-              Chat
-            </Button>
-          </div>
-        </div>
-      </div>
+				{/* Chat Footer */}
+				<div className="pt-4 px-4 h-2/6">
+					<form onSubmit={handleSubmit}>
+						<Input
+							className="w-full"
+							placeholder="Send a message"
+							value={message}
+							onChange={handleInputChange}
+							endContent={
+								<Button className="bg-transparent">
+									<img src="/src/assets/images/emote.svg" />
+								</Button>
+							}
+						/>
+						<div className="flex justify-end mt-3">
+							<Button
+								color="primary"
+								className="text-white"
+								type="submit"
+							>
+								Chat
+							</Button>
+						</div>
+					</form>
+				</div>
+			</div>
 
-      {!isChatOpen && (
-        <Button
-          color="primary"
-          className="fixed top-16 right-0 z-50 transition-all duration-300 rounded-tr-none rounded-br-none"
-          onClick={handleToggleChat}
-        >
-          <LuArrowLeftFromLine className="text-xl" />
-        </Button>
-      )}
-    </>
+			{!isChatOpen && (
+				<Button
+					color="primary"
+					className="fixed top-16 right-0 z-50 transition-all duration-300 rounded-tr-none rounded-br-none"
+					onClick={handleToggleChat}
+				>
+					<LuArrowLeftFromLine className="text-xl" />
+				</Button>
+			)}
+		</>
   );
 };
 

@@ -1,5 +1,5 @@
 import { cn } from "@utils/cn"
-import Logo from "./Logo"
+// import Logo from "./Logo"
 import Button from "@components/ui/Button"
 
 const Footer = () => {
@@ -9,7 +9,7 @@ const Footer = () => {
         "fixed w-full left-0 bottom-0",
         "p-3 bg-primary-500 text-white",
         "font-bold",
-        "z-20"
+        "z-40"
       )}
     >
      <div className="flex flex-col md:flex-row justify-between items-center">

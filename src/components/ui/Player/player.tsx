@@ -1,9 +1,9 @@
-import React from 'react';
+// import React from 'react';
 // import Image from 'next/image';
 
 import { Caption, Controls, Gesture, MediaPlayer, MediaProvider, Time } from '@vidstack/react';
 
-import poster from './poster.webp';
+// import poster from './poster.webp';
 import video from './video.mp4';
 
 import * as Buttons from './buttons';
@@ -17,12 +17,12 @@ export function Player() {
     <MediaPlayer title="..." src={video} aspectRatio="16/9">
       <MediaProvider />
 
-      <Image
+      {/* <Image
         className="absolute inset-0 w-full h-full z-0 opacity-100 media-started:opacity-0 transition-opacity"
         src={poster}
         alt="..."
         placeholder="blur"
-      />
+      /> */}
 
       <Caption.Root className="absolute flex flex-col inset-0 w-full h-full z-30 items-end justify-center">
         <Caption.Text className="px-2 py-1 bg-black/60 backdrop-blur-sm text-white text-lg lg:text-xl" />

@@ -1,32 +1,45 @@
-import { useState } from "react"
-import { useTranslation } from "react-i18next"
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { lngs } from "@utils/i18n";
+import { Dropdown } from "@components/ui/Dropdown";
 
-import { lngs } from "@utils/i18n"
-
-const LanguageSwitch = () => {
-  const { i18n } = useTranslation()
-
-  const [currentLng, setCurrentLng] = useState(i18n.resolvedLanguage)
-
-  const handleChangeLng = (lng: string) => {
-    setCurrentLng(lng)
-    i18n.changeLanguage(lng)
-  }
-
-  return (
-    <div>
-      {Object.keys(lngs).map((lng) => (
-        <button
-          key={lng}
-          type="submit"
-          onClick={() => handleChangeLng(lng)}
-          className={currentLng === lng ? "text-primary" : ""}
-        >
-          {lngs[lng].nativeName}
-        </button>
-      ))}
-    </div>
-  )
+interface LanguageSwitchProps {
+	openLanguage?: boolean;
+	setOpenLanguage?: (open: boolean) => void;
 }
 
-export default LanguageSwitch
+const LanguageSwitch: React.FC<LanguageSwitchProps> = () => {
+	const { i18n } = useTranslation();
+
+	const [currentLng, setCurrentLng] = useState(i18n.resolvedLanguage);
+
+	const handleChangeLng = (lng: string) => {
+		setCurrentLng(lng);
+		i18n.changeLanguage(lng);
+	};
+
+	const handleOnSelect = (e: Event, lng: string) => {
+		e.preventDefault();
+		handleChangeLng(lng);
+	}
+
+	return (
+		<div>
+			{Object.keys(lngs).map((lng) => (
+				<Dropdown.Item
+					key={lng}
+					onSelect={(e) => handleOnSelect(e, lng)}
+					className={`${
+						currentLng === lng
+							? "bg-primary text-white hover:bg-primary"
+							: ""
+					} p-3 cursor-pointer`}
+				>
+					{lngs[lng].nativeName}
+				</Dropdown.Item>
+			))}
+		</div>
+	);
+};
+
+export default LanguageSwitch;

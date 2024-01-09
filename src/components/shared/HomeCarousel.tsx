@@ -101,7 +101,7 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 			{loaded && (
 				<div className="detail fill">
 					<div className="aspect-video video">
-						<MediaPlayer src={video} autoplay className="rounded-none">
+						<MediaPlayer src={video} autoplay className="flex h-full rounded-none">
 							<MediaProvider>
 								<Poster
 									className="vds-poster h-full"
@@ -120,9 +120,9 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 	);
 });
 
-const StreamDescription = () => {
+const StreamDescription = React.memo(() => {
 	return (
-		<div className="description">
+		<div className="description hidden md:flex">
 			<div className="info bg-background-base h-full">
 				<div className="info-top">
 					<div className="profile">
@@ -159,6 +159,6 @@ const StreamDescription = () => {
 			</div>
 		</div>
 	);
-};
+});
 
 export default HomeCarousel;

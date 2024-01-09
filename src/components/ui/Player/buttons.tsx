@@ -13,8 +13,18 @@ import {
   type TooltipPlacement,
 } from '@vidstack/react';
 import {
+  ClosedCaptionsIcon,
+  ClosedCaptionsOnIcon,
+  FullscreenExitIcon,
+  FullscreenIcon,
+  MuteIcon,
   PauseIcon,
+  PictureInPictureExitIcon,
+  PictureInPictureIcon,
   PlayIcon,
+  ReplayIcon,
+  VolumeHighIcon,
+  VolumeLowIcon,
   //...
 } from '@vidstack/react/icons';
 

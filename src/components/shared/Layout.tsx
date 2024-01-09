@@ -13,7 +13,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   return (
     <div className="text-sm min-h-screen">
       <Navbar />
-      <Sidebar />
+      <Sidebar status="user" />
       {/* <main
         className={`py-14 pb-20 px-4 ${
           !isSidebarCollapsed ? "ml-[60px] md:ml-64" : "ml-[60px]"
@@ -21,12 +21,12 @@ const Layout = ({ children }: PropsWithChildren) => {
       > */}
       <main
         className={`py-8 ${
-          !isSidebarCollapsed ? "ml-[60px] md:ml-64" : "ml-[60px]"
+          !isSidebarCollapsed ? "ml-[60px] md:ml-60" : "ml-[60px]"
         }`}
       >
         {children}
       </main>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };

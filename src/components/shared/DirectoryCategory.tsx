@@ -13,11 +13,7 @@ interface DirectoryCategoryProps {
   // Add any additional props specific to DirectoryCategory
 }
 
-const DirectoryCategory: React.FC<DirectoryCategoryProps> = ({
-  to,
-  imgUrl,
-  name,
-}) => {
+const DirectoryCategory: React.FC<DirectoryCategoryProps> = () => {
   return (
     <div className="grid grid-flow-col auto-cols-max py-3 gap-2 overflow-auto">
       <CategoryLink

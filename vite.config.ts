@@ -2,6 +2,7 @@ import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react-swc"
 import path from "path"
 import svgr from "vite-plugin-svgr"
+import { qrcode } from 'vite-plugin-qrcode';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,6 +16,8 @@ export default defineConfig({
       "@utils": path.resolve(__dirname, "./src/utils"),
       "@styles": path.resolve(__dirname, "./src/styles"),
       "@store": path.resolve(__dirname, "./src/store"),
+      "@routes": path.resolve(__dirname, "./src/routes"),
+      "@services": path.resolve(__dirname, "./src/services"),
     },
   },
   plugins: [
@@ -26,5 +29,9 @@ export default defineConfig({
       exclude: "",
     }),
     react(),
+    qrcode(),
   ],
+  server: {
+    open: '/',
+  },
 })

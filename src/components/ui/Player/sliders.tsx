@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React from 'react';
+// import React from 'react';
 
 import { TimeSlider, VolumeSlider } from '@vidstack/react';
 
@@ -23,7 +23,6 @@ export function Volume() {
 
       <VolumeSlider.Preview
         className="opacity-0 data-[showing]:opacity-100 transition-opacity"
-        overflow
       >
         <VolumeSlider.Value className="px-px py-2.5 text-white bg-black rounded-sm" />
       </VolumeSlider.Preview>

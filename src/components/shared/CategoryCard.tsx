@@ -4,7 +4,7 @@ import Tag from "@components/ui/Tag";
 import { tv } from "tailwind-variants";
 import { useNavigate } from "react-router-dom";
 
-const CategoryCard = ({ user, isLive, index }) => {
+const CategoryCard = () => {
   const navigate = useNavigate();
 
   const card = tv({
@@ -42,7 +42,7 @@ const CategoryCard = ({ user, isLive, index }) => {
     <div className="cursor-pointer flex flex-col" onClick={handleLink}>
       <div className={cardContainer()}>
         <div className={liveScreenCard()}>
-          <img className={imageCover()} src={game} alt={user.title} />
+          <img className={imageCover()} src={game} alt={"sample"} />
         </div>
       </div>
 

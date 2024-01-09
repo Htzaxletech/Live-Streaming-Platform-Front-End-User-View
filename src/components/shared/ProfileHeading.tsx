@@ -29,8 +29,8 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 
 }) => {
   return (
-    <div className="container border">
-      <div className="flex p-3 space-x-4">
+    <div className="container">
+      <div className="flex p-3 pt-5 space-x-4">
         <div className="flex-shrink-0 ">
           {/* for large size */}
           <div className="hidden md:flex justify-center items-center  ">
