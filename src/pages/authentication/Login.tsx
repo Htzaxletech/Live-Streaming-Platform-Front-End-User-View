@@ -14,6 +14,9 @@ import {
 	setOpenSignUp,
 	setOpenTwoFactor,
 } from "@store/slices/modalSlice";
+import store from "store2";
+import { toast } from "react-toastify";
+import { login } from "@store/slices/authSlice";
 
 const Login: React.FC = () => {
 	const [username, setUsername] = useState<string>("");
@@ -21,8 +24,7 @@ const Login: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const dispatch = useDispatch();
-	const { isOpenLogin } =
-		useSelector((state: RootState) => state.modals);
+	const { isOpenLogin } = useSelector((state: RootState) => state.modals);	
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -35,16 +37,20 @@ const Login: React.FC = () => {
 			});
 
 			if (loginResult?.success) {
-				setOpenLogin(false);
-				Cookies.set("userToken", loginResult.accessToken);
-				Cookies.set("userData", JSON.stringify(loginResult.data));
-
-				if (loginResult?.data?.twofactors === 1){
+				store.set("accessToken", loginResult?.accessToken);
+				store.set("username", loginResult?.data?.username);
+				
+				if (loginResult?.data?.twofactors === 1) {
+					store.set("firstTime", loginResult?.data?.first_time);
 					Cookies.set("qrCode", loginResult.qr_codes);
 					dispatch(setOpenLogin(false));
 					dispatch(setOpenTwoFactor(true));
+				} else {
+					toast.success(loginResult?.message);
+					store.set("userData", loginResult?.data);
+					dispatch(login());
+					dispatch(setOpenLogin(false));
 				}
-					
 			}
 			setLoading(false);
 		} catch (error) {
@@ -54,9 +60,7 @@ const Login: React.FC = () => {
 	};
 
 	const handleOnClose = () => {
-		// setOpenLogin(false);
-		// setSwitchToSignUp(false);
-		dispatch(setOpenLogin(false))
+		dispatch(setOpenLogin(false));
 		dispatch(setOpenSignUp(false));
 	};
 
@@ -80,6 +84,7 @@ const Login: React.FC = () => {
 									Username
 								</label>
 								<Input
+									autoFocus
 									className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
 									id="username"
 									type="text"
@@ -115,6 +120,7 @@ const Login: React.FC = () => {
 								</Button>
 							</div>
 							<Button
+								type="button"
 								onClick={handleSwitchToSignUp}
 								className="w-full bg-transparent text-primary-500 dark:hover:text-slate-100 hover:text-black text-sm"
 							>

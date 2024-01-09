@@ -1,4 +1,7 @@
+import { RootState } from "@store/index";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import store from "store2";
 
 const UserProfile: React.FC = () => {
 	const location = useLocation();
@@ -8,17 +11,28 @@ const UserProfile: React.FC = () => {
 		return location.pathname.includes("dashboard");
 	};
 
+	const isAuthenticated = useSelector(
+		(state: RootState) => state.auth.isAuthenticated
+	);
+
+
+	const img =
+		store.get("userData")?.image ||
+		"https://static.vecteezy.com/system/resources/previews/015/409/989/non_2x/elegant-man-in-business-suit-with-badge-man-business-avatar-profile-picture-illustration-isolated-vector.jpg";
+
 	return (
 		<div className="flex items-center">
 			<div className="w-[40px] border rounded-full overflow-hidden">
 				<img
 					className="w-full h-full object-cover"
-					src="https://static.vecteezy.com/system/resources/previews/015/409/989/non_2x/elegant-man-in-business-suit-with-badge-man-business-avatar-profile-picture-illustration-isolated-vector.jpg"
+					src={img}
 					alt="Profile Avatar"
 				/>
 			</div>
 			<div className="ml-2 flex flex-col">
-				<span className="font-semibold">Nay Zaw Linn</span>
+				<span className="font-semibold">
+					{isAuthenticated ? store.get("username") : "Unknown User"}
+				</span>
 				{isDashboardRoute() && <span>Creator</span>}
 			</div>
 		</div>

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
+import store from "store2";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_API_URL as string, // Add other configuration options here
@@ -9,6 +10,12 @@ const api = axios.create({
 // Add request interceptor for common headers or modifications
 api.interceptors.request.use((config) => {
 	// Add headers, authentication tokens, or any other modifications here
+	
+	// Assuming you have the token stored in localStorage
+	const token = store.get("accessToken");
+	if (token) {
+		config.headers.Authorization = `Bearer ${token}`;
+	}
 	return config;
 });
 

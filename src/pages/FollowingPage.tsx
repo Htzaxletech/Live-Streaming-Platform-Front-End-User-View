@@ -1,53 +1,42 @@
+import Tab from "@components/ui/Tab";
 import React from "react";
-import ResponsiveCarousel from "../components/shared/HomeCarousel";
+import CategoryCardList from "./CategoryCardListPage";
+import LivePage from "./LivePage";
+import Heading from "@components/ui/Heading";
 
 const FollowingPage: React.FC = () => {
-  // const { users } = useSelector((state) => state.user);
+	// const { users } = useSelector((state) => state.user);
 
-  const data = [
-    {
-      coverImage:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
-      video:
-        "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
-    },
-    {
-      coverImage:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg",
-      video:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    },
-    {
-      coverImage:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
-      video:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    },
-    {
-      coverImage:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg",
-      video:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    },
-    {
-      coverImage:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg",
-      video:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    },
-    {
-      coverImage:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg",
-      video:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    },
-  ];
-
-  return (
-    <div className="py-6 pb-20 px-4">
-      <ResponsiveCarousel data={data} />
-    </div>
-  );
+	return (
+		<div className="container mt-9 pb-20">
+			<Heading size="lg">Following</Heading>
+			<Tab
+				tabs={[
+					{
+						label: "Overview",
+						content: <CategoryCardList />,
+					},
+					{
+						label: "Live",
+						content: <LivePage />,
+					},
+					{
+						label: "Videos",
+						content: <CategoryCardList />,
+					},
+					{
+						label: "Categories",
+						content: <CategoryCardList />,
+					},
+					{
+						label: "Channels",
+						content: <LivePage />,
+					},
+				]}
+				className="mt-3"
+			/>
+		</div>
+	);
 };
 
 export default FollowingPage;

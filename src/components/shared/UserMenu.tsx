@@ -11,11 +11,17 @@ import { MdOutlineAnalytics } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { RiHome5Line } from "react-icons/ri";
-import { BiLogOut } from "react-icons/bi";
+import { BiLogOut, BiLogIn } from "react-icons/bi";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { TbWorld } from "react-icons/tb";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import UserProfile from "./UserProfile";
+import store from "store2";
+import { useDispatch, useSelector } from "react-redux";
+import { setOpenLogin } from "@store/slices/modalSlice";
+import { logout } from "@store/slices/authSlice";
+import { RootState } from "@store/index";
+
 interface DashboardHeaderProps {
 	icon: React.ReactElement; // You can pass the icon as a React element
 	title: string;
@@ -69,8 +75,20 @@ const LanguageHeader: React.FC<LanguageHeaderProps> = ({ openLanguage }) => {
 const UserMenu = () => {
 	const location = useLocation();
 	const isDashboardPage = location.pathname.includes("dashboard");
-
+	const dispatch = useDispatch();
 	const [openLanguage, setOpenLanguage] = useState<boolean>(false);
+	const isAuthenticated = useSelector(
+		(state: RootState) => state.auth.isAuthenticated
+	);
+
+	const handleLogout = () => {
+		dispatch(logout());
+		const theme = store.get("theme");
+		const i18nextLng = store.get("i18nextLng");
+		store.clear();
+		store.set("theme", theme);
+		store.set("i18nextLng", i18nextLng);
+	};
 
 	return (
 		<Dropdown.Root modal={false}>
@@ -90,33 +108,45 @@ const UserMenu = () => {
 				>
 					{!openLanguage && (
 						<>
-							<Dropdown.Group className="flex items-center px-1 py-1">
-								<UserProfile />
-							</Dropdown.Group>
+							{isAuthenticated && (
+								<>
+									<Dropdown.Group className="flex items-center px-1 py-1">
+										<UserProfile />
+									</Dropdown.Group>
+									<Dropdown.Separator />
+								</>
+							)}
+
 							<Dropdown.Group>
-								<Dropdown.Separator />
-								{!isDashboardPage ? (
-									<Link to={"/dashboard/1"}>
-										<Dropdown.Item>
-											<DashboardHeader
-												icon={
-													<MdOutlineAnalytics className="icon" />
-												}
-												title="Creator Dashboard"
-											/>
-										</Dropdown.Item>
-									</Link>
-								) : (
-									<Link to={"/"}>
-										<Dropdown.Item>
-											<DashboardHeader
-												icon={<RiHome5Line className="icon" />}
-												title="Back to Twitch"
-											/>
-										</Dropdown.Item>
-									</Link>
+								{isAuthenticated && (
+									<>
+										{!isDashboardPage ? (
+											<Link to={`/dashboard/${store.get("id")}`}>
+												<Dropdown.Item>
+													<DashboardHeader
+														icon={
+															<MdOutlineAnalytics className="icon" />
+														}
+														title="Creator Dashboard"
+													/>
+												</Dropdown.Item>
+											</Link>
+										) : (
+											<Link to={"/"}>
+												<Dropdown.Item>
+													<DashboardHeader
+														icon={
+															<RiHome5Line className="icon" />
+														}
+														title="Back to Twitch"
+													/>
+												</Dropdown.Item>
+											</Link>
+										)}
+										<Dropdown.Separator />
+									</>
 								)}
-								<Dropdown.Separator />
+
 								<Dropdown.Item
 									onSelect={(e) => {
 										e.preventDefault();
@@ -126,13 +156,34 @@ const UserMenu = () => {
 									<LanguageHeader openLanguage={openLanguage} />
 								</Dropdown.Item>
 								<ThemeSwitch />
-								<Dropdown.Separator />
-								<Dropdown.Item>
-									<DashboardHeader
-										icon={<BiLogOut className="icon" />}
-										title="Log Out"
-									/>
-								</Dropdown.Item>
+
+								{isAuthenticated ? (
+									<>
+										<Dropdown.Separator />
+										<Dropdown.Item
+											onSelect={handleLogout}
+											className="cursor-pointer"
+										>
+											<DashboardHeader
+												icon={<BiLogOut className="icon" />}
+												title="Log Out"
+											/>
+										</Dropdown.Item>
+									</>
+								) : (
+									<>
+										<Dropdown.Separator />
+										<Dropdown.Item
+											onSelect={() => dispatch(setOpenLogin(true))}
+											className="cursor-pointer"
+										>
+											<DashboardHeader
+												icon={<BiLogIn className="icon" />}
+												title="Log In"
+											/>
+										</Dropdown.Item>
+									</>
+								)}
 							</Dropdown.Group>
 						</>
 					)}

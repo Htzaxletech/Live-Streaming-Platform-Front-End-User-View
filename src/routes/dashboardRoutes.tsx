@@ -1,16 +1,26 @@
-import DashboardRootPage from "@pages/dashboard/RootPage";
-import ErrorPage from "@pages/ErrorPage";
+/* eslint-disable react-refresh/only-export-components */
+import { lazy, Suspense } from "react";
 import LoadingIndicator from "@components/ui/LoadingIndicator";
-import { Suspense } from "react";
-import Channel from "@pages/dashboard/channel/Channel";
-import StreamPage from "@pages/dashboard/stream/StreamPage";
-import StreamManager from "@pages/dashboard/StreamManager";
+import PrivateRoute from "@components/shared/PrivateRoute";
 
+const DashboardRootPage = lazy(() => import("@pages/dashboard/RootPage"));
+const ErrorPage = lazy(() => import("@pages/ErrorPage"));
+const Channel = lazy(() => import("@pages/dashboard/channel/Channel"));
+const StreamPage = lazy(() => import("@pages/dashboard/stream/StreamPage"));
+const StreamManager = lazy(() => import("@pages/dashboard/StreamManager"));
 
-export const dashboardRoutes = {
+const dashboardRoutes = {
 	path: "/dashboard",
-	element: <DashboardRootPage />,
-	errorElement: <ErrorPage />,
+	element: (
+		<Suspense fallback={<LoadingIndicator />}>
+			<PrivateRoute element={<DashboardRootPage />} />
+		</Suspense>
+	),
+	errorElement: (
+		<Suspense fallback={<LoadingIndicator />}>
+			<ErrorPage />
+		</Suspense>
+	),
 	children: [
 		{
 			path: "/dashboard/:id",
@@ -43,3 +53,5 @@ export const dashboardRoutes = {
 		},
 	],
 };
+
+export default dashboardRoutes;

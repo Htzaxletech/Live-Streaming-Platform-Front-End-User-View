@@ -1,7 +1,7 @@
+/* eslint-disable react-refresh/only-export-components */
 import { lazy, Suspense } from "react";
 import LoadingIndicator from "@components/ui/LoadingIndicator";
-import TestingComponents from "@pages/TestingComponents";
-import ProfilePage from "@pages/ProfilePage";
+import PrivateRoute from "@components/shared/PrivateRoute";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
 const RootPage = lazy(() => import("@pages/RootPage"));
@@ -14,6 +14,8 @@ const CategoryPage = lazy(() => import("@pages/CategoryPage"));
 const DirectoryCategoryPage = lazy(
 	() => import("@pages/DirectoryCategoryPage")
 );
+const ProfilePage = lazy(() => import("@pages/ProfilePage"));
+const TestingComponents = lazy(() => import("@pages/TestingComponents"));
 
 const userRoutes = {
 	path: "/",
@@ -72,7 +74,7 @@ const userRoutes = {
 			path: "/profile",
 			element: (
 				<Suspense fallback={<LoadingIndicator />}>
-					<ProfilePage />
+					<PrivateRoute element={<ProfilePage />} />
 				</Suspense>
 			),
 		},

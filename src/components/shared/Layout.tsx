@@ -6,29 +6,25 @@ import { useSelector } from "react-redux";
 import { RootState } from "store";
 
 const Layout = ({ children }: PropsWithChildren) => {
-  const isSidebarCollapsed = useSelector(
-    (state: RootState) => state.sidebar.isSidebarCollapsed
-  );
+	const isSidebarCollapsed = useSelector(
+		(state: RootState) => state.sidebar.isSidebarCollapsed
+	);
+	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
-  return (
-    <div className="text-sm min-h-screen">
-      <Navbar />
-      <Sidebar status="user" />
-      {/* <main
-        className={`py-14 pb-20 px-4 ${
-          !isSidebarCollapsed ? "ml-[60px] md:ml-64" : "ml-[60px]"
-        }`}
-      > */}
-      <main
-        className={`py-8 ${
-          !isSidebarCollapsed ? "ml-[60px] md:ml-60" : "ml-[60px]"
-        }`}
-      >
-        {children}
-      </main>
-      <Footer />
-    </div>
-  );
+	return (
+		<div className="text-sm min-h-screen">
+			<Navbar />
+			<Sidebar status="user" />
+			<main
+				className={`py-8 ${
+					!isSidebarCollapsed ? "ml-[60px] md:ml-60" : "ml-[60px]"
+				}`}
+			>
+				{children}
+			</main>
+			{!isAuthenticated && <Footer />}
+		</div>
+	);
 };
 
 export default Layout;

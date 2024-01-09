@@ -20,7 +20,7 @@ const Tab: React.FC<TabsProps> = ({ tabs, className }) => {
           <button
             key={index}
             onClick={() => setActiveTab(index)}
-            className={`${index !== 0 && "mx-5"} ${
+            className={`${index !== 0 ? "mx-2.5" : "mr-2.5"} ${
               activeTab === index
                 ? "border-b-2 border-primary text-primary"
                 : "border-b-2 border-transparent"
