@@ -1,8 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { lazy, Suspense } from "react";
 import LoadingIndicator from "@components/ui/LoadingIndicator";
-import PrivateRoute from "@components/shared/PrivateRoute";
 
+const PrivateRoute = lazy(() => import("@components/shared/PrivateRoute"));
 const DashboardRootPage = lazy(() => import("@pages/dashboard/RootPage"));
 const ErrorPage = lazy(() => import("@pages/ErrorPage"));
 const Channel = lazy(() => import("@pages/dashboard/channel/Channel"));
