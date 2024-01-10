@@ -1,27 +1,14 @@
-// src/components/Sidebar.tsx
-// import React, { useState } from "react";
 import DashboardSidebarItem from "./DashboardSidebarItem";
 import { CiStreamOn } from "react-icons/ci";
 import { MdOutlineSettings } from "react-icons/md";
+import store from "store2";
 
-interface DashboardSidebarProps {
-	items: {
-		title: string;
-		link: string;
-		submenus?: {
-			title: string;
-			link: string;
-		}[];
-	}[];
-	// Other properties
-}
-
-const DashboardSidebar: React.FC<DashboardSidebarProps> = () => {
+const DashboardSidebar: React.FC = () => {
 	const items = [
 		{
 			title: "Stream Manager",
 			icon: <CiStreamOn />,
-			path: "/dashboard/1",
+			path: `/dashboard/${store.get("id")}`,
 		},
 		{
 			title: "Setting",

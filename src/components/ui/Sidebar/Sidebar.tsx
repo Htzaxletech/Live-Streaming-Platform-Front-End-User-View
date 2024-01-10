@@ -28,22 +28,12 @@ const sidebar = tv({
 	defaultVariants: {},
 });
 
-const sidebarItems = [
-	{ title: "Home", link: "/" },
-	{
-		title: "Categories",
-		link: "/categories",
-		submenus: [
-			{ title: "Category 1", link: "/categories/1" },
-			{ title: "Category 2", link: "/categories/2" },
-		],
-	},
-	{ title: "About", link: "/about" },
-];
-
 const Sidebar: FC<SidebarProps> = ({ status }) => {
 	const collapsed = useSelector(
 		(state: RootState) => state.sidebar.isSidebarCollapsed
+	);
+	const isAuthenticated = useSelector(
+		(state: RootState) => state.auth.isAuthenticated
 	);
 
 	const dispatch = useDispatch();
@@ -76,9 +66,9 @@ const Sidebar: FC<SidebarProps> = ({ status }) => {
 						)}
 					</Button>
 				</div>
-				{status === "user" && <FollowedChannels />}
+				{status === "user" && isAuthenticated && <FollowedChannels />}
 				{status === "dashboard" && (
-					<DashboardSidebar items={sidebarItems} />
+					<DashboardSidebar />
 				)}
 			</div>
 		</div>

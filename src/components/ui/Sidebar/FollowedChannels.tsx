@@ -1,6 +1,7 @@
-/* eslint-disable no-empty-pattern */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect } from "react";
+// @ts-nocheck
+import React, { useEffect, useState } from "react";
 import { FaRegHeart } from "react-icons/fa";
 import { CollapsedSidebarItem } from "../CollapsedSidebarItem";
 import { SidebarItem } from "../Sidebaritem";
@@ -9,40 +10,53 @@ import { LuArrowUpDown } from "react-icons/lu";
 import johndoe from "../../../../src/assets/images/johndoe.jpg";
 import { useSelector } from "react-redux";
 import { RootState } from "@store/index";
+import { handleRequestError, makeRequest } from "@services/utils";
+import { endpoints as ep } from "@services/endpoints";
+import store from "store2";
+import { toast } from "react-toastify";
 
-interface FollowedChannelsProps {
-	// userDataList: UserData[];
-}
 
-const userDataList = [
-	{
-		profilePicture: johndoe,
-		name: "John Doe",
-		category: "Gaming",
-		viewers: 1.2,
-	},
-	{
-		profilePicture: johndoe,
-		name: "Jane Doe",
-		category: "Just Chatting",
-		viewers: 1.7,
-	},
+const FollowedChannels: React.FC = () => {
+	const [userData, setUserData] = useState<unknown>([]);
+	const [loading, setLoading] = useState<boolean>(false);
 
-	{
-		profilePicture: johndoe,
-		name: "Jack",
-		category: "Games",
-		viewers: null,
-	},
-	// Add more user data as needed
-];
-
-const FollowedChannels: React.FC<FollowedChannelsProps> = ({}) => {
 	useEffect(() => {
-		console.log("mount follow");
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
+		const fetchData = async () => {
+			try {
+				const response = await makeRequest(
+					"get",
+					ep.followChannels,
+					{
+						userID: 1,
+					},
+					{
+						signal
+					}
+				); // Pass the signal to the request
+
+				if (response?.success) {
+					setUserData(response?.data);
+				} else {
+					toast.error(response?.message);
+				}
+				setLoading(false);
+			} catch (error) {
+				setLoading(false);
+				// Check if the error is due to the request being aborted
+				if (error?.name === "AbortError") {
+					console.log("Request aborted");
+				}
+			}
+		};
+
+		fetchData();
 
 		return () => {
-			console.log("unmount follow");
+			// Abort the ongoing request when the component unmounts
+			abortController.abort();
 		};
 	}, []);
 
@@ -83,34 +97,36 @@ const FollowedChannels: React.FC<FollowedChannelsProps> = ({}) => {
 
 			<div className={contentContainer()}>
 				<div className="mx-auto">
-					{userDataList.map((userData) => (
-						<div key={userData.name}>
-							{collapsed ? (
-								<div key={userData.name}>
-									{/* Assuming you have a CollapsedSidebarItem component */}
-									<CollapsedSidebarItem
-										profilePicture={userData.profilePicture}
-										name=""
-										category=""
-										viewers={null}
-									/>
-								</div>
-							) : (
-								<div
-									className="w-full h-full hover:bg-foreground/10"
-									key={userData.name}
-								>
-									{/* Assuming you have a SidebarItem component */}
-									<SidebarItem
-										profilePicture={userData.profilePicture}
-										name={userData.name}
-										category={userData.category}
-										viewers={userData.viewers}
-									/>
-								</div>
-							)}
-						</div>
-					))}
+					{userData &&
+						userData.map((i, index) => (
+							<div key={index}>
+								{collapsed ? (
+									<div>
+										{/* Assuming you have a CollapsedSidebarItem component */}
+										<CollapsedSidebarItem
+											profilePicture={i?.profileImage || johndoe}
+											name=""
+											category=""
+											viewers={null}
+											title={i?.title}
+											liveID={i?.liveID}
+										/>
+									</div>
+								) : (
+									<div className="w-full h-full hover:bg-foreground/10">
+										{/* Assuming you have a SidebarItem component */}
+										<SidebarItem
+											profilePicture={i?.profileImage || johndoe}
+											name={i.displayName}
+											category={i.categoryName}
+											viewers={i.viewCount}
+											title={i?.title}
+											liveID={i?.liveID}
+										/>
+									</div>
+								)}
+							</div>
+						))}
 				</div>
 			</div>
 		</div>

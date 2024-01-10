@@ -4,7 +4,10 @@ import store from "store2";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_API_URL as string, // Add other configuration options here
-	headers: { "Access-Control-Allow-Origin": "*" },
+	headers: {
+		"Cache-Control": "no-cache",
+		"Accept": "application/json"
+	},
 });
 
 // Add request interceptor for common headers or modifications

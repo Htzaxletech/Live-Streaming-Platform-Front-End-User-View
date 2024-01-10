@@ -5,10 +5,9 @@ import Modal from "./Modal";
 import Input from "@components/ui/Input";
 import Button from "@components/ui/Button";
 import AuthHeader from "./AuthHeader";
-import { handleRequestError, makeRequest } from "@services/utils";
+import { makeRequest } from "@services/utils";
 import { endpoints as ep } from "@services/endpoints";
 import { useDispatch, useSelector } from "react-redux";
-import Cookies from "js-cookie";
 import {
 	setOpenLogin,
 	setOpenSignUp,
@@ -42,20 +41,21 @@ const Login: React.FC = () => {
 				
 				if (loginResult?.data?.twofactors === 1) {
 					store.set("firstTime", loginResult?.data?.first_time);
-					Cookies.set("qrCode", loginResult.qr_codes);
+					store.set("qrCode", loginResult.qr_codes);
 					dispatch(setOpenLogin(false));
 					dispatch(setOpenTwoFactor(true));
 				} else {
 					toast.success(loginResult?.message);
 					store.set("userData", loginResult?.data);
-					dispatch(login());
+					dispatch(login(loginResult?.accessToken));
 					dispatch(setOpenLogin(false));
 				}
+			}else{
+				toast.error(loginResult?.message);
 			}
 			setLoading(false);
 		} catch (error) {
 			setLoading(false);
-			handleRequestError(error);
 		}
 	};
 

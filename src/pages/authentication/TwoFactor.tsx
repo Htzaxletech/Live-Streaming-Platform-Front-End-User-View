@@ -6,7 +6,6 @@ import Input from "@components/ui/Input";
 import Button from "@components/ui/Button";
 import Heading from "@components/ui/Heading";
 // import QRCode from "react-qr-code";
-import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@store/index";
 import {
@@ -45,7 +44,9 @@ const TwoFactor: React.FC = () => {
 				store.remove("password");
 				store.remove("email");
 
-				dispatch(login());
+				console.log("lastToken", response?.accessToken);
+
+				dispatch(login(response?.accessToken));
 				dispatch(setOpenTwoFactor(false));
 				toast.success(response?.message);
 			}else{
@@ -69,7 +70,7 @@ const TwoFactor: React.FC = () => {
 		dispatch(setOpenTwoFactor(false));
 	};
 
-	const image = Cookies.get("qrCode");
+	const image = store.get("qrCode");
 
 	return (
 		<div>
