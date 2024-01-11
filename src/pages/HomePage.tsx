@@ -1,36 +1,8 @@
-import { GoPerson } from "react-icons/go";
-
-import Button from "@components/ui/Button";
-import { CategoryLink } from "@components/ui/CategoryLink";
-import Tag from "@components/ui/Tag";
-import Icon from "@components/shared/Icon";
-
-import categoryimg from "../assets/images/gaming.svg";
-
-import { BsStars } from "react-icons/bs";
-import { FaArrowDownWideShort } from "react-icons/fa6";
-
-import { SocialLink } from "@components/ui/SocialLink";
-import { Select } from "@components/ui/Select";
-import Avatar from "@components/ui/Avatar";
-import ProfileAvatar from "@components/ui/ProfileAvatar";
-import ProfileHeading from "@components/shared/ProfileHeading";
-import ProfileDescription from "@components/shared/ProfileDescription";
-import ProfileStreamInfo from "@components/shared/ProfileStreamInfo";
 import HomeCarousel from "@components/shared/HomeCarousel";
 import LivePage from "./LivePage";
 import CategoryCardList from "./CategoryCardListPage";
 
 const HomePage = () => {
-	const options = [
-		{ option: "Recommended for you", value: "1", icon: <BsStars /> },
-		{
-			option: "Views(high to low)",
-			value: "2",
-			icon: <FaArrowDownWideShort />,
-		},
-	];
-
 	const data = [
 		{
 			coverImage:
@@ -66,7 +38,9 @@ const HomePage = () => {
 
 	return (
 		<div className="container mx-auto py-10 pb-16 px-4">
-			<HomeCarousel data={data} />
+			<div className="hidden md:block">
+				<HomeCarousel data={data} />
+			</div>
 			<LivePage />
 			<CategoryCardList />
 		</div>

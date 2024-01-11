@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import StreamChatBox from "@components/shared/StreamChatBox";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
@@ -11,27 +12,145 @@ import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import Button from "@components/ui/Button";
 import { MdOutlineEdit } from "react-icons/md";
-import { useState } from "react";
 import Modal from "@pages/authentication/Modal";
-import Input from "@components/ui/Input";
+// import Input from "@components/ui/Input";
 import Heading from "@components/ui/Heading";
 import { Label } from "@radix-ui/react-dropdown-menu";
-import { CiSearch } from "react-icons/ci";
+import { SetStateAction, useCallback, useEffect, useState } from "react";
+import { ReactTags, Tag } from "react-tag-autocomplete";
+import { makeMultipleRequests, makeRequest } from "@services/utils";
+import { endpoints as ep } from "@services/endpoints";
+import { toast } from "react-toastify";
+import "@styles/tags.css";
 
 const StreamManager = () => {
 	const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
 	const [isOpenStreamInfo, setIsOpenStreamInfo] = useState<boolean>(false);
-	const [loading, setLoading] = useState<boolean>(false);
+	const [loading] = useState<boolean>(false);
+
+	const [title, setTitle] = useState<string>("");
+
+	const [selectedTag, setSelectedTag] = useState<Tag[]>([]);
+	const [suggestionsTag, setSuggesstionsTag] = useState<Tag[]>([]);
+	const [selectedCategory, setSelectedCategory] = useState<Tag[]>([]);
+	const [suggestionsCategory, setSuggesstionsCategory] = useState<Tag[]>([]);
+
+	useEffect(() => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
+		(async () => {
+			try {
+				// Multiple requests
+				const requests = [
+					{ method: "get", url: ep.tags, signal },
+					{
+						method: "get",
+						url: ep.secondCategory,
+						signal,
+					},
+				];
+
+				const responses = await makeMultipleRequests(requests);
+
+				const tags = responses[0];
+				const category = responses[1];
+
+				if (tags?.success) {
+					const data = tags?.data;
+					const transformedArray = data.map(
+						(item: { ID: number; tagName: string }) => ({
+							...item,
+							value: item.ID,
+							label: item.tagName,
+						})
+					);
+					setSuggesstionsTag(transformedArray);
+				} else {
+					toast.error(tags?.message);
+				}
+
+				if (category?.success) {
+					const data = category?.data;
+					const transformedArray = data.map(
+						(item: { ID: number; categoryName: string }) => ({
+							...item,
+							value: item.ID,
+							label: item.categoryName,
+						})
+					);
+					setSuggesstionsCategory(transformedArray);
+				} else {
+					toast.error(category?.message);
+				}
+			} catch (error) {
+				// Check if the error is due to the request being aborted
+				if (error?.name === "AbortError") {
+					console.log("Request aborted");
+				}
+			}
+		})();
+
+		return () => {
+			abortController.abort();
+		};
+	}, []);
+
+	const onAdd = useCallback(
+		(newTag: Tag) => {
+			setSelectedTag([...selectedTag, newTag]);
+		},
+		[selectedTag]
+	);
+
+	const onDelete = useCallback(
+		(tagIndex: number) => {
+			setSelectedTag(selectedTag.filter((_, i) => i !== tagIndex));
+		},
+		[selectedTag]
+	);
+
+	const onAddCategory = useCallback(
+		(newCategory: Tag) => {
+			setSelectedCategory([...selectedCategory, newCategory]);
+		},
+		[selectedCategory]
+	);
+
+	const onDeleteCategory = useCallback(
+		(CategoryIndex: number) => {
+			setSelectedCategory(
+				selectedCategory.filter((_, i) => i !== CategoryIndex)
+			);
+		},
+		[selectedCategory]
+	);
 
 	const handleStreamInfo = () => {
 		setIsOpenStreamInfo(!isOpenStreamInfo);
-	}
+		setTitle("");
+		setSelectedCategory([]);
+		setSelectedTag([]);
+	};
+
+	const handleChangeTitle = (e: {
+		target: { value: SetStateAction<string> };
+	}) => {
+		setTitle(e.target.value);
+	};
+
+	const handleSubmit = (e: { preventDefault: () => void }) => {
+		e.preventDefault();
+		console.log(title);
+		console.log(selectedCategory);
+		console.log(selectedTag);
+	};
 
 	return (
 		<div>
 			<div className="flex-1 flex flex-col pt-4">
 				<div className={` ${isChatOpen ? "md:mr-60 lg:mr-72" : "mr-0"}`}>
-					<div className="bg-black w-full md:h-2/4 lg:h-5/6 flex justify-center text-white">
+					<div className="h-50 xl:h-[550px] flex justify-center">
 						<MediaPlayer
 							src="https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8"
 							autoplay
@@ -75,7 +194,7 @@ const StreamManager = () => {
 				<div>
 					<Heading size="md">Edit Stream Info</Heading>
 					<div className="px-0 pt-6 mb-4">
-						<form onSubmit={() => {}}>
+						<form onSubmit={handleSubmit}>
 							<div className="mt-2 flex flex-col md:flex-row gap-2 w-full">
 								<Label className="md:w-[180px] left-0 w-full">
 									Title
@@ -86,6 +205,8 @@ const StreamManager = () => {
 										className="flex-shrink resize-none w-full outline-none bg-background-base text-foreground-secondary border border-border rounded-md hover:ring-[1px] hover:ring-border focus-within:!ring-[2px] focus-within:!ring-primary px-[9px] py-2"
 										rows={3}
 										placeholder="My stream title"
+										value={title}
+										onChange={handleChangeTitle}
 									/>
 								</div>
 							</div>
@@ -95,10 +216,19 @@ const StreamManager = () => {
 									Category
 								</Label>
 								<div className="w-full">
-									<Input
+									{/* <Input
 										className="flex-shrink w-full"
 										startContent={<CiSearch />}
 										placeholder="Search for category"
+									/> */}
+
+									<ReactTags
+										labelText="Search for category"
+										selected={selectedCategory}
+										suggestions={suggestionsCategory}
+										onAdd={onAddCategory}
+										onDelete={onDeleteCategory}
+										noOptionsText="No matching"
 									/>
 								</div>
 							</div>
@@ -108,10 +238,19 @@ const StreamManager = () => {
 									Tags
 								</Label>
 								<div className="w-full">
-									<Input
+									{/* <Input
 										className="flex-shrink w-full"
 										startContent={<CiSearch />}
 										placeholder="Search for tags"
+									/> */}
+
+									<ReactTags
+										labelText="Search for tag"
+										selected={selectedTag}
+										suggestions={suggestionsTag}
+										onAdd={onAdd}
+										onDelete={onDelete}
+										noOptionsText="No matching"
 									/>
 								</div>
 							</div>

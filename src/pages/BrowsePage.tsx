@@ -12,9 +12,9 @@ const CategoryCardList = () => {
 	return (
 		<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-8 gap-2">
 			{/* <div className="flex flex-wrap gap-2"> */}
-			{Array.from({ length: 13 }).map(() => (
+			{Array.from({ length: 13 }).map((_, index) => (
 				<CategoryCard
-				// key={index}
+				key={index}
 				// user={jsonData.user}
 				// isLive={jsonData.isLive}
 				/>

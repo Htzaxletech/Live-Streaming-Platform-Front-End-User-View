@@ -29,7 +29,7 @@ export const handleRequestError = (error: any): void => {
 	throw error;
 };
 
-// Common HTTP method
+// Single request function
 export const makeRequest = async <T>(
 	method: string,
 	url: string,
@@ -47,6 +47,37 @@ export const makeRequest = async <T>(
 		});
 
 		return response.data;
+	} catch (error) {
+		handleRequestError(error);
+		throw error; // Propagate the error
+	}
+};
+
+// Multiple requests function
+export const makeMultipleRequests = async <T>(
+	requests: Array<{
+		method: string;
+		url: string;
+		data?: any;
+		config?: AxiosRequestConfig;
+	}>
+): Promise<T[]> => {
+	try {
+		const promises = requests.map(async (request) => {
+			const { method, url, data, config } = request;
+			const response: AxiosResponse<T> = await api.request<T>({
+				method,
+				url,
+				...(method === "get" || method === "GET"
+					? { params: data }
+					: { data }),
+				...config,
+			});
+			return response.data;
+		});
+
+		const results = await Promise.all(promises);
+		return results;
 	} catch (error) {
 		handleRequestError(error);
 		throw error; // Propagate the error

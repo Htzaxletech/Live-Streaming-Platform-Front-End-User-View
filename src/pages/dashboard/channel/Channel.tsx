@@ -5,8 +5,35 @@ import Input from "@components/ui/Input";
 // import { Label } from "@radix-ui/react-dropdown-menu";
 // import React, { useState } from "react";
 import * as Label from "@radix-ui/react-label";
+import { useCallback, useRef, useState } from "react";
+import { ReactTags } from "react-tag-autocomplete";
 
 const Channel: React.FC = () => {
+	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [selectedImage, setSelectedImage] = useState<File | undefined>(
+		undefined
+	);
+	const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(
+		null
+	);
+
+
+	const handleProfileClick = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
+		}
+	};
+
+	const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+
+		if (file) {
+			const url = URL.createObjectURL(file);
+			setSelectedImage(file);
+			setSelectedImageUrl(url);
+		}
+	};
+
 	return (
 		<div className="container mx-auto mt-10">
 			<div className="mb-7">
@@ -14,14 +41,27 @@ const Channel: React.FC = () => {
 				<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2 flex flex-col md:flex-row gap-2 w-full">
 					<div className="w-full flex justify-center md:w-2/6 lg:w-1/6">
 						<img
-							src="https://img.freepik.com/free-photo/beauty-portrait-female-face_93675-132045.jpg?size=626&ext=jpg&ga=GA1.1.1546980028.1704326400&semt=ais"
+							src={
+								selectedImageUrl ||
+								"https://img.freepik.com/free-photo/beauty-portrait-female-face_93675-132045.jpg?size=626&ext=jpg&ga=GA1.1.1546980028.1704326400&semt=ais"
+							}
 							alt="Profile Picture"
-							className="w-[150px] h-[150px] object-cover rounded-full border border-black"
+							className="w-[150px] h-[150px] object-cover rounded-full border border-base"
 							loading="lazy"
+							onClick={handleProfileClick}
 						/>
 					</div>
 					<div className="w-full md:w-4/6 lg:w-5/6">
-						<Button color="default">Add Profile Picture</Button>
+						<Button color="default" onClick={handleProfileClick}>
+							Add Profile Picture
+						</Button>
+						<Input
+							type="file"
+							className="hidden"
+							ref={fileInputRef}
+							accept="image/jpeg"
+							onChange={handleFileInputChange}
+						/>
 						<div className="mt-2">
 							Must be JPEG, PNG, or GIF and cannot exceed 10MB.
 						</div>
@@ -102,7 +142,13 @@ const Channel: React.FC = () => {
 					</div>
 
 					<div className="flex w-full justify-end mt-4">
-						<Button className="py-5" color="primary">
+						<Button
+							className="py-5"
+							color="primary"
+							onClick={() => {
+								console.log("object", selectedImage);
+							}}
+						>
 							Save Changes
 						</Button>
 					</div>
