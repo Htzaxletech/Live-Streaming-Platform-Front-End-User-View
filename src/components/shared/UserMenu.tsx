@@ -1,11 +1,12 @@
 import { GoPerson } from "react-icons/go";
-import { useState } from "react";
-import Button from "@components/ui/Button";
+import { lazy, useState } from "react";
 import { Dropdown } from "@components/ui/Dropdown";
 
-import LanguageSwitch from "./LanguageSwitch";
-import ThemeSwitch from "./ThemeSwitch";
-import Icon from "./Icon";
+// import Button from "@components/ui/Button";
+// import LanguageSwitch from "./LanguageSwitch";
+// import ThemeSwitch from "./ThemeSwitch";
+// import Icon from "./Icon";
+// import UserProfile from "./UserProfile";
 
 import { MdOutlineAnalytics } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -15,12 +16,17 @@ import { BiLogOut, BiLogIn } from "react-icons/bi";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { TbWorld } from "react-icons/tb";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import UserProfile from "./UserProfile";
-import store from "store2";
 import { useDispatch, useSelector } from "react-redux";
 import { setOpenLogin } from "@store/slices/modalSlice";
 import { logout } from "@store/slices/authSlice";
 import { RootState } from "@store/index";
+import store from "store2";
+
+const UserProfile = lazy(() => import("./UserProfile"));
+const LanguageSwitch = lazy(() => import("./LanguageSwitch"));
+const ThemeSwitch = lazy(() => import("./ThemeSwitch"));
+const Icon = lazy(() => import("./Icon"));
+const Button = lazy(() => import("@components/ui/Button"));
 
 interface DashboardHeaderProps {
 	icon: React.ReactElement; // You can pass the icon as a React element

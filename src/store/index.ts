@@ -6,6 +6,9 @@ import chatReducer from "./slices/chatSlice";
 import sideReducer from "./slices/sidebarSlice";
 import modalReducer from "./slices/modalSlice";
 import authReducer from "./slices/authSlice";
+import themeReducer from "./slices/themeSlice";
+import categoryReducer from "./slices/categorySlice";
+
 import store2 from "store2";
 
 const loadAuthState = (): any => {
@@ -36,6 +39,8 @@ export const store = configureStore({
 		sidebar: sideReducer,
 		modals: modalReducer,
 		auth: authReducer,
+		theme: themeReducer,
+		category: categoryReducer,
 	},
 	preloadedState: {
 		auth: loadAuthState(),

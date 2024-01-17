@@ -1,3 +1,3 @@
 import SidebarItem from "./Siderbaritem"
 
-export { SidebarItem }
+export default SidebarItem;

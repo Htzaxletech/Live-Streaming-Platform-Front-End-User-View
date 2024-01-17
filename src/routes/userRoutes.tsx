@@ -2,6 +2,10 @@
 import { lazy, Suspense } from "react";
 import LoadingIndicator from "@components/ui/LoadingIndicator";
 
+const MemoizedScrollToTop = lazy(
+	() => import("@components/shared/ScrollToTop")
+);
+
 const PrivateRoute = lazy(() => import("@components/shared/PrivateRoute"));
 const HomePage = lazy(() => import("@pages/HomePage"));
 const RootPage = lazy(() => import("@pages/RootPage"));
@@ -15,12 +19,14 @@ const DirectoryCategoryPage = lazy(
 	() => import("@pages/DirectoryCategoryPage")
 );
 const ProfilePage = lazy(() => import("@pages/ProfilePage"));
+const SearchPage = lazy(() => import("@pages/SearchPage"));
 const TestingComponents = lazy(() => import("@pages/TestingComponents"));
 
 const userRoutes = {
 	path: "/",
 	element: (
 		<Suspense fallback={<LoadingIndicator />}>
+			<MemoizedScrollToTop />
 			<RootPage />
 		</Suspense>
 	),
@@ -63,6 +69,14 @@ const userRoutes = {
 			),
 		},
 		{
+			path: "/search",
+			element: (
+				<Suspense fallback={<LoadingIndicator />}>
+					<SearchPage />
+				</Suspense>
+			),
+		},
+		{
 			path: "/following",
 			element: (
 				<Suspense fallback={<LoadingIndicator />}>
@@ -82,7 +96,7 @@ const userRoutes = {
 			path: "/:id",
 			element: (
 				<Suspense fallback={<LoadingIndicator />}>
-					<LiveStreamPage />
+					<PrivateRoute element={<LiveStreamPage />} />
 				</Suspense>
 			),
 		},

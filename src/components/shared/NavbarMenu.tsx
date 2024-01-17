@@ -1,10 +1,13 @@
-import React from "react";
+import React, { lazy } from "react";
 import { Dropdown } from "@components/ui/Dropdown";
-import NavbarLink from "./NavbarLink";
-import Button from "@components/ui/Button";
+// import NavbarLink from "./NavbarLink";
+// import Button from "@components/ui/Button";
 import { HiDotsVertical } from "react-icons/hi";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+
+const NavbarLink = lazy(() => import("./NavbarLink"));
+const Button = lazy(() => import("@components/ui/Button"));
 
 const NavbarMenu: React.FC = () => {
   const { t } = useTranslation();

@@ -1,28 +1,122 @@
-import React, { useState } from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import React, { useState, useEffect, useRef } from "react";
 import Button from "@components/ui/Button";
 import Heading from "@components/ui/Heading";
 import Input from "@components/ui/Input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Switch } from "@headlessui/react";
+import { makeRequest } from "@services/utils";
+import { endpoints as ep } from "@services/endpoints";
+import { toast } from "react-toastify";
+import { useDebounce } from "usehooks-ts";
+import store from "store2";
 
 const StreamPage: React.FC = () => {
-	const [enabled, setEnabled] = useState(false);
-	const [show, setShow] = useState(false);
-	const [streamKey] = useState("copy text testing");
+	const [enabled, setEnabled] = useState<boolean>(false);
+	const [show, setShow] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
+	const [streamKey, setStreamKey] = useState<string>("");
+	const [vodSetting, setVodSetting] = useState<number>(0);
+
+	const debouncedValue = useDebounce<boolean>(enabled, 500);
+	const isInitialRender = useRef(true);
+
+	useEffect(() => {
+		if (!isInitialRender.current) {
+			(async () => {
+				try {
+					const { success, message } = await makeRequest(
+						"post",
+						ep.vodSetting,
+						{
+							is_past: enabled ? 1 : 0,
+							userID: store.get("id"),
+						}
+					);
+
+					if (!success) {
+						toast.error(message);
+					}
+				} catch (error) {
+					if (error?.name === "AbortError") {
+						console.log("Request aborted");
+					}
+				}
+			})();
+		} else {
+			isInitialRender.current = false;
+		}
+	}, [debouncedValue]);
+
+	useEffect(() => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
+		(async () => {
+			try {
+				const { success, data, message } = await makeRequest(
+					"get",
+					ep.getStreamInfo,
+					{
+						userID: store.get("id"),
+					},
+					{ signal }
+				);
+
+				if (success) {
+					setStreamKey(data?.streamKey);
+					setVodSetting(data?.showpast);
+					setEnabled(data?.showpast === 0 ? false : true);
+				} else {
+					toast.error(message);
+				}
+			} catch (error) {
+				if (error?.name === "AbortError") {
+					console.log("Request aborted");
+				}
+			}
+		})();
+
+		return () => {
+			abortController.abort();
+		};
+	}, []);
 
 	const handleCopyToClipboard = () => {
-		// Copy the message to the clipboard
 		navigator.clipboard
 			.writeText(streamKey)
-			.then(() => {
-				alert("copied")
-				console.log("Text copied to clipboard:", streamKey);
-				// You can provide user feedback here if needed
-			})
-			.catch((error) => {
-				console.error("Unable to copy text to clipboard", error);
-				// Handle error or provide user feedback
+			.then(() => toast.success("Stream Key copied successfully."))
+			.catch((error) =>
+				toast.error("Unable to copy text to clipboard", error)
+			);
+	};
+
+	const handleOnChange = () => {
+		setEnabled(!enabled);
+		setVodSetting(enabled ? 0 : 1);
+	};
+
+	const handleReset = async () => {
+		setLoading(true);
+
+		try {
+			await makeRequest("post", ep.updateStreamKey, {
+				userID: store.get("id"),
 			});
+
+			const { success, data } = await makeRequest("get", ep.getStreamInfo, {
+				userID: store.get("id"),
+			});
+
+			if (success) {
+				setStreamKey(data?.streamKey);
+			}
+
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -36,8 +130,9 @@ const StreamPage: React.FC = () => {
 					<div className="w-full">
 						<Input
 							className="flex-shrink w-full"
-							value={show ? streamKey : "***"}
-							readOnly
+							value={show ? streamKey : "**********"}
+							onChange={() => {}}
+							// disabled
 						/>
 						<Button
 							onClick={() => setShow(!show)}
@@ -50,7 +145,13 @@ const StreamPage: React.FC = () => {
 						<Button color="primary" onClick={handleCopyToClipboard}>
 							Copy
 						</Button>
-						<Button color="default">Reset</Button>
+						<Button
+							color="default"
+							onClick={handleReset}
+							disabled={loading}
+						>
+							{loading ? "Loading..." : "Reset"}
+						</Button>
 					</div>
 				</div>
 			</div>
@@ -64,10 +165,12 @@ const StreamPage: React.FC = () => {
 					<div className="w-full">
 						<div>
 							<Switch
-								checked={enabled}
-								onChange={setEnabled}
+								checked={vodSetting === 1 ? true : false}
+								onChange={handleOnChange}
 								className={`${
-									enabled ? "bg-primary" : "bg-background-base"
+									vodSetting === 1
+										? "bg-primary"
+										: "bg-background-base"
 								}
                                   relative inline-flex h-[26px] w-[50px] shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white/75`}
 							>
@@ -75,7 +178,9 @@ const StreamPage: React.FC = () => {
 								<span
 									aria-hidden="true"
 									className={`${
-										enabled ? "translate-x-6" : "translate-x-0"
+										vodSetting === 1
+											? "translate-x-6"
+											: "translate-x-0"
 									}
                                     pointer-events-none inline-block h-[22px] w-[22px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
 								/>

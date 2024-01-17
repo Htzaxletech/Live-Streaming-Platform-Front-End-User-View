@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
-import React, { useEffect, useState } from "react";
+import React, { lazy, useEffect, useState } from "react";
 import { FaRegHeart } from "react-icons/fa";
-import { CollapsedSidebarItem } from "../CollapsedSidebarItem";
-import { SidebarItem } from "../Sidebaritem";
+// import { CollapsedSidebarItem } from "../CollapsedSidebarItem";
+// import { SidebarItem } from "../Sidebaritem";
+import johndoe from "../../../../src/assets/images/johndoe.jpg";
 import { tv } from "tailwind-variants";
 import { LuArrowUpDown } from "react-icons/lu";
-import johndoe from "../../../../src/assets/images/johndoe.jpg";
 import { useSelector } from "react-redux";
 import { RootState } from "@store/index";
 import { handleRequestError, makeRequest } from "@services/utils";
@@ -15,6 +15,8 @@ import { endpoints as ep } from "@services/endpoints";
 import store from "store2";
 import { toast } from "react-toastify";
 
+const CollapsedSidebarItem = lazy(() => import("../CollapsedSidebarItem"))
+const SidebarItem = lazy(() => import("../Sidebaritem"));
 
 const FollowedChannels: React.FC = () => {
 	const [userData, setUserData] = useState<unknown>([]);

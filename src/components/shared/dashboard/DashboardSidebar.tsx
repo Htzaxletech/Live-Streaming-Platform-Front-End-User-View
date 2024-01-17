@@ -1,7 +1,9 @@
-import DashboardSidebarItem from "./DashboardSidebarItem";
+import { lazy } from "react";
 import { CiStreamOn } from "react-icons/ci";
 import { MdOutlineSettings } from "react-icons/md";
 import store from "store2";
+
+const DashboardSidebarItem = lazy(() => import("./DashboardSidebarItem"));
 
 const DashboardSidebar: React.FC = () => {
 	const items = [

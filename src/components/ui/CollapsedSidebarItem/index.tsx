@@ -1,4 +1,4 @@
 
 import CollapsedSidebarItem from "./CollapsedSidebarItem"
 
-export { CollapsedSidebarItem }
+export default CollapsedSidebarItem

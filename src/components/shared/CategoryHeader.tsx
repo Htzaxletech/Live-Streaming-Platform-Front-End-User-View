@@ -1,84 +1,67 @@
-// import Button from "@components/ui/Button";
 import gaming from "@assets/images/gaming.svg";
 import Tag from "@components/ui/Tag";
-// import heart from "@assets/images/heart.svg";
+import { RootState } from "@store/index";
+import {
+	setCategoryData,
+} from "@store/slices/categorySlice";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const CategoryHeader: React.FC = () => {
-	const items = [
-		{
-			id: 1,
-			imageUrl: gaming, // Replace with your image URLs
-			title: "Cat 1",
-			content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-			tagName: "RPG",
-		},
-		{
-			id: 2,
-			imageUrl: gaming,
-			title: "Cat 2",
-			content:
-				"Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
-			tagName: "MOBA",
-		},
-		// Add more items as needed
-	];
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	const { categoryData } = useSelector((state: RootState) => state.category);
+
+	useEffect(() => {
+		if (categoryData === null) navigate("/");
+	}, []);
+
+	const handleLink = (data: any) => {
+		dispatch(setCategoryData(data));
+		navigate(`/directory/category/${data?.categoryName}`);
+	};
 
 	return (
-		<div className="w-2/4">
-			<ThumbnailGrid items={items} />
-		</div>
-	);
-};
+		<div className="w-full lg:w-2/4">
+			<div className="grid grid-cols-12 lg:grid-cols-5 lg:gap-4">
+				{/* Image Thumbnail Grid (20%) */}
+				<div className="col-span-12 lg:col-span-1">
+					<img
+						src={categoryData?.image || gaming}
+						alt={categoryData?.categoryName}
+						className="w-full h-full mb-4"
+						loading="lazy"
+					/>
+				</div>
 
-interface ThumbnailGridProps {
-	items: Array<{
-		id: number;
-		imageUrl: string;
-		title: string;
-		content: string;
-		tagName: string;
-	}>;
-}
+				{/* Title and Content Grid (80%) */}
+				<div className="col-span-12 lg:col-span-4 grid lg:grid-cols-1">
+					<div className="flex flex-col lg:p-4 rounded-md gap-1">
+						<h1 className="text-xl font-bold mb-2">
+							{categoryData?.categoryName}
+						</h1>
+						{categoryData?.secondCat && (
+							<div className="flex items-center gap-3 mb-3">
+								{/* <div className="rounded-full w-1 h-1 bg-current"></div> */}
+								{categoryData?.secondCat.map((item, index) => (
+									<Tag
+										key={index}
+										to={""}
+										onClick={() => handleLink(item)}
+									>
+										{item.categoryName}
+									</Tag>
+								))}
+							</div>
+						)}
 
-const ThumbnailGrid: React.FC<ThumbnailGridProps> = ({ items }) => {
-	return (
-		<div className="grid grid-cols-5 gap-4">
-			{/* Image Thumbnail Grid (20%) */}
-			<div className="col-span-1">
-				<img src={gaming} alt={gaming} className="w-full h-full mb-4" />
-			</div>
-
-			{/* Title and Content Grid (80%) */}
-			<div className="col-span-4 grid grid-cols-1">
-				<div className="flex flex-col p-4 rounded-md gap-1">
-					<h1 className="text-xl font-bold mb-2">Category Name</h1>
-					<div className="flex items-center gap-3">
 						<p>
-							<span className="font-semibold">1.2K</span> Viewers
+							{categoryData?.description ||
+								"Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam, excepturi aliquam explicabo nihil eligendi repellat sit ea cupiditate. Pariatur mollitia eius a! Aspernatur est eius odit doloremque, asperiores maxime quos."}
 						</p>
-						<div className="rounded-full w-1 h-1 bg-current"></div>
-						<p>
-							<span className="font-semibold">2.5M</span> Followers
-						</p>
-						<div className="rounded-full w-1 h-1 bg-current"></div>
-						{items.map((item, index) => (
-							<Tag key={index} to={""}>
-								{item.tagName}
-							</Tag>
-						))}
 					</div>
-					<p>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit.
-						Laboriosam, excepturi aliquam explicabo nihil eligendi
-						repellat sit ea cupiditate. Pariatur mollitia eius a!
-						Aspernatur est eius odit doloremque, asperiores maxime quos.
-					</p>
-					{/* <div className="mt-3">
-            <Button color="primary" className="py-4 gap-1">
-              <img src={heart} alt="image" />
-              Follow
-            </Button>
-          </div> */}
 				</div>
 			</div>
 		</div>

@@ -1,7 +1,9 @@
-import CategoryHeader from "@components/shared/CategoryHeader";
-import Tab from "@components/ui/Tab";
-import CategoryCardList from "./CategoryCardListPage";
-import LivePage from "./LivePage";
+import { lazy } from "react";
+
+const LivePage = lazy(() => import("./LivePage"));
+const VideosPage = lazy(() => import("./VideosPage"));
+const Tab = lazy(() => import("@components/ui/Tab"));
+const CategoryHeader = lazy(() => import("@components/shared/CategoryHeader"));
 
 const CategoryPage = () => {
 	return (
@@ -15,7 +17,7 @@ const CategoryPage = () => {
 					},
 					{
 						label: "Videos",
-						content: <CategoryCardList />,
+						content: <VideosPage />,
 					},
 				]}
 				className="mt-3"

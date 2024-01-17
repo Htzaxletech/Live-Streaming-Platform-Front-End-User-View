@@ -1,9 +1,12 @@
-import { PropsWithChildren } from "react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import { PropsWithChildren, lazy } from "react";
+// import Navbar from "./Navbar";
+// import Footer from "./Footer";
 import { Sidebar } from "../ui/Sidebar";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
+
+const Footer = lazy(() => import("./Footer"));
+const Navbar = lazy(() => import("./Navbar"));
 
 const Layout = ({ children }: PropsWithChildren) => {
 	const isSidebarCollapsed = useSelector(

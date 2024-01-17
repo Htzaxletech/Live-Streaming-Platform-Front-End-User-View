@@ -1,15 +1,20 @@
-import { ChangeEvent, FormEvent, useCallback, useRef, useState } from "react"
+import { ChangeEvent, FormEvent, lazy, useCallback, useRef, useState } from "react"
 import { tv } from "tailwind-variants"
 import { RiSearchLine } from "react-icons/ri"
 
-import Button from "@components/ui/Button"
-import Input from "@components/ui/Input"
+// import Button from "@components/ui/Button"
+// import Input from "@components/ui/Input"
+import { useNavigate } from "react-router-dom"
+
+const Button = lazy(() => import("@components/ui/Button"));
+const Input = lazy(() => import("@components/ui/Input"));
 
 const classes = tv({
   base: ["flex", "w-full", "max-w-[300px]"],
 })
 
 const NavbarSearchBox = ({ className }: { className?: string }) => {
+  const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null)
   const [searchValue, setSearchValue] = useState<string>("")
 
@@ -24,7 +29,8 @@ const NavbarSearchBox = ({ className }: { className?: string }) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    clearInputValue()
+    navigate(`/search`);
+    clearInputValue();
   }
 
   return (
@@ -43,7 +49,6 @@ const NavbarSearchBox = ({ className }: { className?: string }) => {
         size="lg"
         iconOnly
         className="rounded-s-none"
-        onClick={clearInputValue}
         disabled={!searchValue}
         type="submit"
       >

@@ -56,8 +56,8 @@ const VideoCard = ({ user, isLive }: { user: User; isLive: boolean }) => {
 		<div>
 			<div className={cardContainer()}>
 				<div className={liveScreenCard()}>
-					<img className={imageCover()} src={game} alt={user.title} />
-
+					<img className={imageCover()} src={game} alt={user.title} loading="lazy" />
+					
 					{isLive && (
 						<>
 							<div className={live()}>Live</div>
@@ -81,6 +81,7 @@ const VideoCard = ({ user, isLive }: { user: User; isLive: boolean }) => {
 							src={game}
 							alt="channel-profile"
 							className={channelAvator()}
+							loading="lazy"
 						/>
 					</div>
 					<div className={titleContainer()}>

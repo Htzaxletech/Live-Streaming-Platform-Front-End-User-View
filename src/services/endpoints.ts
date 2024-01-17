@@ -7,5 +7,14 @@ export const endpoints = {
 	liveChannelList: "/follow/channelListbyLive",
 	tags: "/streams/tags",
 	secondCategory: "/browse/second_category",
+	homeCategory: "/streams/get_categories",
+	updateStreamInfo: "/streams/update_streaminfo",
+	getStreamInfo: "/streams/get_streaminfo",
+	updateStreamKey: "/streams/update_streamkey",
+	vodSetting: "/streams/update_vodshowpast",
+	videoSlider: "/streams/get_streamsliderlimit",
+	startLive: "/profile/go_live",
+	updateProfile: "/profile/update_profile",
+	vodByCategoryID: "/browse/VODByCategoryID",
 	// Add more endpoints as needed
 };

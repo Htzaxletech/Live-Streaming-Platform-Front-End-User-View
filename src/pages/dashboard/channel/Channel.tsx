@@ -1,36 +1,141 @@
-import Button from "@components/ui/Button";
-import Heading from "@components/ui/Heading";
-import Input from "@components/ui/Input";
-// import Textarea from "@components/ui/Textarea";
-// import { Label } from "@radix-ui/react-dropdown-menu";
-// import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
+// import Button from "@components/ui/Button";
+// import Heading from "@components/ui/Heading";
+// import Input from "@components/ui/Input";
+import { lazy } from "react";
 import * as Label from "@radix-ui/react-label";
-import { useCallback, useRef, useState } from "react";
-import { ReactTags } from "react-tag-autocomplete";
+import { endpoints as ep } from "@services/endpoints";
+import { makeRequest } from "@services/utils";
+import { convertToBase64 } from "@utils/helpers";
+import { useRef, useState } from "react";
+import { toast } from "react-toastify";
+import store from "store2";
+
+const Button = lazy(() => import("@components/ui/Button"));
+const Heading = lazy(() => import("@components/ui/Heading"));
+const Input = lazy(() => import("@components/ui/Input"));
 
 const Channel: React.FC = () => {
-	const fileInputRef = useRef<HTMLInputElement>(null);
-	const [selectedImage, setSelectedImage] = useState<File | undefined>(
-		undefined
-	);
-	const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(
-		null
-	);
+	interface ProfileSettings {
+		selectedImageUrl: string;
+		selectedBannerUrl: string;
+		userName: string;
+		displayName: string;
+		bio: string;
+	}
 
+	const profileRef = useRef<HTMLInputElement>(null);
+	const bannerRef = useRef<HTMLInputElement>(null);
+
+	const [loading, setLoading] = useState<boolean>(false);
+
+	const [profileImageBase64Url, setProfileImageBase64Url] =
+		useState<string>("");
+	const [bannerImageBase64Url, setBannerImageBase64Url] = useState<string>("");
+
+	const initialForm = {
+		selectedImageUrl:
+			"https://img.freepik.com/free-photo/beauty-portrait-female-face_93675-132045.jpg?size=626&ext=jpg&ga=GA1.1.1546980028.1704326400&semt=ais",
+		selectedBannerUrl:
+			"https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg",
+		userName: "",
+		displayName: "",
+		bio: "",
+	};
+
+	const [profileSettings, setProfileSettings] = useState<ProfileSettings>(initialForm);
 
 	const handleProfileClick = () => {
-		if (fileInputRef.current) {
-			fileInputRef.current.click();
+		if (profileRef.current) {
+			profileRef.current.click();
 		}
 	};
 
-	const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleBannerClick = () => {
+		if (bannerRef.current) {
+			bannerRef.current.click();
+		}
+	};
+
+	const handleProfileChange = async (
+		e: React.ChangeEvent<HTMLInputElement>
+	) => {
 		const file = e.target.files?.[0];
 
 		if (file) {
-			const url = URL.createObjectURL(file);
-			setSelectedImage(file);
-			setSelectedImageUrl(url);
+			const selectedImageUrl = URL.createObjectURL(file);
+			setProfileSettings({ ...profileSettings, selectedImageUrl });
+
+			const base64Url = await convertToBase64(file);
+			const splittedUrl = base64Url.split(",")[1];
+			setProfileImageBase64Url(splittedUrl);
+		}
+	};
+
+	const handleBannerChange = async (
+		e: React.ChangeEvent<HTMLInputElement>
+	) => {
+		const file = e.target.files?.[0];
+
+		if (file) {
+			const selectedBannerUrl = URL.createObjectURL(file);
+			setProfileSettings({ ...profileSettings, selectedBannerUrl });
+
+			const base64Url = await convertToBase64(file);
+			const splittedUrl = base64Url.split(",")[1];
+			setBannerImageBase64Url(splittedUrl);
+		}
+	};
+
+	const handleUserName = (e: { target: { value: any } }) => {
+		setProfileSettings({ ...profileSettings, userName: e.target.value });
+	};
+
+	const handleDisplayName = (e: { target: { value: any } }) => {
+		setProfileSettings({ ...profileSettings, displayName: e.target.value });
+	};
+
+	const handleBio = (e: { target: { value: any } }) => {
+		setProfileSettings({ ...profileSettings, bio: e.target.value });
+	};
+
+	const handleSaveChanges = async (e: { preventDefault: () => void }) => {
+		e.preventDefault();
+
+		try {
+			setLoading(true);
+
+			const { userName, displayName, bio } =
+				profileSettings as ProfileSettings;
+
+			const reqData = {
+				username: userName,
+				displayName,
+				userID: store.get("id"),
+				bio,
+				profileImage: profileImageBase64Url,
+				bannerImage: bannerImageBase64Url,
+			};
+
+			const { success, message } = await makeRequest(
+				"post",
+				ep.updateProfile,
+				reqData
+			);
+
+			if (success) {
+				toast.success(message);
+				setProfileSettings(initialForm);
+			} else {
+				toast.error(message);
+			}
+
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
 		}
 	};
 
@@ -41,10 +146,7 @@ const Channel: React.FC = () => {
 				<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2 flex flex-col md:flex-row gap-2 w-full">
 					<div className="w-full flex justify-center md:w-2/6 lg:w-1/6">
 						<img
-							src={
-								selectedImageUrl ||
-								"https://img.freepik.com/free-photo/beauty-portrait-female-face_93675-132045.jpg?size=626&ext=jpg&ga=GA1.1.1546980028.1704326400&semt=ais"
-							}
+							src={profileSettings.selectedImageUrl}
 							alt="Profile Picture"
 							className="w-[150px] h-[150px] object-cover rounded-full border border-base"
 							loading="lazy"
@@ -58,9 +160,9 @@ const Channel: React.FC = () => {
 						<Input
 							type="file"
 							className="hidden"
-							ref={fileInputRef}
+							ref={profileRef}
 							accept="image/jpeg"
-							onChange={handleFileInputChange}
+							onChange={handleProfileChange}
 						/>
 						<div className="mt-2">
 							Must be JPEG, PNG, or GIF and cannot exceed 10MB.
@@ -74,14 +176,24 @@ const Channel: React.FC = () => {
 				<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2 flex flex-col md:flex-row gap-6 w-full">
 					<div className="w-full lg:w-2/6">
 						<img
-							src="https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg"
+							src={profileSettings.selectedBannerUrl}
 							alt="Profile Picture"
-							className="w-full h-auto md:h-[150px] object-cover border border-black"
+							className="w-full h-auto md:h-[150px] object-cover border"
 							loading="lazy"
+							onClick={handleBannerClick}
 						/>
 					</div>
 					<div className="w-full lg:w-3/6">
-						<Button color="default">Update</Button>
+						<Button color="default" onClick={handleBannerClick}>
+							Update
+						</Button>
+						<Input
+							type="file"
+							className="hidden"
+							ref={bannerRef}
+							accept="image/jpeg"
+							onChange={handleBannerChange}
+						/>
 						<div className="mt-2">
 							Must be JPEG, PNG, or GIF and cannot exceed 10MB.
 						</div>
@@ -92,66 +204,68 @@ const Channel: React.FC = () => {
 			<div className="mb-7">
 				<Heading size="sm">Profile Settings</Heading>
 				<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2">
-					<div className="flex flex-col md:flex-row gap-2 w-full">
-						<Label.Root
-							className="md:w-[280px] left-0 w-full"
-							htmlFor="userName"
-						>
-							User Name
-						</Label.Root>
-						<div className="w-full">
-							<Input
-								id="userName"
-								className="flex-shrink w-full"
-								placeholder="johndoe23"
-							/>
+					<form onSubmit={handleSaveChanges}>
+						<div className="flex flex-col md:flex-row gap-2 w-full">
+							<Label.Root
+								className="md:w-[280px] left-0 w-full"
+								htmlFor="userName"
+							>
+								User Name
+							</Label.Root>
+							<div className="w-full">
+								<Input
+									id="userName"
+									className="flex-shrink w-full"
+									placeholder="johndoe23"
+									value={profileSettings.userName}
+									onChange={handleUserName}
+								/>
+							</div>
 						</div>
-					</div>
 
-					<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
-						<Label.Root
-							className="md:w-[280px] left-0 w-full"
-							htmlFor="displayName"
-						>
-							Display Name
-						</Label.Root>
-						<div className="w-full">
-							<Input
-								id="displayName"
-								className="flex-shrink w-full"
-								placeholder="John Doe"
-							/>
+						<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
+							<Label.Root
+								className="md:w-[280px] left-0 w-full"
+								htmlFor="displayName"
+							>
+								Display Name
+							</Label.Root>
+							<div className="w-full">
+								<Input
+									id="displayName"
+									className="flex-shrink w-full"
+									placeholder="John Doe"
+									value={profileSettings.displayName}
+									onChange={handleDisplayName}
+								/>
+							</div>
 						</div>
-					</div>
 
-					<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
-						<Label.Root
-							className="md:w-[280px] left-0 w-full"
-							htmlFor="bio"
-						>
-							Bio
-						</Label.Root>
-						<div className="w-full">
-							<textarea
-								id="bio"
-								className="flex-shrink resize-none w-full outline-none bg-background-base text-foreground-secondary border border-border rounded-md hover:ring-[1px] hover:ring-border focus-within:!ring-[2px] focus-within:!ring-primary px-[9px] py-2"
-								rows={3}
-								placeholder="I'm PUBG Streamer and mainly stream FPP"
-							/>
+						<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
+							<Label.Root
+								className="md:w-[280px] left-0 w-full"
+								htmlFor="bio"
+							>
+								Bio
+							</Label.Root>
+							<div className="w-full">
+								<textarea
+									id="bio"
+									className="flex-shrink resize-none w-full outline-none bg-background-base text-foreground-secondary border border-border rounded-md hover:ring-[1px] hover:ring-border focus-within:!ring-[2px] focus-within:!ring-primary px-[9px] py-2"
+									rows={3}
+									placeholder="I'm PUBG Streamer and mainly stream FPP"
+									value={profileSettings.bio}
+									onChange={handleBio}
+								/>
+							</div>
 						</div>
-					</div>
 
-					<div className="flex w-full justify-end mt-4">
-						<Button
-							className="py-5"
-							color="primary"
-							onClick={() => {
-								console.log("object", selectedImage);
-							}}
-						>
-							Save Changes
-						</Button>
-					</div>
+						<div className="flex w-full justify-end mt-4">
+							<Button className="py-5" color="primary" type="submit">
+								{loading ? "Loading..." : "Save Changes"}
+							</Button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

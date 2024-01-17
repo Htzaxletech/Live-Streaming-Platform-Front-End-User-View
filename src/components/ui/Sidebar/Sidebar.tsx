@@ -5,9 +5,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleSidebar } from "@store/slices/sidebarSlice";
 import { RootState } from "store";
 import { lazy } from "react";
-import Button from "../Button";
-import DashboardSidebar from "@components/shared/dashboard/DashboardSidebar";
 
+const DashboardSidebar = lazy(
+	() => import("@components/shared/dashboard/DashboardSidebar")
+);
+const Button = lazy(() => import("../Button"));
 const FollowedChannels = lazy(() => import("./FollowedChannels"));
 
 interface SidebarProps {

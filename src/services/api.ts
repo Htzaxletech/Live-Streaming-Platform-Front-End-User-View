@@ -2,6 +2,8 @@
 import axios from "axios";
 import store from "store2";
 
+console.log("baseURL", import.meta.env.VITE_API_URL);
+
 const api = axios.create({
 	baseURL: import.meta.env.VITE_API_URL as string, // Add other configuration options here
 	headers: {

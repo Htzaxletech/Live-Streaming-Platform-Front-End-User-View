@@ -2,6 +2,9 @@
 import { lazy, Suspense } from "react";
 import LoadingIndicator from "@components/ui/LoadingIndicator";
 
+const MemoizedScrollToTop = lazy(
+	() => import("@components/shared/ScrollToTop")
+);
 const PrivateRoute = lazy(() => import("@components/shared/PrivateRoute"));
 const DashboardRootPage = lazy(() => import("@pages/dashboard/RootPage"));
 const ErrorPage = lazy(() => import("@pages/ErrorPage"));
@@ -13,6 +16,7 @@ const dashboardRoutes = {
 	path: "/dashboard",
 	element: (
 		<Suspense fallback={<LoadingIndicator />}>
+			<MemoizedScrollToTop />
 			<PrivateRoute element={<DashboardRootPage />} />
 		</Suspense>
 	),

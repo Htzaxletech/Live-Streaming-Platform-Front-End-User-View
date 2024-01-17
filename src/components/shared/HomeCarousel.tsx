@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	StackedCarousel,
 	ResponsiveContainer,
@@ -18,47 +18,100 @@ import "@vidstack/react/player/styles/default/layouts/video.css";
 import Tag from "@components/ui/Tag";
 import Button from "@components/ui/Button";
 import "./HomeCarousel.css";
+import { makeRequest } from "@services/utils";
+import { endpoints } from "@services/endpoints";
+import { generateStreamUrl, tempData, videoSliderData } from "@utils/helpers";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { setLiveStreams } from "@store/slices/liveStreamsSlice";
+import { RootState } from "@store/index";
 
-interface HomeCarouselProps {
-	data: any[];
-}
-
-function HomeCarousel({ data }: HomeCarouselProps) {
+function HomeCarousel() {
 	const ref = React.useRef<any>();
+	const dispatch = useDispatch();
+
+	const liveStreams = useSelector(
+		(state: RootState) => state.liveStreams.liveStreams
+	);
+
+	useEffect(() => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
+		(async () => {
+			try {
+				await fetchData(signal);
+			} catch (error) {
+				toast.error(error);
+			}
+		})();
+
+		return () => {
+			abortController.abort();
+		};
+	}, []);
+
+	const fetchData = async (signal) => {
+		const { success, message, data } = await makeRequest(
+			"get",
+			endpoints.videoSlider,
+			{},
+			{ signal }
+		);
+
+		if (success) {
+			const updatedData = tempData.map((item: any) => ({
+				...item,
+				video: generateStreamUrl(item.streamKey),
+				coverImage:
+					// item.thumbnail ||
+					"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
+			}));
+
+			dispatch(setLiveStreams(updatedData));
+		} else {
+			toast.error(message);
+		}
+	};
 
 	return (
-		<div className="w-full relative">
-			<ResponsiveContainer
-				carouselRef={ref}
-				render={(width, carouselRef) => {
-					return (
-						<StackedCarousel
-							ref={carouselRef}
-							slideComponent={Slide}
-							slideWidth={750}
-							carouselWidth={width}
-							data={data}
-							maxVisibleSlide={5}
-							disableSwipe
-							customScales={[1, 0.85, 0.7, 0.55]}
-							transitionTime={450}
-						/>
-					);
-				}}
-			/>
-			<Button
-				className="absolute top-[43%] p-1 bg-transparent"
-				onClick={() => ref.current?.goBack()}
-			>
-				<AiOutlineLeft style={{ fontSize: 20 }} />
-			</Button>
-			<Button
-				className="absolute top-[43%] right-0 p-1 bg-transparent"
-				onClick={() => ref.current?.goNext()}
-			>
-				<AiOutlineRight style={{ fontSize: 20 }} />
-			</Button>
-		</div>
+		<>
+			{liveStreams.length > 0 && (
+				<div className="w-full relative">
+					<ResponsiveContainer
+						carouselRef={ref}
+						render={(width, carouselRef) => {
+							return (
+								<StackedCarousel
+									ref={carouselRef}
+									slideComponent={Slide}
+									slideWidth={750}
+									carouselWidth={width}
+									data={liveStreams}
+									maxVisibleSlide={5}
+									disableSwipe
+									customScales={[1, 0.85, 0.7, 0.55]}
+									transitionTime={450}
+								/>
+							);
+						}}
+					/>
+
+					<Button
+						className="absolute top-[43%] p-1 bg-transparent"
+						onClick={() => ref.current?.goBack()}
+					>
+						<AiOutlineLeft style={{ fontSize: 20 }} />
+					</Button>
+					<Button
+						className="absolute top-[43%] right-0 p-1 bg-transparent"
+						onClick={() => ref.current?.goNext()}
+					>
+						<AiOutlineRight style={{ fontSize: 20 }} />
+					</Button>
+				</div>
+			)}
+		</>
 	);
 }
 
@@ -83,7 +136,8 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 		clearTimeout(loadDelay);
 	});
 
-	const { coverImage, video } = data[dataIndex];
+	const { coverImage, video, channelName, categoryName, tags, title } =
+		data[dataIndex];
 
 	return (
 		<div className="slider-card" draggable={false}>
@@ -101,7 +155,11 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 			{loaded && (
 				<div className="detail fill">
 					<div className="aspect-video video">
-						<MediaPlayer src={video} autoplay className="flex h-full rounded-none">
+						<MediaPlayer
+							src={video || ""}
+							autoplay
+							className="flex h-full rounded-none"
+						>
 							<MediaProvider>
 								<Poster
 									className="vds-poster h-full"
@@ -113,50 +171,42 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 							<DefaultVideoLayout icons={defaultLayoutIcons} />
 						</MediaPlayer>
 					</div>
-					<StreamDescription />
+					{/* <StreamDescription /> */}
+					<div className="description hidden md:flex">
+						<div className="info bg-background-base h-full">
+							<div className="info-top">
+								<div className="profile">
+									<div className="pp">
+										<img
+											src="https://i.pravatar.cc/50"
+											alt="Profile"
+											loading="lazy"
+										/>
+									</div>
+									<div className="profile-info">
+										<div className="username">{channelName}</div>
+										<div className="game">{categoryName}</div>
+										<div className="viewers">297 viewers</div>
+									</div>
+								</div>
+								<div className="tags">
+									{tags.length > 0 &&
+										tags.map((i: any, index: number) => {
+											return (
+												<Tag key={index} to={""}>
+													{i.tagName}
+												</Tag>
+											);
+										})}
+								</div>
+							</div>
+							<div className="info-bottom">
+								<p>{title}</p>
+							</div>
+						</div>
+					</div>
 				</div>
 			)}
-		</div>
-	);
-});
-
-const StreamDescription = React.memo(() => {
-	return (
-		<div className="description hidden md:flex">
-			<div className="info bg-background-base h-full">
-				<div className="info-top">
-					<div className="profile">
-						<div className="pp">
-							<img src="https://i.pravatar.cc/50" alt="Profile" />
-						</div>
-						<div className="profile-info">
-							<div className="username">Linnz</div>
-							<div className="game">Dota 2</div>
-							<div className="viewers">297 viewers</div>
-						</div>
-					</div>
-					<div className="tags">
-						<Tag to={""}>Esports</Tag>
-						<Tag to={""}>English</Tag>
-						<Tag to={""}>Esports</Tag>
-						<Tag to={""}>English</Tag>
-						<Tag to={""}>Esports</Tag>
-						<Tag to={""}>English</Tag>
-					</div>
-				</div>
-				<div className="info-bottom">
-					<p>
-						Lorem ipsum dolor sit, amet consectetur adipisicing elit. A,
-						consequatur blanditiis consequuntur ipsa temporeLorem ipsum
-						dolor sit, amet consectetur adipisicing elit. A, consequatur
-						blanditiis consequuntur ipsa temporeLorem ipsum dolor sit,
-						amet consectetur adipisicing elit. A, consequatur blanditiis
-						consequuntur ipsa temporeLorem ipsum dolor sit, amet
-						consectetur adipisicing elit. A, consequatur blanditiis
-						consequuntur ipsa tempore
-					</p>
-				</div>
-			</div>
 		</div>
 	);
 });

@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import StreamChatBox from "@components/shared/StreamChatBox";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { MediaPlayer, MediaProvider } from "@vidstack/react";
@@ -10,30 +10,47 @@ import {
 } from "@vidstack/react/player/layouts/default";
 import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
-import Button from "@components/ui/Button";
+// import Button from "@components/ui/Button";
+// import Modal from "@pages/authentication/Modal";
+// import Heading from "@components/ui/Heading";
+// import StreamChatBox from "@components/shared/StreamChatBox";
 import { MdOutlineEdit } from "react-icons/md";
-import Modal from "@pages/authentication/Modal";
-// import Input from "@components/ui/Input";
-import Heading from "@components/ui/Heading";
 import { Label } from "@radix-ui/react-dropdown-menu";
-import { SetStateAction, useCallback, useEffect, useState } from "react";
+import { SetStateAction, lazy, useCallback, useEffect, useState } from "react";
 import { ReactTags, Tag } from "react-tag-autocomplete";
 import { makeMultipleRequests, makeRequest } from "@services/utils";
 import { endpoints as ep } from "@services/endpoints";
 import { toast } from "react-toastify";
+import store from "store2";
 import "@styles/tags.css";
+
+
+const Button = lazy(() => import("@components/ui/Button"));
+const Modal = lazy(() => import("@pages/authentication/Modal"));
+const Heading = lazy(() => import("@components/ui/Heading"));
+const StreamChatBox = lazy(() => import("@components/shared/StreamChatBox"));
 
 const StreamManager = () => {
 	const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
+
 	const [isOpenStreamInfo, setIsOpenStreamInfo] = useState<boolean>(false);
-	const [loading] = useState<boolean>(false);
-
+	const [loading, setLoading] = useState<boolean>(false);
 	const [title, setTitle] = useState<string>("");
-
 	const [selectedTag, setSelectedTag] = useState<Tag[]>([]);
 	const [suggestionsTag, setSuggesstionsTag] = useState<Tag[]>([]);
 	const [selectedCategory, setSelectedCategory] = useState<Tag[]>([]);
 	const [suggestionsCategory, setSuggesstionsCategory] = useState<Tag[]>([]);
+
+	interface FormState {
+		title: string;
+		categoryImage: string;
+	}
+
+	const [initFormState, setInitialFormState] = useState<FormState>({
+		title: "",
+		categoryImage:
+			"https://play-lh.googleusercontent.com/uqq6a-fHayQxsNQkxB9ZZXag8N7Du5mOEKcScr9yltHqx3RKgCdr9VJHKGO2vY_GUe0",
+	});
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -43,45 +60,43 @@ const StreamManager = () => {
 			try {
 				// Multiple requests
 				const requests = [
-					{ method: "get", url: ep.tags, signal },
-					{
-						method: "get",
-						url: ep.secondCategory,
-						signal,
-					},
+					{ method: "get", url: ep.tags, config: { signal } },
+					{ method: "get", url: ep.secondCategory, config: { signal } },
 				];
 
 				const responses = await makeMultipleRequests(requests);
 
-				const tags = responses[0];
-				const category = responses[1];
+				if (responses !== null) {
+					const tags = responses[0];
+					const category = responses[1];
 
-				if (tags?.success) {
-					const data = tags?.data;
-					const transformedArray = data.map(
-						(item: { ID: number; tagName: string }) => ({
-							...item,
-							value: item.ID,
-							label: item.tagName,
-						})
-					);
-					setSuggesstionsTag(transformedArray);
-				} else {
-					toast.error(tags?.message);
-				}
+					if (tags?.success) {
+						const data = tags?.data;
+						const transformedArray = data.map(
+							(item: { ID: number; tagName: string }) => ({
+								...item,
+								value: item.ID,
+								label: item.tagName,
+							})
+						);
+						setSuggesstionsTag(transformedArray);
+					} else {
+						toast.error(tags?.message);
+					}
 
-				if (category?.success) {
-					const data = category?.data;
-					const transformedArray = data.map(
-						(item: { ID: number; categoryName: string }) => ({
-							...item,
-							value: item.ID,
-							label: item.categoryName,
-						})
-					);
-					setSuggesstionsCategory(transformedArray);
-				} else {
-					toast.error(category?.message);
+					if (category?.success) {
+						const data = category?.data;
+						const transformedArray = data.map(
+							(item: { ID: number; categoryName: string }) => ({
+								...item,
+								value: item.ID,
+								label: item.categoryName,
+							})
+						);
+						setSuggesstionsCategory(transformedArray);
+					} else {
+						toast.error(category?.message);
+					}
 				}
 			} catch (error) {
 				// Check if the error is due to the request being aborted
@@ -110,12 +125,9 @@ const StreamManager = () => {
 		[selectedTag]
 	);
 
-	const onAddCategory = useCallback(
-		(newCategory: Tag) => {
-			setSelectedCategory([...selectedCategory, newCategory]);
-		},
-		[selectedCategory]
-	);
+	const onAddCategory = useCallback((newCategory: Tag) => {
+		setSelectedCategory([newCategory]);
+	}, []);
 
 	const onDeleteCategory = useCallback(
 		(CategoryIndex: number) => {
@@ -139,12 +151,61 @@ const StreamManager = () => {
 		setTitle(e.target.value);
 	};
 
-	const handleSubmit = (e: { preventDefault: () => void }) => {
+	const handleSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
-		console.log(title);
-		console.log(selectedCategory);
-		console.log(selectedTag);
+		setLoading(true);
+
+		try {
+			const valuesArray = selectedTag.map(tag => tag.value);
+
+			const data = {
+				categoryID:
+					selectedCategory.length > 0 ? selectedCategory[0].ID : "",
+				userID: store.get("id"),
+				title,
+				tags: valuesArray,
+			};
+
+			const response = await makeRequest("post", ep.updateStreamInfo, data);
+			console.log("response", response);
+			if (response?.success) {
+				setInitialFormState({
+					...initFormState,
+					title: title,
+					categoryImage:
+						"https://play-lh.googleusercontent.com/wRXSrwwbzBBlTpowK6onSs3rfBV-4nqVvLJJ7yAZa7jzdGNHpHH2hDhKCyKWj_3nqw=w240-h480-rw",
+				});
+				handleStreamInfo();
+				toast.success(response?.message);
+			}else{
+				toast.error(response?.message);
+			}
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
+		}
 	};
+
+	const handleStartLive = async () => {
+		try {
+			const data = {
+				isStart: 0,
+				liveID: 1,
+			};
+
+			const response = await makeRequest("post", ep.updateStreamInfo, data);
+			console.log("response", response);
+
+			if (response?.success) {
+				toast.success(response?.message);
+			} else {
+				toast.error(response?.message);
+			}
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
+		}
+	}
 
 	return (
 		<div>
@@ -164,16 +225,24 @@ const StreamManager = () => {
 
 					<div className="container">
 						<div className="py-5 rounded-md mt-2 flex flex-col md:flex-row gap-6 w-full">
-							<div className="w-full lg:w-1/6">
+							<div className="w-full lg:w-[200px]">
 								<img
-									src="https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg"
-									alt="Profile Picture"
-									className="w-full h-auto md:h-[150px] object-cover border border-black"
+									src={
+										initFormState.categoryImage ||
+										"https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg"
+									}
+									alt="Category Image"
+									className="w-[150px] h-[100px] md:h-[150px] object-cover border border-black"
 									loading="lazy"
 								/>
 							</div>
-							<div className="w-full lg:w-4/6">
-								<div className="mt-2">Stream Title</div>
+							<div className="w-full flex lg:flex-row items center justify-between">
+								<div className="mt-2">{initFormState.title}</div>
+								<div>
+									<Button color="primary" onClick={handleStartLive}>
+										Start Live
+									</Button>
+								</div>
 							</div>
 						</div>
 						<div>
@@ -216,12 +285,6 @@ const StreamManager = () => {
 									Category
 								</Label>
 								<div className="w-full">
-									{/* <Input
-										className="flex-shrink w-full"
-										startContent={<CiSearch />}
-										placeholder="Search for category"
-									/> */}
-
 									<ReactTags
 										labelText="Search for category"
 										selected={selectedCategory}
@@ -229,6 +292,8 @@ const StreamManager = () => {
 										onAdd={onAddCategory}
 										onDelete={onDeleteCategory}
 										noOptionsText="No matching"
+										placeholderText="Add new category"
+										collapseOnSelect
 									/>
 								</div>
 							</div>
@@ -238,12 +303,6 @@ const StreamManager = () => {
 									Tags
 								</Label>
 								<div className="w-full">
-									{/* <Input
-										className="flex-shrink w-full"
-										startContent={<CiSearch />}
-										placeholder="Search for tags"
-									/> */}
-
 									<ReactTags
 										labelText="Search for tag"
 										selected={selectedTag}
@@ -251,6 +310,7 @@ const StreamManager = () => {
 										onAdd={onAdd}
 										onDelete={onDelete}
 										noOptionsText="No matching"
+										placeholderText="Add new tag"
 									/>
 								</div>
 							</div>

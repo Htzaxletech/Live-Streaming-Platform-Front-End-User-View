@@ -2,6 +2,7 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import api from "./api";
 import { toast } from "react-toastify";
+import isOnline from "is-online";
 
 // Common function to handle request errors
 export const handleRequestError = (error: any): void => {
@@ -12,19 +13,19 @@ export const handleRequestError = (error: any): void => {
 			error.response.status,
 			error.response.data
 		);
-		toast.error(
-			"The request was made and the server responded with a status code"
-		);
+		// toast.error(
+		// 	"The request was made and the server responded with a status code"
+		// );
 	} else if (error.request) {
 		// The request was made but no response was received
 		console.error("Request Error:", error.request);
-		toast.error("The request was made but no response was received");
+		// toast.error("The request was made but no response was received");
 	} else {
 		// Something happened in setting up the request that triggered an Error
 		console.error("Error:", error.message);
-		toast.error(
-			"Something happened in setting up the request that triggered an Error"
-		);
+		// toast.error(
+		// 	"Something happened in setting up the request that triggered an Error"
+		// );
 	}
 	throw error;
 };
@@ -35,8 +36,15 @@ export const makeRequest = async <T>(
 	url: string,
 	data?: any,
 	config?: AxiosRequestConfig
-): Promise<T> => {
+): Promise<T | null> => {
 	try {
+		// Check if the device is online before making the request
+		const online = await isOnline();
+		if (!online) {
+			toast.error("No internet connection");
+			return null;
+		}
+
 		const response: AxiosResponse<T> = await api.request<T>({
 			method,
 			url,
@@ -61,8 +69,16 @@ export const makeMultipleRequests = async <T>(
 		data?: any;
 		config?: AxiosRequestConfig;
 	}>
-): Promise<T[]> => {
+): Promise<T[] | null> => {
 	try {
+		// Check if the device is online before making the request
+		const online = await isOnline();
+
+		if (!online) {
+			toast.error("No internet connection.");
+			return null;
+		}
+
 		const promises = requests.map(async (request) => {
 			const { method, url, data, config } = request;
 			const response: AxiosResponse<T> = await api.request<T>({

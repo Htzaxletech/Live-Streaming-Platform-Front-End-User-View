@@ -1,14 +1,15 @@
-import CategoryCard from "@components/shared/CategoryCard";
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { makeRequest } from "@services/utils";
 import { useEffect, useState } from "react";
 import { endpoints as ep } from "@services/endpoints";
 import { toast } from "react-toastify";
+import VideoCard from "@components/shared/VideoCard";
+import jsonData from "./test.json";
 
-const CategoryCardList = () => {
+const VideosPage = () => {
 	const [loading, setLoading] = useState<boolean>(false);
-	const [categories, setCategories] = useState<[]>([]);
+	const [videos, setVideos] = useState<[]>([]);
 	const [currentPage, setCurrentPage] = useState<number>(0);
 	const [pageSize] = useState<number>(10);
 	const [showMoreButton, setShowMoreButton] = useState(true);
@@ -43,7 +44,7 @@ const CategoryCardList = () => {
 				const moreData = response?.data;
 
 				if (moreData.length > 0) {
-					setCategories((prevState) => [...prevState, ...moreData]);
+					setVideos((prevState) => [...prevState, ...moreData]);
 				} else {
 					setShowMoreButton(false);
 				}
@@ -60,13 +61,20 @@ const CategoryCardList = () => {
 
 	return (
 		<div className="mt-8">
-			<Heading size="sm">Categories</Heading>
-			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-8 gap-2 mt-3 mb-8">
-				{categories &&
-					categories.length > 0 &&
-					categories?.map((data, index) => (
+			<Heading size="sm">Videos</Heading>
+			{/* {videos &&
+					videos.length > 0 &&
+					videos?.map((data, index) => (
 						<CategoryCard key={index} data={data} />
-					))}
+					))} */}
+			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 mt-3 mb-4">
+				{Array.from({ length: 13 }).map((_, index) => (
+					<VideoCard
+						key={index}
+						user={jsonData.user}
+						isLive={jsonData.isLive}
+					/>
+				))}
 			</div>
 
 			{showMoreButton && (
@@ -80,4 +88,4 @@ const CategoryCardList = () => {
 	);
 };
 
-export default CategoryCardList;
+export default VideosPage;

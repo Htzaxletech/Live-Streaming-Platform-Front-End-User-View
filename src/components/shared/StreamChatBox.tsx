@@ -4,7 +4,11 @@ import Input from "@components/ui/Input";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleChat } from "@store/slices/chatSlice";
 import { RootState } from "store";
-import { LuUsers, LuArrowLeftFromLine, LuArrowRightFromLine } from "react-icons/lu";
+import {
+	LuUsers,
+	LuArrowLeftFromLine,
+	LuArrowRightFromLine,
+} from "react-icons/lu";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { socket } from "../../socket";
 import { customAlphabet } from "nanoid";
@@ -12,157 +16,157 @@ import { useParams } from "react-router-dom";
 import store from "store2";
 
 const StreamChatBox: React.FC = () => {
-  const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
-  const [chatMessages, setChatMessages] = useState<unknown[]>([]);
-  // const [isConnected, setIsConnected] = useState(false);
-  const [message, setMessage] = useState("");
+	const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
+	const [chatMessages, setChatMessages] = useState<unknown[]>([]);
+	// const [isConnected, setIsConnected] = useState(false);
+	const [message, setMessage] = useState("");
 
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-  const handleToggleChat = () => {
-    dispatch(toggleChat());
-  };
+	const handleToggleChat = () => {
+		dispatch(toggleChat());
+	};
 
-  const nanoid = customAlphabet("1234567890", 6);
+	const nanoid = customAlphabet("1234567890", 6);
 
-  let userID = store.get("userId");
-  if (!userID) {
-    userID = nanoid();
-    store.set("userId", userID);
-  }
-  
-  const params = useParams();
-    
-  useEffect(() => {
-    socket.connect();
+	let userID = store.get("userId");
+	if (!userID) {
+		userID = nanoid();
+		store.set("userId", userID);
+	}
 
-    function onConnect() {
-      socket.timeout(3000).emit(
-        "livestream_connect",
-        {
-          userID: 1,
-          // streamKey: params.id,
-          streamKey: "0r6fyRXaj",
-        },
-        () => {
-          console.log("livestream_connect");
-        }
-      );
+	const params = useParams();
 
-       socket.timeout(3000).emit(
-         "chat_connect",
-         {
-           userID: 1,
-           // streamKey: params.id,
-           liveID: "123",
-         },
-         () => {
-           console.log("chat_connect");
-         }
-       );
-    }
+	useEffect(() => {
+		socket.connect();
 
-    function onDisconnect() {
-      socket.emit(
-        "livestream_disconnect",
-        {
-          userID,
-          // streamKey: params.id,
-          streamKey: "0r6fyRXaj",
-        },
-        () => {
-          console.log("livestream_disconnect");
-        }
-      );
+		function onConnect() {
+			socket.timeout(3000).emit(
+				"livestream_connect",
+				{
+					userID: 1,
+					// streamKey: params.id,
+					streamKey: "0r6fyRXaj",
+				},
+				() => {
+					console.log("livestream_connect");
+				}
+			);
 
-      socket.emit(
-        "chat_disconnect",
-        {
-          userID: 1,
-          // streamKey: params.id,
-          liveID: "123",
-        },
-        () => {
-          console.log("chat_disconnect");
-        }
-      );
-    }
+			socket.timeout(3000).emit(
+				"chat_connect",
+				{
+					userID: 1,
+					// streamKey: params.id,
+					liveID: "123",
+				},
+				() => {
+					console.log("chat_connect");
+				}
+			);
+		}
 
-    // function onConnectLiveChat() {
-    //   socket.timeout(3000).emit(
-    //     "chat_connect",
-    //     {
-    //       userID: 1,
-    //       // streamKey: params.id,
-    //       LiveID: "123",
-    //     },
-    //     () => {
-    //       console.log("chat_connect");
-    //     }
-    //   );
-    // }
+		function onDisconnect() {
+			socket.emit(
+				"livestream_disconnect",
+				{
+					userID,
+					// streamKey: params.id,
+					streamKey: "0r6fyRXaj",
+				},
+				() => {
+					console.log("livestream_disconnect");
+				}
+			);
 
-    // function onDisConnectLiveChat() {
-    //   socket.emit(
-    //     "chat_disconnect",
-    //     {
-    //       userID,
-    //       // streamKey: params.id,
-    //       LiveID: "123",
-    //     },
-    //     () => {
-    //       console.log("chat_disconnect");
-    //     }
-    //   );
-    // }
+			socket.emit(
+				"chat_disconnect",
+				{
+					userID: 1,
+					// streamKey: params.id,
+					liveID: "123",
+				},
+				() => {
+					console.log("chat_disconnect");
+				}
+			);
+		}
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function onMessageEvent(value: any) {
-      console.log("value", value);
-      setChatMessages(previous => [...previous, value]);
-    }
+		// function onConnectLiveChat() {
+		//   socket.timeout(3000).emit(
+		//     "chat_connect",
+		//     {
+		//       userID: 1,
+		//       // streamKey: params.id,
+		//       LiveID: "123",
+		//     },
+		//     () => {
+		//       console.log("chat_connect");
+		//     }
+		//   );
+		// }
 
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
+		// function onDisConnectLiveChat() {
+		//   socket.emit(
+		//     "chat_disconnect",
+		//     {
+		//       userID,
+		//       // streamKey: params.id,
+		//       LiveID: "123",
+		//     },
+		//     () => {
+		//       console.log("chat_disconnect");
+		//     }
+		//   );
+		// }
 
-    // socket.on("connect", onConnectLiveChat);
-    // socket.on("disconnect", onDisConnectLiveChat);
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		function onMessageEvent(value: any) {
+			console.log("value", value);
+			setChatMessages((previous) => [...previous, value]);
+		}
 
-    socket.on("chat_list_message", onMessageEvent);
-    console.log("listen events");
+		socket.on("connect", onConnect);
+		socket.on("disconnect", onDisconnect);
 
-    return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-      socket.off("chat_list_message", onMessageEvent);
-    };
-  }, [params.id]);
+		// socket.on("connect", onConnectLiveChat);
+		// socket.on("disconnect", onDisConnectLiveChat);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setMessage(e.target.value);
-  };
+		socket.on("chat_list_message", onMessageEvent);
+		console.log("listen events");
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    console.log("message", message);
-    socket.emit(
-      "add_chat_message",
-      { userID, liveID: params.id, message },
-      () => {
-        console.log("Sent");
-      }
-    );
-    setMessage("");
-  };
+		return () => {
+			socket.off("connect", onConnect);
+			socket.off("disconnect", onDisconnect);
+			socket.off("chat_list_message", onMessageEvent);
+		};
+	}, [params.id]);
 
-  return (
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setMessage(e.target.value);
+	};
+
+	const handleSubmit = (e: FormEvent) => {
+		e.preventDefault();
+		console.log("message", message);
+		socket.emit(
+			"add_chat_message",
+			{ userID, liveID: params.id, message },
+			() => {
+				console.log("Sent");
+			}
+		);
+		setMessage("");
+	};
+
+	return (
 		<>
 			<div
-				className={`invisible md:visible bg-background-base md:w-60 lg:w-72 top-[50px] overflow-y-auto h-full flex flex-col justify-between fixed right-0 transform ${
+				className={`invisible md:visible bg-background-base md:w-60 lg:w-72 overflow-y-auto h-full flex flex-col justify-between fixed top-0 right-0 transform ${
 					isChatOpen ? "translate-x-0" : "translate-x-full"
 				} ease-in-out z-20`}
 			>
-				<div className="flex justify-between items-center border-b-2 gap-2 p-2">
+				<div className="flex justify-between items-center border-b-2 gap-2 p-2 mt-[50px]">
 					{/* Toggle Button */}
 					<Button className="bg-transparent" onClick={handleToggleChat}>
 						<LuArrowRightFromLine className="text-xl" />
@@ -177,7 +181,7 @@ const StreamChatBox: React.FC = () => {
 				</div>
 
 				{/* Chat Content */}
-				<div className="px-4 pt-4 h-4/6 overflow-auto">
+				<div className="px-4 pt-4 h-5/6 overflow-auto">
 					{/* Chat messages */}
 					<div className="mb-2">
 						<span className="text-gray-500">Default User:</span> Hello
@@ -196,7 +200,7 @@ const StreamChatBox: React.FC = () => {
 				</div>
 
 				{/* Chat Footer */}
-				<div className="pt-4 px-4 h-2/6">
+				<div className="pt-4 px-4 h-1/6">
 					<form onSubmit={handleSubmit}>
 						<Input
 							className="w-full"
@@ -232,7 +236,7 @@ const StreamChatBox: React.FC = () => {
 				</Button>
 			)}
 		</>
-  );
+	);
 };
 
 export default StreamChatBox;
