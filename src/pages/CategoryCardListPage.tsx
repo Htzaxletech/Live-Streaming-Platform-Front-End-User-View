@@ -55,6 +55,7 @@ const CategoryCardList = () => {
 			setLoading(false);
 		} catch (error) {
 			setLoading(false);
+			setShowMoreButton(false);
 		}
 	};
 

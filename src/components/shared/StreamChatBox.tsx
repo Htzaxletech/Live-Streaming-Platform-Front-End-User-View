@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Button from "@components/ui/Button";
 import Input from "@components/ui/Input";
+import store from "store2";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleChat } from "@store/slices/chatSlice";
 import { RootState } from "store";
@@ -9,138 +10,145 @@ import {
 	LuArrowLeftFromLine,
 	LuArrowRightFromLine,
 } from "react-icons/lu";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { socket } from "../../socket";
-import { customAlphabet } from "nanoid";
-import { useParams } from "react-router-dom";
-import store from "store2";
+import { useLocation } from "react-router-dom";
+import { chatTempData, getRandomColor } from "@utils/helpers";
+import { Virtuoso } from "react-virtuoso";
+import { FaArrowDown } from "react-icons/fa6";
 
-const StreamChatBox: React.FC = () => {
+interface StreamChatBoxProps {
+	liveID: any; // Replace 'any' with a more specific type if possible
+	streamKey: any; // Replace 'any' with a more specific type if possible
+}
+
+const StreamChatBox: React.FC<StreamChatBoxProps> = ({
+	liveID: lid,
+	streamKey: skey,
+}) => {
 	const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
-	const [chatMessages, setChatMessages] = useState<unknown[]>([]);
+	const [chatMessages, setChatMessages] = useState<unknown[]>(chatTempData);
 	// const [isConnected, setIsConnected] = useState(false);
 	const [message, setMessage] = useState("");
+	const [showScrollButton, setShowScrollButton] = useState(false);
 
 	const dispatch = useDispatch();
+	const { state } = useLocation();
 
 	const handleToggleChat = () => {
 		dispatch(toggleChat());
 	};
 
-	const nanoid = customAlphabet("1234567890", 6);
+	console.log(
+		"Stream Chat Box >> state?.liveStreamData",
+		state?.liveStreamData
+	);
 
-	let userID = store.get("userId");
-	if (!userID) {
-		userID = nanoid();
-		store.set("userId", userID);
-	}
+	const userID = store.get("id");
+	const streamKey = state?.liveStreamData?.streamKey || skey;
+	const liveID = state?.liveStreamData?.liveID || lid;
 
-	const params = useParams();
+	// console.table({ userID, streamKey });
+
+	const virtuosoRef = useRef<any>(null);
 
 	useEffect(() => {
-		socket.connect();
+		scrollToBottom();
+	}, [chatMessages]);
 
-		function onConnect() {
-			socket.timeout(3000).emit(
-				"livestream_connect",
-				{
-					userID: 1,
-					// streamKey: params.id,
-					streamKey: "0r6fyRXaj",
-				},
-				() => {
-					console.log("livestream_connect");
-				}
-			);
+	// const handleScroll = () => {
+	// 	if (virtuosoRef.current) {
+	// 		const { scrollTop, scrollHeight, clientHeight } =
+	// 			virtuosoRef.current.getScrollingElement();
+	// 		const isAtBottom = scrollTop + clientHeight === scrollHeight;
 
-			socket.timeout(3000).emit(
-				"chat_connect",
-				{
-					userID: 1,
-					// streamKey: params.id,
-					liveID: "123",
-				},
-				() => {
-					console.log("chat_connect");
-				}
-			);
+	// 		setShowScrollButton(!isAtBottom);
+	// 	}
+	// };
+
+	const scrollToBottom = () => {
+		if (virtuosoRef.current) {
+			virtuosoRef.current.scrollToIndex({
+				index: chatMessages.length - 1,
+				align: "end",
+				behavior: "smooth",
+			});
 		}
+	};
 
-		function onDisconnect() {
-			socket.emit(
-				"livestream_disconnect",
-				{
-					userID,
-					// streamKey: params.id,
-					streamKey: "0r6fyRXaj",
-				},
-				() => {
-					console.log("livestream_disconnect");
-				}
-			);
+	useEffect(() => {
+		const liveStatus = 1;
 
-			socket.emit(
-				"chat_disconnect",
-				{
-					userID: 1,
-					// streamKey: params.id,
-					liveID: "123",
-				},
-				() => {
-					console.log("chat_disconnect");
-				}
-			);
+		if (liveStatus && state?.liveStreamData) {
+			socket.connect();
+
+			socket.timeout(3000).emit("add_user_count", { userID });
+
+			socket.on("connect", onConnect);
+			socket.on("disconnect", onDisconnect);
+			socket.on("chat_list_message", onMessageEvent);
 		}
-
-		// function onConnectLiveChat() {
-		//   socket.timeout(3000).emit(
-		//     "chat_connect",
-		//     {
-		//       userID: 1,
-		//       // streamKey: params.id,
-		//       LiveID: "123",
-		//     },
-		//     () => {
-		//       console.log("chat_connect");
-		//     }
-		//   );
-		// }
-
-		// function onDisConnectLiveChat() {
-		//   socket.emit(
-		//     "chat_disconnect",
-		//     {
-		//       userID,
-		//       // streamKey: params.id,
-		//       LiveID: "123",
-		//     },
-		//     () => {
-		//       console.log("chat_disconnect");
-		//     }
-		//   );
-		// }
-
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		function onMessageEvent(value: any) {
-			console.log("value", value);
-			setChatMessages((previous) => [...previous, value]);
-		}
-
-		socket.on("connect", onConnect);
-		socket.on("disconnect", onDisconnect);
-
-		// socket.on("connect", onConnectLiveChat);
-		// socket.on("disconnect", onDisConnectLiveChat);
-
-		socket.on("chat_list_message", onMessageEvent);
-		console.log("listen events");
 
 		return () => {
+			socket.emit("remove_user_count", { userID });
+
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
 			socket.off("chat_list_message", onMessageEvent);
 		};
-	}, [params.id]);
+	}, []);
+
+	const onConnect = () => {
+		socket.timeout(3000).emit(
+			"livestream_connect",
+			{
+				userID,
+				streamKey,
+			},
+			() => {
+				console.log("livestream_connect");
+			}
+		);
+
+		socket.timeout(3000).emit(
+			"chat_connect",
+			{
+				userID,
+				liveID,
+			},
+			() => {
+				console.log("chat_connect");
+			}
+		);
+	};
+
+	const onDisconnect = () => {
+		socket.emit(
+			"livestream_disconnect",
+			{
+				userID,
+				streamKey,
+			},
+			() => {
+				console.log("livestream_disconnect");
+			}
+		);
+
+		socket.emit(
+			"chat_disconnect",
+			{
+				userID,
+				liveID,
+			},
+			() => {
+				console.log("chat_disconnect");
+			}
+		);
+	};
+
+	const onMessageEvent = (value: any) => {
+		setChatMessages((previous) => [...previous, value]);
+	};
 
 	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setMessage(e.target.value);
@@ -148,15 +156,33 @@ const StreamChatBox: React.FC = () => {
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		console.log("message", message);
-		socket.emit(
-			"add_chat_message",
-			{ userID, liveID: params.id, message },
-			() => {
-				console.log("Sent");
-			}
-		);
+
+		console.log("chatMessages", chatMessages);
+		setChatMessages((previous) => [...previous, message]);
+
+		socket.emit("add_chat_message", { userID, liveID, message }, () => {
+			console.log("message sent");
+		});
+
 		setMessage("");
+	};
+
+	const chatContent = (_, chat: any) => (
+		<div className="text-sm hover:bg-zinc-100 px-2 py-1">
+			<span style={{ backgroundColor: getRandomColor() }}>
+				{chat?.userID}
+			</span>
+			<span>:&nbsp;</span>
+			<span className="leading-normal">{chat?.message}</span>
+		</div>
+	);
+
+	const handleEndReached = () => {
+		setShowScrollButton(false);
+	};
+
+	const handleAtBottomStateChange = (atBottom: boolean) => {
+		setShowScrollButton(!atBottom);
 	};
 
 	return (
@@ -181,22 +207,24 @@ const StreamChatBox: React.FC = () => {
 				</div>
 
 				{/* Chat Content */}
-				<div className="px-4 pt-4 h-5/6 overflow-auto">
+				<div className="px-2 pt-3 h-5/6">
 					{/* Chat messages */}
-					<div className="mb-2">
-						<span className="text-gray-500">Default User:</span> Hello
-						Testing!
-					</div>
-
-					{chatMessages.map((i: any, index) => {
-						return (
-							<div key={index} className="mb-2">
-								<span className="text-gray-500">{i.userID}:</span>
-								{i.message}
-							</div>
-						);
-					})}
-					{/* Add more messages as needed */}
+					<Virtuoso
+						ref={virtuosoRef}
+						style={{ height: "100%" }}
+						data={chatMessages}
+						itemContent={chatContent}
+						endReached={handleEndReached}
+						atBottomStateChange={handleAtBottomStateChange}
+					/>
+					{showScrollButton && (
+						<Button
+							className="relative mx-auto bottom-10 rounded-full bg-primary-50 hover:bg-primary-100 active:bg-primary-100"
+							onClick={() => scrollToBottom()}
+						>
+							<FaArrowDown className="text-lg text-primary" />
+						</Button>
+					)}
 				</div>
 
 				{/* Chat Footer */}

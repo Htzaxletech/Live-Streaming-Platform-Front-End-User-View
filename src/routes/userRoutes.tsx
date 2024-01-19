@@ -19,7 +19,7 @@ const DirectoryCategoryPage = lazy(
 	() => import("@pages/DirectoryCategoryPage")
 );
 const ProfilePage = lazy(() => import("@pages/ProfilePage"));
-const SearchPage = lazy(() => import("@pages/SearchPage"));
+const SearchPage = lazy(() => import("@pages/search/SearchPage"));
 const TestingComponents = lazy(() => import("@pages/TestingComponents"));
 
 const userRoutes = {
@@ -93,7 +93,7 @@ const userRoutes = {
 			),
 		},
 		{
-			path: "/:id",
+			path: "/:channelName",
 			element: (
 				<Suspense fallback={<LoadingIndicator />}>
 					<PrivateRoute element={<LiveStreamPage />} />

@@ -1,13 +1,27 @@
-// VideoCard.tsx
+import React from "react";
 import game from "../../pages/game-pubg.jpg";
 import Tag from "@components/ui/Tag";
+import { convertToLowerCase } from "@utils/helpers";
+import { useNavigate } from "react-router-dom";
 import { tv } from "tailwind-variants";
+import { useDispatch } from "react-redux";
 
-interface User {
-	title: string;
+interface DataProps {
+	ID: number;
+	mainCategoryID: number;
+	categoryName?: string;
+	image: string;
+	secondCat?: [];
 }
 
-const VideoCard = ({ user, isLive }: { user: User; isLive: boolean }) => {
+interface VideoCardProps {
+	data?: DataProps;
+}
+
+const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
 	const card = tv({
 		slots: {
 			cardContainer: "mx-auto duration-300 bg-primary cursor-pointer",
@@ -52,19 +66,37 @@ const VideoCard = ({ user, isLive }: { user: User; isLive: boolean }) => {
 		liveScreenCard,
 	} = card();
 
+	const handleOnClick = () => {
+		navigate(`/${convertToLowerCase(data?.channelName)}`, {
+			state: {
+				liveStreamData: data,
+			},
+		});
+	};
+
+	const handleLink = (param: unknown) => {
+		// dispatch(setCategoryData(param));
+		navigate(`/directory/category/${param?.categoryName}`);
+	};
+
 	return (
 		<div>
-			<div className={cardContainer()}>
+			<div className={cardContainer()} onClick={handleOnClick}>
 				<div className={liveScreenCard()}>
-					<img className={imageCover()} src={game} alt={user.title} loading="lazy" />
-					
-					{isLive && (
+					<img
+						className={imageCover()}
+						src={game}
+						alt={data?.title}
+						loading="lazy"
+					/>
+
+					{data?.live_status === 1 && (
 						<>
 							<div className={live()}>Live</div>
-							<div className={view()}>{200} views</div>
+							<div className={view()}>{data?.viewCount} views</div>
 						</>
 					)}
-					{!isLive && (
+					{data?.live_status === 0 && (
 						<>
 							<div className={videoLength()}>7:03:46</div>
 							<div className={lastUploaded()}>{1} day ago</div>
@@ -78,27 +110,26 @@ const VideoCard = ({ user, isLive }: { user: User; isLive: boolean }) => {
 					<div className={profileImage()}>
 						<img
 							// src={`https://random.imagecdn.app/500/${index}`}
-							src={game}
+							src={game || data?.thumbnail}
 							alt="channel-profile"
 							className={channelAvator()}
 							loading="lazy"
 						/>
 					</div>
 					<div className={titleContainer()}>
-						<div className={title()}>{"title"}</div>
-						<div className={username()}>{"channelName"}</div>
-						<div className={categoryName()}>{"categoryName"}</div>
+						<div className={title()}>{data?.title}</div>
+						<div className={username()}>{data?.channelName}</div>
+						<div className={categoryName()}>{data?.categoryName}</div>
 					</div>
 				</div>
-				{isLive && (
+				{data?.live_status === 1 && (
 					<div className={tagsContainer()}>
-						<Tag to={""}>International</Tag>
-						<Tag to={""}>International Language</Tag>
-						<Tag to={""}>Esports Global</Tag>
-						<Tag to={""}>Mingalardon</Tag>
-						<Tag className="" to={""}>
-							Mandalay
-						</Tag>
+						{data?.tags?.length > 0 &&
+							data?.tags?.map((i, index) => (
+								<Tag key={index} to={""} onClick={() => handleLink(i)}>
+									{i.tagName}
+								</Tag>
+							))}
 					</div>
 				)}
 			</div>

@@ -1,4 +1,4 @@
-import LivePage from "./LivePage";
+import LivePage from "../LivePage";
 
 const SearchPage = () => {
 	return (

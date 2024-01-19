@@ -16,5 +16,9 @@ export const endpoints = {
 	startLive: "/profile/go_live",
 	updateProfile: "/profile/update_profile",
 	vodByCategoryID: "/browse/VODByCategoryID",
+	channelData: "/profile/channeldataBychannelID",
+	homeLive: "/streams/get_streams",
+	profileData: "/profile/channeldataByuserID",
+	follow: "/follow/addfollow",
 	// Add more endpoints as needed
 };

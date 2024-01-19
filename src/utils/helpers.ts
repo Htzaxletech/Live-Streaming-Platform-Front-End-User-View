@@ -1,3 +1,10 @@
+/**
+ * Converts a Blob file to a base64 encoded string.
+ *
+ * @param {Blob} file - The Blob file to convert.
+ * @returns {Promise<string>} - A Promise that resolves with the base64 encoded string.
+ * @throws {Error} - If conversion fails.
+ */
 export const convertToBase64 = (file: Blob): Promise<string> => {
 	return new Promise((resolve, reject) => {
 		const reader = new FileReader();
@@ -18,10 +25,35 @@ export const convertToBase64 = (file: Blob): Promise<string> => {
 	});
 };
 
-export const generateStreamUrl = (streamKey: string) => {
+/**
+ * Converts a given string to lowercase.
+ *
+ * @param {string} input - The input string.
+ * @returns {string} - The lowercase version of the input string.
+ */
+export const convertToLowerCase = (input: string): string => {
+	return input.toLowerCase();
+};
+
+/**
+ * Generates a streaming URL based on the provided stream key.
+ *
+ * @param {string} streamKey - The stream key used in the URL.
+ * @returns {string} - The generated streaming URL.
+ */
+export const generateStreamUrl = (streamKey: string): string => {
 	const baseUrl = import.meta.env.VITE_STREAM_URL;
 	const streamUrl = `${baseUrl}/live/${streamKey}/index.m3u8`;
 	return streamUrl;
+};
+
+/**
+ * Generates a random hex color code.
+ *
+ * @returns {string} - The random hex color code.
+ */
+export const getRandomColor = (): string => {
+	return "#" + Math.floor(Math.random() * 16777215).toString(16);
 };
 
 export const videoSliderData = [
@@ -195,5 +227,394 @@ export const tempData = [
 				tagName: "Strategy",
 			},
 		],
+	},
+];
+
+export const chatTempData = [
+	{
+		userID: 1,
+		message: "Hellow World, Testing chat message for production. Is it Okay?",
+	},
+	{
+		userID: 2,
+		message:
+			"You are my sunshine. Bright for everything! Everything is Okay. Impossible is Nothing",
+	},
+	{
+		userID: 3,
+		message:
+			"Why shoud u think about the animals? No I am not right This is testing",
+	},
+	{
+		userID: 1,
+		message: "I'm lonely and feel depressed",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
+	},
+	{
+		userID: 1,
+		message: "testing",
 	},
 ];

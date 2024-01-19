@@ -3,7 +3,7 @@
 // @ts-nocheck
 import React, { lazy, useEffect, useState } from "react";
 import { FaRegHeart } from "react-icons/fa";
-// import { CollapsedSidebarItem } from "../CollapsedSidebarItem";
+import CollapsedSidebarItem from "../CollapsedSidebarItem";
 // import { SidebarItem } from "../Sidebaritem";
 import johndoe from "../../../../src/assets/images/johndoe.jpg";
 import { tv } from "tailwind-variants";
@@ -12,15 +12,38 @@ import { useSelector } from "react-redux";
 import { RootState } from "@store/index";
 import { handleRequestError, makeRequest } from "@services/utils";
 import { endpoints as ep } from "@services/endpoints";
-import store from "store2";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { convertToLowerCase } from "@utils/helpers";
+import store from "store2";
 
-const CollapsedSidebarItem = lazy(() => import("../CollapsedSidebarItem"))
 const SidebarItem = lazy(() => import("../Sidebaritem"));
 
 const FollowedChannels: React.FC = () => {
+	// const [userData, setUserData] = useState<unknown>([
+	// 	{
+	// 		profileImage: "test.jpg",
+	// 		title: "halo",
+	// 		ChannelID: 3,
+	// 		displayName: "Adam",
+	// 		categoryName: "Basketball",
+	// 		viewCount: 0,
+	// 		liveID: 0,
+	// 	},
+	// 	{
+	// 		profileImage: "www-1213940.jpeg",
+	// 		title: "This is streaming",
+	// 		ChannelID: 2,
+	// 		displayName: "Min",
+	// 		categoryName: "Basketball",
+	// 		viewCount: 0,
+	// 		liveID: 162,
+	// 	},
+	// ]);
 	const [userData, setUserData] = useState<unknown>([]);
 	const [loading, setLoading] = useState<boolean>(false);
+
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -35,7 +58,7 @@ const FollowedChannels: React.FC = () => {
 						userID: 1,
 					},
 					{
-						signal
+						signal,
 					}
 				); // Pass the signal to the request
 
@@ -78,6 +101,14 @@ const FollowedChannels: React.FC = () => {
 		defaultVariants: {},
 	});
 
+	const handleOnClick = (data) => {
+		navigate(`/${convertToLowerCase(data.displayName)}`, {
+			state: {
+				liveStreamData: data,
+			},
+		});
+	};
+
 	return (
 		<div>
 			<div className="flex">
@@ -100,8 +131,9 @@ const FollowedChannels: React.FC = () => {
 			<div className={contentContainer()}>
 				<div className="mx-auto">
 					{userData &&
+						userData.length > 0 &&
 						userData.map((i, index) => (
-							<div key={index}>
+							<div key={index} onClick={() => handleOnClick(i)}>
 								{collapsed ? (
 									<div>
 										{/* Assuming you have a CollapsedSidebarItem component */}
@@ -123,7 +155,7 @@ const FollowedChannels: React.FC = () => {
 											category={i.categoryName}
 											viewers={i.viewCount}
 											title={i?.title}
-											liveID={i?.liveID}
+											liveStatus={i?.live_status}
 										/>
 									</div>
 								)}

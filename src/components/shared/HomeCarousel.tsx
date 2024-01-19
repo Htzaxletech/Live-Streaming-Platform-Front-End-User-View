@@ -59,12 +59,15 @@ function HomeCarousel() {
 			{ signal }
 		);
 
+		console.log("Home Carousel response", data);
+
 		if (success) {
-			const updatedData = tempData.map((item: any) => ({
+			const updatedData = data?.map((item: any) => ({
 				...item,
 				video: generateStreamUrl(item.streamKey),
+				// video: "http://192.168.1.31:8888/live/0r6fyRXaj/index.m3u8",
 				coverImage:
-					// item.thumbnail ||
+					item.s3path ||
 					"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg",
 			}));
 
@@ -76,7 +79,7 @@ function HomeCarousel() {
 
 	return (
 		<>
-			{liveStreams.length > 0 && (
+			{liveStreams && liveStreams?.length > 2 && (
 				<div className="w-full relative">
 					<ResponsiveContainer
 						carouselRef={ref}
@@ -136,8 +139,15 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 		clearTimeout(loadDelay);
 	});
 
-	const { coverImage, video, channelName, categoryName, tags, title } =
-		data[dataIndex];
+	const {
+		coverImage,
+		video,
+		channelName,
+		categoryName,
+		tags,
+		title,
+		viewCount,
+	} = data[dataIndex];
 
 	return (
 		<div className="slider-card" draggable={false}>
@@ -171,7 +181,6 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 							<DefaultVideoLayout icons={defaultLayoutIcons} />
 						</MediaPlayer>
 					</div>
-					{/* <StreamDescription /> */}
 					<div className="description hidden md:flex">
 						<div className="info bg-background-base h-full">
 							<div className="info-top">
@@ -186,7 +195,7 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 									<div className="profile-info">
 										<div className="username">{channelName}</div>
 										<div className="game">{categoryName}</div>
-										<div className="viewers">297 viewers</div>
+										<div className="viewers">{viewCount} viewers</div>
 									</div>
 								</div>
 								<div className="tags">

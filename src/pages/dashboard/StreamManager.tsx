@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
+// /* eslint-disable @typescript-eslint/ban-ts-comment */
+// // @ts-nocheck
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { MediaPlayer, MediaProvider } from "@vidstack/react";
@@ -22,6 +22,8 @@ import { makeMultipleRequests, makeRequest } from "@services/utils";
 import { endpoints as ep } from "@services/endpoints";
 import { toast } from "react-toastify";
 import store from "store2";
+import { generateStreamUrl } from "@utils/helpers";
+import { useLocation } from "react-router-dom";
 import "@styles/tags.css";
 
 
@@ -31,6 +33,8 @@ const Heading = lazy(() => import("@components/ui/Heading"));
 const StreamChatBox = lazy(() => import("@components/shared/StreamChatBox"));
 
 const StreamManager = () => {
+	const { state } = useLocation();
+
 	const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
 
 	const [isOpenStreamInfo, setIsOpenStreamInfo] = useState<boolean>(false);
@@ -52,6 +56,7 @@ const StreamManager = () => {
 			"https://play-lh.googleusercontent.com/uqq6a-fHayQxsNQkxB9ZZXag8N7Du5mOEKcScr9yltHqx3RKgCdr9VJHKGO2vY_GUe0",
 	});
 
+
 	useEffect(() => {
 		const abortController = new AbortController();
 		const signal = abortController.signal;
@@ -62,6 +67,14 @@ const StreamManager = () => {
 				const requests = [
 					{ method: "get", url: ep.tags, config: { signal } },
 					{ method: "get", url: ep.secondCategory, config: { signal } },
+					{
+						method: "get",
+						url: ep.profileData,
+						data: {
+							userID: 1,
+						},
+						config: { signal },
+					},
 				];
 
 				const responses = await makeMultipleRequests(requests);
@@ -69,6 +82,7 @@ const StreamManager = () => {
 				if (responses !== null) {
 					const tags = responses[0];
 					const category = responses[1];
+					const channel = responses[2];
 
 					if (tags?.success) {
 						const data = tags?.data;
@@ -97,6 +111,8 @@ const StreamManager = () => {
 					} else {
 						toast.error(category?.message);
 					}
+
+					console.log("channel", channel);
 				}
 			} catch (error) {
 				// Check if the error is due to the request being aborted
@@ -167,7 +183,7 @@ const StreamManager = () => {
 			};
 
 			const response = await makeRequest("post", ep.updateStreamInfo, data);
-			console.log("response", response);
+
 			if (response?.success) {
 				setInitialFormState({
 					...initFormState,
@@ -213,7 +229,7 @@ const StreamManager = () => {
 				<div className={` ${isChatOpen ? "md:mr-60 lg:mr-72" : "mr-0"}`}>
 					<div className="h-50 xl:h-[550px] flex justify-center">
 						<MediaPlayer
-							src="https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8"
+							src={generateStreamUrl(state?.liveStreamData?.streamKey)}
 							autoplay
 							className="h-full rounded-none"
 						>
@@ -257,7 +273,10 @@ const StreamManager = () => {
 					</div>
 				</div>
 			</div>
-			<StreamChatBox />
+			<StreamChatBox
+				// streamKey={streamKey}
+				liveID={state?.liveStreamData?.liveID}
+			/>
 
 			<Modal isOpen={isOpenStreamInfo} onClose={handleStreamInfo}>
 				<div>
