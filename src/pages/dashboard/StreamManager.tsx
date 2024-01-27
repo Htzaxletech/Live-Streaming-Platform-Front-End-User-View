@@ -26,7 +26,6 @@ import { generateStreamUrl } from "@utils/helpers";
 import { useLocation } from "react-router-dom";
 import "@styles/tags.css";
 
-
 const Button = lazy(() => import("@components/ui/Button"));
 const Modal = lazy(() => import("@pages/authentication/Modal"));
 const Heading = lazy(() => import("@components/ui/Heading"));
@@ -44,6 +43,7 @@ const StreamManager = () => {
 	const [suggestionsTag, setSuggesstionsTag] = useState<Tag[]>([]);
 	const [selectedCategory, setSelectedCategory] = useState<Tag[]>([]);
 	const [suggestionsCategory, setSuggesstionsCategory] = useState<Tag[]>([]);
+	const [channelData, setChanelData] = useState([]);
 
 	interface FormState {
 		title: string;
@@ -55,7 +55,6 @@ const StreamManager = () => {
 		categoryImage:
 			"https://play-lh.googleusercontent.com/uqq6a-fHayQxsNQkxB9ZZXag8N7Du5mOEKcScr9yltHqx3RKgCdr9VJHKGO2vY_GUe0",
 	});
-
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -69,7 +68,7 @@ const StreamManager = () => {
 					{ method: "get", url: ep.secondCategory, config: { signal } },
 					{
 						method: "get",
-						url: ep.profileData,
+						url: ep.liveByUserID,
 						data: {
 							userID: 1,
 						},
@@ -112,6 +111,10 @@ const StreamManager = () => {
 						toast.error(category?.message);
 					}
 
+					if (channel?.success) {
+						const data = channel?.data[0];
+						setChanelData(data);
+					}
 					console.log("channel", channel);
 				}
 			} catch (error) {
@@ -172,7 +175,7 @@ const StreamManager = () => {
 		setLoading(true);
 
 		try {
-			const valuesArray = selectedTag.map(tag => tag.value);
+			const valuesArray = selectedTag.map((tag) => tag.value);
 
 			const data = {
 				categoryID:
@@ -193,7 +196,7 @@ const StreamManager = () => {
 				});
 				handleStreamInfo();
 				toast.success(response?.message);
-			}else{
+			} else {
 				toast.error(response?.message);
 			}
 			setLoading(false);
@@ -221,22 +224,28 @@ const StreamManager = () => {
 		} catch (error) {
 			setLoading(false);
 		}
-	}
+	};
 
 	return (
 		<div>
 			<div className="flex-1 flex flex-col pt-4">
 				<div className={` ${isChatOpen ? "md:mr-60 lg:mr-72" : "mr-0"}`}>
 					<div className="h-50 xl:h-[550px] flex justify-center">
-						<MediaPlayer
-							src={generateStreamUrl(state?.liveStreamData?.streamKey)}
-							autoplay
-							className="h-full rounded-none"
-						>
-							<MediaProvider></MediaProvider>
-							<DefaultAudioLayout icons={defaultLayoutIcons} />
-							<DefaultVideoLayout icons={defaultLayoutIcons} />
-						</MediaPlayer>
+						{state?.liveStreamData?.streamKey ||
+							(channelData?.streamKey && (
+								<MediaPlayer
+									src={generateStreamUrl(
+										state?.liveStreamData?.streamKey ||
+											channelData?.streamKey
+									)}
+									autoplay
+									className="h-full rounded-none"
+								>
+									<MediaProvider></MediaProvider>
+									<DefaultAudioLayout icons={defaultLayoutIcons} />
+									<DefaultVideoLayout icons={defaultLayoutIcons} />
+								</MediaPlayer>
+							))}
 					</div>
 
 					<div className="container">
@@ -273,9 +282,11 @@ const StreamManager = () => {
 					</div>
 				</div>
 			</div>
+
 			<StreamChatBox
-				// streamKey={streamKey}
-				liveID={state?.liveStreamData?.liveID}
+				streamKey={channelData?.streamKey}
+				liveID={channelData?.liveID}
+				liveStatus={channelData?.live_status}
 			/>
 
 			<Modal isOpen={isOpenStreamInfo} onClose={handleStreamInfo}>

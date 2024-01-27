@@ -14,24 +14,28 @@ const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
   size = 100,
 }) => {
   return (
-    <div className='relative inline-block'>
-      <img
-        src={imageUrl}
-        alt={altText}
-        className={`rounded-full object-cover outline outline-danger outline-offset-2 `}
-        style={{
-          width: `${size}px`,
-          height: `${size}px`,
-        }}
-      />
-      {isLive && (
-        <div
-        className={"bg-danger rounded text-white text-xs px-1 absolute -bottom-2 left-1/2 transform -translate-x-1/2 "}
-       >
-          LIVE
-        </div>
-      )}
-    </div>
+		<div className="relative inline-block">
+			<img
+				src={imageUrl}
+				alt={altText}
+				className={`rounded-full object-cover outline outline-offset-2 ${
+					isLive ? "outline-danger" : "outline-gray-200"
+				}`}
+				style={{
+					width: `${size}px`,
+					height: `${size}px`,
+				}}
+			/>
+			{isLive && (
+				<div
+					className={
+						"bg-danger rounded text-white text-xs px-1 absolute -bottom-2 left-1/2 transform -translate-x-1/2 "
+					}
+				>
+					LIVE
+				</div>
+			)}
+		</div>
   );
 };
 

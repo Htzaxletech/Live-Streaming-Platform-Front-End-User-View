@@ -1,9 +1,9 @@
 import { lazy } from "react";
+import CategoryHeader from "@components/shared/CategoryHeader";
+import LiveByCategoryID from "./LiveByCategoryID";
+import Tab from "@components/ui/Tab";
 
-const LivePage = lazy(() => import("./LivePage"));
-const VideosPage = lazy(() => import("./VideosPage"));
-const Tab = lazy(() => import("@components/ui/Tab"));
-const CategoryHeader = lazy(() => import("@components/shared/CategoryHeader"));
+const VODByCategoryID = lazy(() => import("./VODByCategoryID"));
 
 const CategoryPage = () => {
 	return (
@@ -13,11 +13,11 @@ const CategoryPage = () => {
 				tabs={[
 					{
 						label: "Live Channels",
-						content: <LivePage />,
+						content: <LiveByCategoryID />,
 					},
 					{
 						label: "Videos",
-						content: <VideosPage />,
+						content: <VODByCategoryID />,
 					},
 				]}
 				className="mt-3"

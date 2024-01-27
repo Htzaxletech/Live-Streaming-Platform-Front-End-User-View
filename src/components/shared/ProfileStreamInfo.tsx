@@ -16,7 +16,7 @@ const ProfileStreamInfo: React.FC<ProfileStreamInfoProps> = ({
 }) => {
 
   return (
-    <div className="bg-background-float p-5 w-full max-w-sm h-40">
+    <div className="bg-background-base p-5 w-full max-w-sm h-40">
       <div className="flex flex-col justify-between items-stretch h-full">
         <div className="w-[80%]">
           {

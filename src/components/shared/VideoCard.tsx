@@ -4,7 +4,6 @@ import Tag from "@components/ui/Tag";
 import { convertToLowerCase } from "@utils/helpers";
 import { useNavigate } from "react-router-dom";
 import { tv } from "tailwind-variants";
-import { useDispatch } from "react-redux";
 
 interface DataProps {
 	ID: number;
@@ -20,21 +19,20 @@ interface VideoCardProps {
 
 const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 
 	const card = tv({
 		slots: {
 			cardContainer: "mx-auto duration-300 bg-primary cursor-pointer",
 			live: "absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded",
 			view: "absolute bottom-2 left-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded",
-			imageCover: "w-full h-50",
+			imageCover: "w-full h-32",
 			videoLength:
 				"absolute top-2 left-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded",
 			lastUploaded:
 				"absolute bottom-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded",
 			cardContent: "p-4",
 			flexContainer: "flex items-center gap-3",
-			profileImage: "w-12 h-12",
+			profileImage: "w-12 h-12 text-center",
 			titleContainer: "col-span-1",
 			title: "font-semibold",
 			username: "text-soft",
@@ -43,7 +41,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 				"flex flex-wrap gap-2 items-center mt-5 h-6 overflow-hidden",
 			channelAvator: "w-full h-full rounded-full md:w-30 md:h-30",
 			liveScreenCard:
-				"relative hover:translate-x-1 hover:-translate-y-1 transition-all duration-200 w-full h-50",
+				"relative hover:translate-x-1 hover:-translate-y-1 transition-all duration-200 w-full h-32 text-center",
 		},
 	});
 
@@ -67,6 +65,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 	} = card();
 
 	const handleOnClick = () => {
+		console.log("data", data);
 		navigate(`/${convertToLowerCase(data?.channelName)}`, {
 			state: {
 				liveStreamData: data,
@@ -85,8 +84,8 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 				<div className={liveScreenCard()}>
 					<img
 						className={imageCover()}
-						src={game}
-						alt={data?.title}
+						src={data?.s3path || game}
+						alt={"Live thumbnail"}
 						loading="lazy"
 					/>
 
@@ -98,8 +97,8 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 					)}
 					{data?.live_status === 0 && (
 						<>
-							<div className={videoLength()}>7:03:46</div>
-							<div className={lastUploaded()}>{1} day ago</div>
+							<div className={videoLength()}>{data?.duration || "07:03:46"}</div>
+							{/* <div className={lastUploaded()}>{1} day ago</div> */}
 						</>
 					)}
 				</div>
@@ -110,7 +109,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 					<div className={profileImage()}>
 						<img
 							// src={`https://random.imagecdn.app/500/${index}`}
-							src={game || data?.thumbnail}
+							src={data?.s3channel || game}
 							alt="channel-profile"
 							className={channelAvator()}
 							loading="lazy"

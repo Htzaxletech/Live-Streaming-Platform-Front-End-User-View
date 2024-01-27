@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { GoPerson } from "react-icons/go";
 import { lazy, useState } from "react";
 import { Dropdown } from "@components/ui/Dropdown";
 
-// import Button from "@components/ui/Button";
-// import LanguageSwitch from "./LanguageSwitch";
-// import ThemeSwitch from "./ThemeSwitch";
-// import Icon from "./Icon";
-// import UserProfile from "./UserProfile";
+import Button from "@components/ui/Button";
+import LanguageSwitch from "./LanguageSwitch";
+import ThemeSwitch from "./ThemeSwitch";
+import Icon from "./Icon";
+import UserProfile from "./UserProfile";
 
 import { MdOutlineAnalytics } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -22,11 +23,11 @@ import { logout } from "@store/slices/authSlice";
 import { RootState } from "@store/index";
 import store from "store2";
 
-const UserProfile = lazy(() => import("./UserProfile"));
-const LanguageSwitch = lazy(() => import("./LanguageSwitch"));
-const ThemeSwitch = lazy(() => import("./ThemeSwitch"));
-const Icon = lazy(() => import("./Icon"));
-const Button = lazy(() => import("@components/ui/Button"));
+// const UserProfile = lazy(() => import("./UserProfile"));
+// const LanguageSwitch = lazy(() => import("./LanguageSwitch"));
+// const ThemeSwitch = lazy(() => import("./ThemeSwitch"));
+// const Icon = lazy(() => import("./Icon"));
+// const Button = lazy(() => import("@components/ui/Button"));
 
 interface DashboardHeaderProps {
 	icon: React.ReactElement; // You can pass the icon as a React element

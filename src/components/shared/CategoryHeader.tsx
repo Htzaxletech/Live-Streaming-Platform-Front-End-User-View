@@ -1,26 +1,53 @@
 import gaming from "@assets/images/gaming.svg";
 import Tag from "@components/ui/Tag";
-import { RootState } from "@store/index";
-import {
-	setCategoryData,
-} from "@store/slices/categorySlice";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { endpoints } from "@services/endpoints";
+import { makeRequest } from "@services/utils";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CategoryHeader: React.FC = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const { categoryID } = useParams();
 
-	const { categoryData } = useSelector((state: RootState) => state.category);
+	const [categoryData, setCategoryData] = useState<[]>([]);
 
 	useEffect(() => {
-		if (categoryData === null) navigate("/");
-	}, []);
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
+		(async () => {
+			try {
+				const { success, message, data } = await makeRequest(
+					"get",
+					endpoints.categoryDetail,
+					{
+						catID: categoryID,
+					},
+					{
+						signal
+					}
+				);
+
+				if(success){
+					setCategoryData(data?.[0]);
+				}
+			} catch (error) {
+				toast.error(error);
+			}
+		})();
+
+		return() => {
+			abortController.abort();
+
+		}
+	}, [categoryID]);
 
 	const handleLink = (data: any) => {
-		dispatch(setCategoryData(data));
-		navigate(`/directory/category/${data?.categoryName}`);
+		// dispatch(setCategoryData(data));
+		// navigate(`/directory/category/${data?.categoryName}`);
 	};
 
 	return (
@@ -29,7 +56,7 @@ const CategoryHeader: React.FC = () => {
 				{/* Image Thumbnail Grid (20%) */}
 				<div className="col-span-12 lg:col-span-1">
 					<img
-						src={categoryData?.image || gaming}
+						src={categoryData?.s3categoryImage || gaming}
 						alt={categoryData?.categoryName}
 						className="w-full h-full mb-4"
 						loading="lazy"
@@ -48,8 +75,8 @@ const CategoryHeader: React.FC = () => {
 								{categoryData?.secondCat.map((item, index) => (
 									<Tag
 										key={index}
-										to={""}
-										onClick={() => handleLink(item)}
+										to={"/directory"}
+										state={{ directory: { ...item, active: 0 } }}
 									>
 										{item.categoryName}
 									</Tag>

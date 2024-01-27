@@ -3,6 +3,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 // import { lazy, useEffect, useState } from "react";
 import dashboardRoutes from "@routes/dashboardRoutes";
 import userRoutes from "@routes/userRoutes";
+import { useEffect } from "react";
+import { socket } from "./socket";
 
 const App = () => {
 	// const [routes, setRoutes] = useState({});
@@ -23,6 +25,14 @@ const App = () => {
 
 	// 	loadRoutes();
 	// }, []);
+	
+	useEffect(()=>{
+		socket.connect();
+
+		return () => {
+			socket.disconnect();
+		};
+	}, [])
 
 	const appRouter = createBrowserRouter([userRoutes, dashboardRoutes]);
 

@@ -3,15 +3,14 @@ import game from "../../pages/game-pubg.jpg";
 import Tag from "@components/ui/Tag";
 import { tv } from "tailwind-variants";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setCategoryData } from "@store/slices/categorySlice";
 
 interface DataProps {
 	ID: number;
-	mainCategoryID: number
+	mainCategoryID: number;
 	categoryName?: string;
 	image: string;
 	secondCat?: [];
+	s3categoryImage: string;
 }
 
 interface CategoryCardProps {
@@ -20,7 +19,7 @@ interface CategoryCardProps {
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ data }) => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	// const dispatch = useDispatch();
 
 	const card = tv({
 		slots: {
@@ -50,8 +49,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ data }) => {
 	} = card();
 
 	const handleLink = (param: unknown) => {
-		dispatch(setCategoryData(param));
-		navigate(`/directory/category/${param?.categoryName}`);
+		navigate(`/directory/category/${param?.ID}`);
 	};
 
 	return (
@@ -60,7 +58,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ data }) => {
 				<div className={liveScreenCard()}>
 					<img
 						className={imageCover()}
-						src={game || data?.image}
+						src={data?.s3categoryImage || game}
 						alt={data?.categoryName}
 						loading="lazy"
 					/>
@@ -78,7 +76,11 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ data }) => {
 						data?.secondCat.length > 0 &&
 						data?.secondCat.map((i, index) => {
 							return (
-								<Tag key={index} to={""} onClick={() => handleLink(i)}>
+								<Tag
+									key={index}
+									to={"/directory"}
+									state={{ directory: { ...i, active: 0 } }}
+								>
 									{i.categoryName}
 								</Tag>
 							);

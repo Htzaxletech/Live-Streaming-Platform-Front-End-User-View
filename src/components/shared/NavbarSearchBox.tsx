@@ -29,7 +29,7 @@ const NavbarSearchBox = ({ className }: { className?: string }) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    navigate(`/search`);
+    navigate(`/search/${searchValue}`, );
     clearInputValue();
   }
 

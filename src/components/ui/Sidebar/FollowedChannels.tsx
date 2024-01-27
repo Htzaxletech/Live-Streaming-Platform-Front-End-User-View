@@ -29,6 +29,7 @@ const FollowedChannels: React.FC = () => {
 	// 		categoryName: "Basketball",
 	// 		viewCount: 0,
 	// 		liveID: 0,
+	// 		streamKey: "5asdf23",
 	// 	},
 	// 	{
 	// 		profileImage: "www-1213940.jpeg",
@@ -38,6 +39,7 @@ const FollowedChannels: React.FC = () => {
 	// 		categoryName: "Basketball",
 	// 		viewCount: 0,
 	// 		liveID: 162,
+	// 		streamKey: "adb34dg",
 	// 	},
 	// ]);
 	const [userData, setUserData] = useState<unknown>([]);
@@ -55,7 +57,7 @@ const FollowedChannels: React.FC = () => {
 					"get",
 					ep.followChannels,
 					{
-						userID: 1,
+						userID: store.get("id"),
 					},
 					{
 						signal,
@@ -63,6 +65,7 @@ const FollowedChannels: React.FC = () => {
 				); // Pass the signal to the request
 
 				if (response?.success) {
+					console.log("Followed Channel Sidebar", response?.data);
 					setUserData(response?.data);
 				} else {
 					toast.error(response?.message);
@@ -102,11 +105,15 @@ const FollowedChannels: React.FC = () => {
 	});
 
 	const handleOnClick = (data) => {
-		navigate(`/${convertToLowerCase(data.displayName)}`, {
-			state: {
-				liveStreamData: data,
-			},
-		});
+		if (data?.live_status) {
+			navigate(`/${convertToLowerCase(data?.displayName)}`, {
+				state: {
+					liveStreamData: data,
+				},
+			});
+		} else {
+			navigate(`/profile/${data?.channelID}`);
+		}
 	};
 
 	return (
@@ -138,7 +145,7 @@ const FollowedChannels: React.FC = () => {
 									<div>
 										{/* Assuming you have a CollapsedSidebarItem component */}
 										<CollapsedSidebarItem
-											profilePicture={i?.profileImage || johndoe}
+											profilePicture={i?.s3path || johndoe}
 											name=""
 											category=""
 											viewers={null}
@@ -150,7 +157,7 @@ const FollowedChannels: React.FC = () => {
 									<div className="w-full h-full hover:bg-foreground/10">
 										{/* Assuming you have a SidebarItem component */}
 										<SidebarItem
-											profilePicture={i?.profileImage || johndoe}
+											profilePicture={i?.s3path || johndoe}
 											name={i.displayName}
 											category={i.categoryName}
 											viewers={i.viewCount}

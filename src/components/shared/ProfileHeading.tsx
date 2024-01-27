@@ -2,20 +2,25 @@ import Button from "@components/ui/Button";
 import Heading from "@components/ui/Heading";
 import ProfileAvatar from "@components/ui/ProfileAvatar";
 import Tag from "@components/ui/Tag";
-import React from "react";
-import { FaRegHeart } from "react-icons/fa6";
+import React, { useState } from "react";
+import { FaRegHeart, FaHeart, FaHeartBroken } from "react-icons/fa";
 import { GoPerson } from "react-icons/go";
 import Icon from "./Icon";
-import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface ProfileHeadingProps {
 	streamerName: string;
-	streamTitle: string;
-	gameTags: unknown[];
-	viewers: number;
-	time: string;
+	streamTitle?: string;
+	gameTags?: unknown[];
+	viewers?: number;
+	time?: string;
 	profileImage: string;
 	handleFollow: () => void;
+	followStatus?: number;
+	loading?: boolean;
+	isLive?: boolean;
+	followers?: number;
+	channelID?: number;
 }
 
 const ProfileHeading: React.FC<ProfileHeadingProps> = ({
@@ -26,7 +31,23 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 	time,
 	profileImage,
 	handleFollow,
+	followStatus,
+	loading,
+	isLive,
+	followers,
+	channelID,
 }) => {
+	const [isHoveredFollow, setIsHoveredFollow] = useState(false);
+	const [isHoveredUnfollow, setIsHoveredUnFollow] = useState(false);
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	const handleClickStreamerName = () => {
+		if (!location.pathname.includes("profile")) {
+			navigate(`/profile/${channelID}`);
+		}
+	};
+
 	return (
 		<div className="container">
 			<div className="flex p-3 pt-5 space-x-4">
@@ -39,7 +60,7 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 								"https://th.bing.com/th/id/R.8b167af653c2399dd93b952a48740620?rik=%2fIwzk0n3LnH7dA&pid=ImgRaw&r=0"
 							}
 							altText="User Avatar"
-							isLive={true}
+							isLive={isLive}
 							size={85}
 						/>
 					</div>
@@ -51,7 +72,7 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 								"https://th.bing.com/th/id/R.8b167af653c2399dd93b952a48740620?rik=%2fIwzk0n3LnH7dA&pid=ImgRaw&r=0"
 							}
 							altText="User Avatar"
-							isLive={true}
+							isLive={isLive}
 							size={50}
 						/>
 					</div>
@@ -59,44 +80,94 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 				<div className="grow ps-2 md:ps-4 lg:ps-5">
 					<div className="flex">
 						<div className="grow">
-							<Heading className="text-foreground mb-1 md:mb-3 lg:mb-4 text-lg md:text-2xl">
-								<Link to="/directory">{streamerName}</Link>
+							<Heading
+								className="text-foreground mb-1 text-lg md:text-2xl cursor-pointer"
+								onClick={handleClickStreamerName}
+							>
+								{/* <Link to="/directory">{streamerName}</Link> */}
+								{streamerName}
 							</Heading>
 							<div className="">
-								<p className="hidden md:flex text-foreground-secondary mb-2">
-									{streamTitle}
-								</p>
-								<div className="flex justify-start items-center">
-									<div className="hidden md:flex space-x-2 ">
-										{gameTags &&
-											gameTags.length > 0 &&
-											gameTags.map((tag, index) => (
-												<Tag to="" key={index}>
-													{tag?.tagName}
-												</Tag>
-											))}
+								{streamTitle && (
+									<p className="hidden md:flex text-foreground-secondary mb-2">
+										{streamTitle}
+									</p>
+								)}
+								{followers && (
+									<p className="hidden md:flex text-foreground-secondary mb-2">
+										<span className="mr-1">{followers}</span>followers
+									</p>
+								)}
+
+								{gameTags && gameTags.length > 0 && (
+									<div className="flex justify-start items-center">
+										<div className="hidden md:flex space-x-2 ">
+											{gameTags &&
+												gameTags.length > 0 &&
+												gameTags.map((tag, index) => (
+													<Tag to="" key={index}>
+														{tag?.tagName}
+													</Tag>
+												))}
+										</div>
 									</div>
-								</div>
+								)}
 							</div>
 						</div>
 						<div className="flex-none">
 							<div className="flex flex-col justify-center items-end space-y-3">
-								<Button color="primary" onClick={handleFollow}>
-									<FaRegHeart className="me-1" />
-									Follow
-								</Button>
-								<div className="hidden md:flex justify-end items-center">
-									<div className="flex justify-start items-center font-bold me-3">
-										<Icon
-											icon={GoPerson}
-											className="text-danger font-bold"
-										/>
-										<span className="text-danger">{viewers}</span>
+								{!followStatus ? (
+									<Button
+										color="primary"
+										onClick={handleFollow}
+										onMouseEnter={() => setIsHoveredFollow(true)}
+										onMouseLeave={() => setIsHoveredFollow(false)}
+										disabled={loading}
+									>
+										{isHoveredFollow ? (
+											<FaHeart className="me-1" />
+										) : (
+											<FaRegHeart className="me-1" />
+										)}
+										Follow
+									</Button>
+								) : (
+									<a
+										data-tooltip-id="my-tooltip"
+										data-tooltip-content="Unfollow"
+										className="z-50"
+									>
+										<Button
+											onClick={handleFollow}
+											onMouseEnter={() => setIsHoveredUnFollow(true)}
+											onMouseLeave={() =>
+												setIsHoveredUnFollow(false)
+											}
+											disabled={loading}
+										>
+											{isHoveredUnfollow ? (
+												<FaHeartBroken />
+											) : (
+												<FaHeart />
+											)}
+										</Button>
+									</a>
+								)}
+
+								{isLive && (
+									<div className="hidden md:flex justify-end items-center">
+										<div className="flex justify-start items-center font-bold me-3">
+											<Icon
+												icon={GoPerson}
+												className="text-danger font-bold"
+											/>
+											<span className="text-danger">{viewers}</span>
+										</div>
+										<div className="">
+											<span>{time}</span>
+										</div>
 									</div>
-									<div className="">
-										<span>{time}</span>
-									</div>
-								</div>
+								)}
 							</div>
 						</div>
 					</div>

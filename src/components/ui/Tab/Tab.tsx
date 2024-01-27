@@ -6,12 +6,13 @@ interface Tab {
 }
 
 interface TabsProps {
-  tabs: Tab[];
-  className?: string;
+	tabs?: Tab[];
+	className?: string;
+	active?: number;
 }
 
-const Tab: React.FC<TabsProps> = ({ tabs, className }) => {
-  const [activeTab, setActiveTab] = useState(0);
+const Tab: React.FC<TabsProps> = ({ tabs, className, active }) => {
+  const [activeTab, setActiveTab] = useState(active || 0);
 
   return (
     <div className={`w-full ${className || ""}`}>

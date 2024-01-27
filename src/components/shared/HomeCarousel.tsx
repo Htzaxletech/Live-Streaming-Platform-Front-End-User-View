@@ -17,7 +17,6 @@ import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import Tag from "@components/ui/Tag";
 import Button from "@components/ui/Button";
-import "./HomeCarousel.css";
 import { makeRequest } from "@services/utils";
 import { endpoints } from "@services/endpoints";
 import { generateStreamUrl, tempData, videoSliderData } from "@utils/helpers";
@@ -25,6 +24,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setLiveStreams } from "@store/slices/liveStreamsSlice";
 import { RootState } from "@store/index";
+import "@styles/HomeCarousel.css";
 
 function HomeCarousel() {
 	const ref = React.useRef<any>();
@@ -147,6 +147,7 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 		tags,
 		title,
 		viewCount,
+		s3channelpath,
 	} = data[dataIndex];
 
 	return (
@@ -173,7 +174,10 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 							<MediaProvider>
 								<Poster
 									className="vds-poster h-full"
-									src={coverImage}
+									src={
+										coverImage ||
+										"https://t4.ftcdn.net/jpg/05/28/90/43/360_F_528904357_wRur2TnRmUKXgRnbrSF8CYewb6aNgZ9S.jpg"
+									}
 									alt="thumbnail"
 								/>
 							</MediaProvider>
@@ -187,7 +191,9 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 								<div className="profile">
 									<div className="pp">
 										<img
-											src="https://i.pravatar.cc/50"
+											src={
+												s3channelpath || "https://i.pravatar.cc/50"
+											}
 											alt="Profile"
 											loading="lazy"
 										/>

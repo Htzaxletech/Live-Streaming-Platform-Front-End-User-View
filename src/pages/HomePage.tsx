@@ -1,6 +1,10 @@
-import HomeCarousel from "@components/shared/HomeCarousel";
+// import HomeCarousel from "@components/shared/HomeCarousel";
 import LivePage from "./LivePage";
 import CategoryCardList from "./CategoryCardListPage";
+import { endpoints as ep } from "@services/endpoints";
+import { lazy } from "react";
+
+const HomeCarousel = lazy(() => import("@components/shared/HomeCarousel"));
 
 const HomePage = () => {
 	return (
@@ -9,8 +13,8 @@ const HomePage = () => {
 				<HomeCarousel />
 			</div>
 
-			<LivePage />
-			<CategoryCardList />
+			<LivePage url={ep.homeLive} title="Live Channels" />
+			<CategoryCardList url={ep.homeCategory} />
 		</div>
 	);
 };

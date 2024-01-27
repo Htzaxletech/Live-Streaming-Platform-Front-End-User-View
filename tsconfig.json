@@ -29,7 +29,8 @@
 			"@styles/*": ["./styles/*"],
 			"@store/*": ["./store/*"],
 			"@routes/*": ["./routes/*"],
-			"@services/*": ["./services/*"]
+			"@services/*": ["./services/*"],
+			"@socket/*": ["./socket/*"]
 		}
   },
   "include": ["src"],

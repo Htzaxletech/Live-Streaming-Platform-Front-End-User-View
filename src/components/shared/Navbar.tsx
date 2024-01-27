@@ -4,7 +4,7 @@ import { tv } from "tailwind-variants";
 // import NavbarSearchBox from "./NavbarSearchBox";
 import UserMenu from "./UserMenu";
 // import Button from "@components/ui/Button";
-// import NavbarMenu from "./NavbarMenu";
+import NavbarMenu from "./NavbarMenu";
 import { setOpenLogin, setOpenSignUp } from "@store/slices/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@store/index";
@@ -18,7 +18,7 @@ const TwoFactor = lazy(() => import("@pages/authentication/TwoFactor"));
 const NavbarSearchBox = lazy(() => import("./NavbarSearchBox"));
 // const UserMenu = lazy(() => import("./UserMenu"));
 const Button = lazy(() => import("@components/ui/Button"));
-const NavbarMenu = lazy(() => import("./NavbarMenu"));
+// const NavbarMenu = lazy(() => import("./NavbarMenu"));
 const Logo = lazy(() => import("./Logo"));
 
 const classes = tv({

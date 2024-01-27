@@ -1,76 +1,86 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useCallback } from "react";
 import { CategoryLink } from "@components/ui/CategoryLink";
-import gamingImg from "@assets/images/gaming.svg";
-import irlImg from "@assets/images/irl.svg";
-import musicImg from "@assets/images/music.svg";
-import esportsImg from "@assets/images/esports.svg";
-import creativeImg from "@assets/images/creative.svg";
+import { useEffect, useState } from "react";
+import { makeRequest } from "@services/utils";
+import { endpoints } from "@services/endpoints";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { convertToLowerCase } from "@utils/helpers";
 
-interface DirectoryCategoryProps {
-  to: string;
-  imgUrl: string;
-  name: string;
-  // Add any additional props specific to DirectoryCategory
-}
+const DirectoryCategory: React.FC = () => {
+	interface CategoryDataType {}
 
-const DirectoryCategory: React.FC<DirectoryCategoryProps> = () => {
-  return (
-    <div className="grid grid-flow-col auto-cols-max py-3 gap-2 overflow-auto">
-      <CategoryLink
-        to={"/directory/gaming"}
-        color="default"
-        size="md"
-        icon={<img src={gamingImg} alt="icon" />}
-      >
-        Games
-      </CategoryLink>
+	const [loading, setLoading] = useState<boolean>(false);
+	const [categories, setCategories] = useState<CategoryDataType[]>([]);
+	const navigate = useNavigate();
 
-      <CategoryLink
-        to="/directory/irl"
-        color="default"
-        size="md"
-        icon={<img src={irlImg} alt="icon" />}
-      >
-        IRL
-      </CategoryLink>
+	useEffect(() => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
 
-      <CategoryLink
-        to="/directory/music"
-        color="default"
-        size="md"
-        icon={<img src={musicImg} alt="icon" />}
-      >
-        Music
-      </CategoryLink>
+		(async () => {
+			try {
+				const reqData = {};
 
-      <CategoryLink
-        to="/directory/esports"
-        color="default"
-        size="md"
-        icon={<img src={esportsImg} alt="icon" />}
-      >
-        Esports
-      </CategoryLink>
+				const { success, message, data } = await makeRequest(
+					"get",
+					endpoints.mainCategory,
+					reqData,
+					{
+						signal,
+					}
+				);
 
-      <CategoryLink
-        to="/directory/creative"
-        color="default"
-        size="md"
-        icon={<img src={creativeImg} alt="icon" />}
-      >
-        Creative
-      </CategoryLink>
+				if (success && data?.length > 0) {
+					setCategories(data);
+				} else {
+					toast.error(message);
+				}
+				setLoading(false);
+			} catch (error) {
+				setLoading(false);
+			}
+		})();
 
-      <CategoryLink
-        to="/directory/esports"
-        color="default"
-        size="md"
-        icon={<img src={esportsImg} alt="icon" />}
-      >
-        Esports
-      </CategoryLink>
-    </div>
-  );
+		return () => {
+			abortController.abort();
+		};
+	}, []);
+
+	const handleClick = useCallback((data: any) => {
+		const categoryNameLowerCase = convertToLowerCase(data?.categoryName);
+		if (categoryNameLowerCase) {
+			navigate(`/directory/${categoryNameLowerCase}`, {
+				state: {
+					categoryState: data,
+				},
+			});
+		}
+	}, []);
+
+	return (
+		<>
+			{categories?.length > 0 && (
+				<div className="grid grid-flow-col auto-cols-max py-3 gap-2 overflow-auto">
+					{categories?.map((i, index) => {
+						return (
+							<div key={index} onClick={() => handleClick(i)}>
+								<CategoryLink
+									to=""
+									color="default"
+									size="md"
+									icon={<img src={i.s3path} alt="icon" />}
+								>
+									{i.categoryName}
+								</CategoryLink>
+							</div>
+						);
+					})}
+				</div>
+			)}
+		</>
+	);
 };
 
 export default DirectoryCategory;

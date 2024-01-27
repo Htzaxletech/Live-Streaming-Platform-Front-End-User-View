@@ -3,7 +3,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@store/index";
-import "./DashboardSidebarItem.css";
+import "@styles/DashboardSidebarItem.css"
 
 interface DashboardSidebarItemProps {
 	title?: string;

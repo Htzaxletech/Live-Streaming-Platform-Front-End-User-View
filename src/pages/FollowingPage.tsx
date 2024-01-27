@@ -1,8 +1,12 @@
 import Tab from "@components/ui/Tab";
-import React from "react";
+import React, { lazy } from "react";
 import CategoryCardList from "./CategoryCardListPage";
 import LivePage from "./LivePage";
 import Heading from "@components/ui/Heading";
+import { endpoints } from "@services/endpoints";
+import store from "store2";
+
+const ChannelList = lazy(() => import("@pages/ChannelListPage"));
 
 const FollowingPage: React.FC = () => {
 	// const { users } = useSelector((state) => state.user);
@@ -14,23 +18,48 @@ const FollowingPage: React.FC = () => {
 				tabs={[
 					{
 						label: "Overview",
-						content: <CategoryCardList />,
+						content: (
+							<>
+								<LivePage
+									url={endpoints.homeLive}
+									title="Live Channels"
+								/>
+								<CategoryCardList url={endpoints.homeCategory} />
+							</>
+						),
 					},
 					{
 						label: "Live",
-						content: <LivePage />,
+						content: (
+							<LivePage
+								url={endpoints.followLive}
+								userID={store.get("id")}
+								title="Live Channels"
+							/>
+						),
 					},
 					{
 						label: "Videos",
-						content: <CategoryCardList />,
+						content: (
+							<LivePage
+								url={endpoints.vodList}
+								userID={store.get("id")}
+								title="Latest Videos"
+							/>
+						),
 					},
 					{
 						label: "Categories",
-						content: <CategoryCardList />,
+						content: (
+							<CategoryCardList
+								url={endpoints.followCategory}
+								userID={store.get("id")}
+							/>
+						),
 					},
 					{
 						label: "Channels",
-						content: <LivePage />,
+						content: <ChannelList />,
 					},
 				]}
 				className="mt-3"

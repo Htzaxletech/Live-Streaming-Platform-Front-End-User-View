@@ -18,16 +18,18 @@ import { Virtuoso } from "react-virtuoso";
 import { FaArrowDown } from "react-icons/fa6";
 
 interface StreamChatBoxProps {
-	liveID: any; // Replace 'any' with a more specific type if possible
-	streamKey: any; // Replace 'any' with a more specific type if possible
+	liveID?: any; // Replace 'any' with a more specific type if possible
+	streamKey?: any; // Replace 'any' with a more specific type if possible
+	liveStatus?: number;
 }
 
 const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	liveID: lid,
 	streamKey: skey,
+	liveStatus,
 }) => {
 	const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
-	const [chatMessages, setChatMessages] = useState<unknown[]>(chatTempData);
+	const [chatMessages, setChatMessages] = useState<unknown[]>([]);
 	// const [isConnected, setIsConnected] = useState(false);
 	const [message, setMessage] = useState("");
 	const [showScrollButton, setShowScrollButton] = useState(false);
@@ -35,36 +37,17 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	const dispatch = useDispatch();
 	const { state } = useLocation();
 
+	const virtuosoRef = useRef<any>(null);
+	const inputRef = useRef<any>(null);
+
+
 	const handleToggleChat = () => {
 		dispatch(toggleChat());
 	};
 
-	console.log(
-		"Stream Chat Box >> state?.liveStreamData",
-		state?.liveStreamData
-	);
-
-	const userID = store.get("id");
-	const streamKey = state?.liveStreamData?.streamKey || skey;
-	const liveID = state?.liveStreamData?.liveID || lid;
-
-	// console.table({ userID, streamKey });
-
-	const virtuosoRef = useRef<any>(null);
-
-	useEffect(() => {
-		scrollToBottom();
-	}, [chatMessages]);
-
-	// const handleScroll = () => {
-	// 	if (virtuosoRef.current) {
-	// 		const { scrollTop, scrollHeight, clientHeight } =
-	// 			virtuosoRef.current.getScrollingElement();
-	// 		const isAtBottom = scrollTop + clientHeight === scrollHeight;
-
-	// 		setShowScrollButton(!isAtBottom);
-	// 	}
-	// };
+	// useEffect(() => {
+	// 	scrollToBottom();
+	// }, [chatMessages]);
 
 	const scrollToBottom = () => {
 		if (virtuosoRef.current) {
@@ -76,13 +59,20 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 		}
 	};
 
+	const liveFlag = liveStatus || state?.liveStreamData?.live_status;
+	const userID = store.get("id");
+	const streamID = skey || state?.liveStreamData?.streamKey;
+	const liveId = lid || state?.liveStreamData?.liveID;
+
 	useEffect(() => {
-		const liveStatus = 1;
 
-		if (liveStatus && state?.liveStreamData) {
+
+		console.table({ skey, streamID, liveId, liveFlag });
+
+		if (streamID && liveFlag) {
+			socket.disconnect();
 			socket.connect();
-
-			socket.timeout(3000).emit("add_user_count", { userID });
+			// socket.timeout(3000).emit("add_user_count", { userID });
 
 			socket.on("connect", onConnect);
 			socket.on("disconnect", onDisconnect);
@@ -96,14 +86,15 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 			socket.off("disconnect", onDisconnect);
 			socket.off("chat_list_message", onMessageEvent);
 		};
-	}, []);
+	}, [streamID]);
 
 	const onConnect = () => {
+		console.log("onConnect", socket.connected);
 		socket.timeout(3000).emit(
 			"livestream_connect",
 			{
 				userID,
-				streamKey,
+				streamKey: streamID,
 			},
 			() => {
 				console.log("livestream_connect");
@@ -114,7 +105,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 			"chat_connect",
 			{
 				userID,
-				liveID,
+				liveID: liveId,
 			},
 			() => {
 				console.log("chat_connect");
@@ -127,7 +118,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 			"livestream_disconnect",
 			{
 				userID,
-				streamKey,
+				streamKey: streamID,
 			},
 			() => {
 				console.log("livestream_disconnect");
@@ -138,7 +129,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 			"chat_disconnect",
 			{
 				userID,
-				liveID,
+				liveID: liveId,
 			},
 			() => {
 				console.log("chat_disconnect");
@@ -147,7 +138,8 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	};
 
 	const onMessageEvent = (value: any) => {
-		setChatMessages((previous) => [...previous, value]);
+		console.log("onMessageEvent", value);
+		setChatMessages((previous) => [...previous, ...value]);
 	};
 
 	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -156,22 +148,31 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
+		console.log("input", inputRef?.current?.value);
 
-		console.log("chatMessages", chatMessages);
-		setChatMessages((previous) => [...previous, message]);
+		const message = inputRef.current.value;
+		// setChatMessages((previous) => [...previous, message]);
+		console.log("message", message);
 
-		socket.emit("add_chat_message", { userID, liveID, message }, () => {
-			console.log("message sent");
-		});
+		socket.emit(
+			"add_chat_message",
+			{ userID: store.get("id"), liveID: liveId, message },
+			() => {
+				console.log("message sent");
+			}
+		);
 
-		setMessage("");
+		inputRef.current.value = "";
+
+		// setMessage("");
 	};
 
 	const chatContent = (_, chat: any) => (
-		<div className="text-sm hover:bg-zinc-100 px-2 py-1">
-			<span style={{ backgroundColor: getRandomColor() }}>
+		<div className="text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 px-2 py-1">
+			{/* <span style={{ backgroundColor: getRandomColor() }}>
 				{chat?.userID}
-			</span>
+			</span> */}
+			<span style={{ color: "#234234D" }}>{chat?.username}</span>
 			<span>:&nbsp;</span>
 			<span className="leading-normal">{chat?.message}</span>
 		</div>
@@ -233,8 +234,9 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 						<Input
 							className="w-full"
 							placeholder="Send a message"
-							value={message}
-							onChange={handleInputChange}
+							// value={message}
+							// onChange={handleInputChange}
+							ref={inputRef}
 							endContent={
 								<Button className="bg-transparent">
 									<img src="/src/assets/images/emote.svg" />

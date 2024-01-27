@@ -10,15 +10,15 @@ const PrivateRoute = lazy(() => import("@components/shared/PrivateRoute"));
 const HomePage = lazy(() => import("@pages/HomePage"));
 const RootPage = lazy(() => import("@pages/RootPage"));
 const ErrorPage = lazy(() => import("@pages/ErrorPage"));
-const DirectoryPage = lazy(() => import("@pages/DirectoryPage"));
+const DirectoryPage = lazy(() => import("@pages/browse/DirectoryPage"));
 const FollowingPage = lazy(() => import("@pages/FollowingPage"));
 const ChannelPage = lazy(() => import("@pages/ChannelPage"));
 const LiveStreamPage = lazy(() => import("@pages/LiveStreamPage"));
-const CategoryPage = lazy(() => import("@pages/CategoryPage"));
+const CategoryPage = lazy(() => import("@pages/category/CategoryPage"));
 const DirectoryCategoryPage = lazy(
-	() => import("@pages/DirectoryCategoryPage")
+	() => import("@pages/browse/DirectoryCategoryPage")
 );
-const ProfilePage = lazy(() => import("@pages/ProfilePage"));
+const ProfilePage = lazy(() => import("@pages/profile/ProfilePage"));
 const SearchPage = lazy(() => import("@pages/search/SearchPage"));
 const TestingComponents = lazy(() => import("@pages/TestingComponents"));
 
@@ -56,12 +56,20 @@ const userRoutes = {
 			path: "/directory/:dirCategoryName",
 			element: (
 				<Suspense fallback={<LoadingIndicator />}>
-					<DirectoryCategoryPage to={""} imgUrl={""} name={""} />
+					<DirectoryCategoryPage />
 				</Suspense>
 			),
 		},
+		// {
+		// 	path: "/directory/category/:categoryName",
+		// 	element: (
+		// 		<Suspense fallback={<LoadingIndicator />}>
+		// 			<CategoryPage />
+		// 		</Suspense>
+		// 	),
+		// },
 		{
-			path: "/directory/category/:categoryName",
+			path: "/directory/category/:categoryID",
 			element: (
 				<Suspense fallback={<LoadingIndicator />}>
 					<CategoryPage />
@@ -69,7 +77,7 @@ const userRoutes = {
 			),
 		},
 		{
-			path: "/search",
+			path: "/search/:searchKeyword",
 			element: (
 				<Suspense fallback={<LoadingIndicator />}>
 					<SearchPage />
@@ -85,7 +93,7 @@ const userRoutes = {
 			),
 		},
 		{
-			path: "/profile",
+			path: "/profile/:channelId",
 			element: (
 				<Suspense fallback={<LoadingIndicator />}>
 					<PrivateRoute element={<ProfilePage />} />

@@ -18,7 +18,6 @@ import ProfileAvatar from "@components/ui/ProfileAvatar";
 import ProfileHeading from "@components/shared/ProfileHeading";
 import ProfileDescription from "@components/shared/ProfileDescription";
 import ProfileStreamInfo from "@components/shared/ProfileStreamInfo";
-import HomeCarousel from "@components/shared/HomeCarousel";
 import { useState } from "react";
 
 const TestingComponents = () => {
@@ -53,10 +52,10 @@ const TestingComponents = () => {
 			STORECD: "00002",
 			CLOSEDATE: "2022-01-05",
 		},
-		{
-			STORECD: "00003",
-			CLOSEDATE: "2022-01-05",
-		},
+		// {
+		// 	STORECD: "00003",
+		// 	CLOSEDATE: "2022-01-05",
+		// },
 		{
 			STORECD: "00004",
 			CLOSEDATE: "2022-01-05",
@@ -67,7 +66,12 @@ const TestingComponents = () => {
 	const [selectedTwoLeftTable, setSelectedTwoLeftTable] = useState([]);
 	const [selectedTwoRightTable, setSelectedTwoRightTable] = useState([]);
 
-	const [finalTable, setFinalTable] = useState([]);
+	const [finalTable, setFinalTable] = useState([
+		{
+			STORECD: "00003",
+			CLOSEDATE: "2022-01-05",
+		},
+	]);
 
 	const options = [
 		{ option: "Recommended for you", value: "1", icon: <BsStars /> },
@@ -111,21 +115,6 @@ const TestingComponents = () => {
 		},
 	];
 
-	// const handleOneLeftTableRowClick = (index: any) => {
-	// 	const updatedSelectedRows = [...selectedOneLeftTable];
-	// 	const selectedRowIndex = updatedSelectedRows.indexOf(index);
-
-	// 	if (selectedRowIndex === -1) {
-	// 		// If the row is not selected, add it to the selection
-	// 		updatedSelectedRows.push(index);
-	// 	} else {
-	// 		// If the row is already selected, remove it from the selection
-	// 		updatedSelectedRows.splice(selectedRowIndex, 1);
-	// 	}
-
-	// 	setSelectedOneLeftTable(updatedSelectedRows);
-	// };
-
 	const handleOneLeftTableRowClick = (selectedRow: any) => {
 		const isRowSelected = selectedOneLeftTable.some(
 			(row: any) => row.STORECD === selectedRow.STORECD
@@ -147,45 +136,183 @@ const TestingComponents = () => {
 		}
 	};
 
-	const handleOneRight = () => {
-		// console.log("data", selectedOneLeftTable);
-		// setTableOneRight([...tableOneRight, ...selectedOneLeftTable]);
+	const handleOneRightTableRowClick = (selectedRow: any) => {
+		const isRowSelected = selectedOneRightTable.some(
+			(row: any) => row.STORECD === selectedRow.STORECD
+		);
 
-		// const oneLeftTemp = [...tableOneLeft];
-		// const data = oneLeftTemp.filter(
-		// 	(row: any) => row.STORECD != selectedOneLeftTable.STORECD
-		// );
+		if (isRowSelected) {
+			// If the row is already selected, remove it from the selection
+			setSelectedOneRightTable((prevSelectedRows) =>
+				prevSelectedRows.filter(
+					(row: any) => row.STORECD !== selectedRow.STORECD
+				)
+			);
+		} else {
+			// If the row is not selected, add it to the selection
+			setSelectedOneRightTable((prevSelectedRows) => [
+				...prevSelectedRows,
+				selectedRow,
+			]);
+		}
+	};
 
-		// console.log("object", data);
-		// setTableOneLeft(data);
-		// setSelectedOneLeftTable([]);
+	const handleOneRightButtonTesting = () => {
+		const handleOneRightButton = () => {
+			if (selectedOneLeftTable.length > 0) {
+				// const updatedSelectedOneLeftTable = finalTable.map((store) =>
+				// 	selectedOneLeftTable.find(
+				// 		(updatedStore) => updatedStore.STORECD === store.STORECD
+				// 	)
+				// 		? {
+				// 				...store,
+				// 				CLOSEDATE: updatedTableRight.find(
+				// 					(updatedStore) => updatedStore.STORECD === store.STORECD
+				// 				)?.CLOSEDATE,
+				// 		  }
+				// 		: store
+				// );
 
-		const updatedTableOne = tableOneLeft.filter(
+				const biggerData = [];
+				const smallerData = [];
+
+				const updatedSelectedOneLeftTable = selectedOneLeftTable.filter(
+					(item1) =>
+						finalTable.some(
+							(item2) =>
+								item2.STORECD === item1.STORECD &&
+								item2.CLOSEDATE > item1.CLOSEDATE
+						)
+				);
+
+				// updatedSelectedOneLeftTable.forEach(element => {
+				// 	if(new Date(element.CLOSEDATE) > )
+				// });
+
+				const ftable = [...finalTable];
+				const ftable2 = [...finalTable];
+				const tableLeft = [...tableOneLeft];
+				const ttable = [...tableTwoLeft];
+
+				for (const rowA of tableOneLeft) {
+					const correspondingRowC = finalTable.find(
+						(rowC) => rowC.STORECD === rowA.STORECD
+					);
+
+					console.log("correspondingRowC", correspondingRowC);
+
+					if (correspondingRowC) {
+						if (
+							new Date(rowA.CLOSEDATE) >
+							new Date(correspondingRowC.CLOSEDATE)
+						) {
+							// Move rowA to C
+							// finalTable.push(rowA);
+							ftable.push(rowA);
+							tableLeft.splice(tableLeft.indexOf(rowA), 1);
+						} else {
+							// Move correspondingRowC to B
+							// tableTwoLeft.push(correspondingRowC);
+							ttable.push(correspondingRowC);
+
+							// Remove correspondingRowC from C
+							ftable2.splice(ftable2.indexOf(rowA), 1);
+
+							// setFinalTable(
+							// 	finalTable.splice(finalTable.indexOf(correspondingRowC), 1)
+							// );
+						}
+					}
+				}
+
+				// setFinalTable(ftable2);
+				// Remove rowA from A
+				setFinalTable((prev) => [...prev, ...ftable]);
+				setTableOneLeft((prev) => [...prev, ...tableLeft]);
+				setTableTwoLeft((prev) => [...prev, ...ttable]);
+
+				console.log(
+					"updatedSelectedOneLeftTable",
+					updatedSelectedOneLeftTable
+				);
+				// const updatedTableOne = tableOneLeft.filter(
+				// 	(row) =>
+				// 		!selectedOneLeftTable.some(
+				// 			(selectedRow) => selectedRow.STORECD === row.STORECD
+				// 		)
+				// );
+
+				// const updatedTableRight = tableOneLeft.filter((row) =>
+				// 	selectedOneLeftTable.some(
+				// 		(selectedRow) => selectedRow.STORECD === row.STORECD
+				// 	)
+				// );
+
+				// setTableOneRight((prevTableTwo) => [
+				// 	...prevTableTwo,
+				// 	...updatedTableRight,
+				// ]);
+				// setTableOneLeft(updatedTableOne);
+				// setSelectedOneLeftTable([]);
+				// setFinalTable((prev) => [
+				// 	...prev,
+				// 	...tableOneRight,
+				// 	...updatedTableRight,
+				// ]);
+			}
+		};
+	};
+
+	const handleOneRightButton = () => {
+		if (selectedOneLeftTable.length > 0) {
+			const updatedTableOne = tableOneLeft.filter(
+				(row) =>
+					!selectedOneLeftTable.some(
+						(selectedRow) => selectedRow.STORECD === row.STORECD
+					)
+			);
+
+			const updatedTableRight = tableOneLeft.filter((row) =>
+				selectedOneLeftTable.some(
+					(selectedRow) => selectedRow.STORECD === row.STORECD
+				)
+			);
+
+			setTableOneRight((prevTableTwo) => [
+				...prevTableTwo,
+				...updatedTableRight,
+			]);
+			setTableOneLeft(updatedTableOne);
+			setSelectedOneLeftTable([]);
+			setFinalTable((prev) => [
+				...prev,
+				...tableOneRight,
+				...updatedTableRight,
+			]);
+		}
+	};
+
+	const handleOneLeftButton = () => {
+		const updatedTableOne = tableOneRight.filter(
 			(row) =>
-				!selectedOneLeftTable.some(
+				!selectedOneRightTable.some(
 					(selectedRow) => selectedRow.STORECD === row.STORECD
 				)
 		);
 
-		const updatedTableRight = tableOneLeft.filter((row) =>
-			selectedOneLeftTable.some(
+		const updatedTableRight = tableOneRight.filter((row) =>
+			selectedOneRightTable.some(
 				(selectedRow) => selectedRow.STORECD === row.STORECD
 			)
 		);
 
-		console.log("updatedTableRight", updatedTableRight);
-
-		setTableOneRight((prevTableTwo) => [
+		setTableOneLeft((prevTableTwo) => [
 			...prevTableTwo,
 			...updatedTableRight,
 		]);
-		setTableOneLeft(updatedTableOne);
-		setSelectedOneLeftTable([]);
-		setFinalTable((prev) => [
-			...prev,
-			...tableOneRight,
-			...updatedTableRight,
-		]);
+		setTableOneRight(updatedTableOne);
+		setSelectedOneRightTable([]);
+		setFinalTable((prev) => [...prev, ...tableOneLeft, ...updatedTableRight]);
 	};
 
 	return (
@@ -227,9 +354,11 @@ const TestingComponents = () => {
 				</table>
 
 				<div className="flex flex-col gap-2">
-					<Button color="default">Left</Button>
-					<Button color="primary" onClick={handleOneRight}>
-						Right
+					<Button color="default" onClick={handleOneLeftButton}>
+						One Left
+					</Button>
+					<Button color="primary" onClick={handleOneRightButton}>
+						One Right
 					</Button>
 				</div>
 
@@ -245,8 +374,17 @@ const TestingComponents = () => {
 					</thead>
 					<tbody>
 						{tableOneRight.map((i, index) => {
+							const isSelected = selectedOneRightTable.some(
+								(row) => row.STORECD === i.STORECD
+							);
 							return (
-								<tr key={index}>
+								<tr
+									key={index}
+									onClick={() => handleOneRightTableRowClick(i)}
+									className={`${
+										isSelected ? "bg-primary-100" : "bg-transparent"
+									} cursor-pointer`}
+								>
 									<td className="border border-primary p-1">
 										{i.STORECD}
 									</td>
@@ -260,6 +398,8 @@ const TestingComponents = () => {
 				</table>
 			</div>
 			<hr className="border border-primary my-5" />
+			{/* finish one here */}
+
 			<div className="flex items-start gap-12">
 				<table>
 					<caption className="my-1 font-semibold text-left">
@@ -347,7 +487,6 @@ const TestingComponents = () => {
 				</table>
 			</div>
 
-			{/* <HomeCarousel data={data} /> */}
 			<div className="flex gap-5 flex-col w-fit mt-96">
 				<div className="flex p-5 gap-10">
 					<Button color="default">Default</Button>

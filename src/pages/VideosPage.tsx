@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { endpoints as ep } from "@services/endpoints";
 import { toast } from "react-toastify";
 import VideoCard from "@components/shared/VideoCard";
-import jsonData from "./test.json";
 
 const VideosPage = () => {
 	const [loading, setLoading] = useState<boolean>(false);

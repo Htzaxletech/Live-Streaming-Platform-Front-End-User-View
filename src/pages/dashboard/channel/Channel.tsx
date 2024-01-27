@@ -37,10 +37,9 @@ const Channel: React.FC = () => {
 	const [bannerImageBase64Url, setBannerImageBase64Url] = useState<string>("");
 
 	const initialForm = {
-		selectedImageUrl:
-			"https://img.freepik.com/free-photo/beauty-portrait-female-face_93675-132045.jpg?size=626&ext=jpg&ga=GA1.1.1546980028.1704326400&semt=ais",
+		selectedImageUrl: "https://i.stack.imgur.com/l60Hf.png",
 		selectedBannerUrl:
-			"https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg",
+			"https://img.freepik.com/free-vector/black-banner-with-yellow-geometric-shapes_1017-32327.jpg?size=338&ext=jpg&ga=GA1.1.632798143.1705881600&semt=ais",
 		userName: "",
 		displayName: "",
 		bio: "",
