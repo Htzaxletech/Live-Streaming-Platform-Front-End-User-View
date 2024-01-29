@@ -2,6 +2,7 @@ import React, { MouseEvent } from "react";
 import { IoArrowDown } from "react-icons/io5";
 import Button from "@components/ui/Button";
 import { ThreeDots } from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 
 interface ShowMoreButtonProps {
 	title?: string;
@@ -14,6 +15,7 @@ const ShowMoreButton: React.FC<ShowMoreButtonProps> = ({
 	onClick,
 	loading,
 }) => {
+	const { t } = useTranslation();
 	const onButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
 		if (onClick) {
 			onClick(event);
@@ -41,7 +43,7 @@ const ShowMoreButton: React.FC<ShowMoreButtonProps> = ({
 						onClick={onButtonClick}
 					>
 						<div className="mr-2">
-							<p>Show More {title}</p>
+							<p>{t("pages.showmore", { title })}</p>
 						</div>
 						<IoArrowDown />
 					</Button>

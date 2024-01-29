@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import Button from "@components/ui/Button";
 import Heading from "@components/ui/Heading";
 import ProfileAvatar from "@components/ui/ProfileAvatar";

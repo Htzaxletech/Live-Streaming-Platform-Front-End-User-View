@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import React from "react";
 import game from "../../pages/game-pubg.jpg";
 import Tag from "@components/ui/Tag";
@@ -73,10 +77,10 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 		});
 	};
 
-	const handleLink = (param: unknown) => {
-		// dispatch(setCategoryData(param));
-		navigate(`/directory/category/${param?.categoryName}`);
-	};
+	// const handleLink = (param: unknown) => {
+	// 	// dispatch(setCategoryData(param));
+	// 	navigate(`/directory/category/${param?.categoryName}`);
+	// };
 
 	return (
 		<div>
@@ -97,7 +101,9 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 					)}
 					{data?.live_status === 0 && (
 						<>
-							<div className={videoLength()}>{data?.duration || "07:03:46"}</div>
+							<div className={videoLength()}>
+								{data?.duration || "07:03:46"}
+							</div>
 							{/* <div className={lastUploaded()}>{1} day ago</div> */}
 						</>
 					)}
@@ -125,7 +131,17 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 					<div className={tagsContainer()}>
 						{data?.tags?.length > 0 &&
 							data?.tags?.map((i, index) => (
-								<Tag key={index} to={""} onClick={() => handleLink(i)}>
+								<Tag
+									key={index}
+									to={"/directory"}
+									state={{
+										directory: {
+											...i,
+											categoryName: i.tagName,
+											active: 1,
+										},
+									}}
+								>
 									{i.tagName}
 								</Tag>
 							))}

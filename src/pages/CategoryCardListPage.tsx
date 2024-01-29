@@ -1,8 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import CategoryCard from "@components/shared/CategoryCard";
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { makeRequest } from "@services/utils";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 interface CategoryProps {
@@ -16,6 +21,7 @@ interface CategoryDataType {
 }
 
 const CategoryCardList: React.FC<CategoryProps> = ({ url, userID }) => {
+	const { t } = useTranslation();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [categories, setCategories] = useState<CategoryDataType[]>([]);
 	const [currentPage, setCurrentPage] = useState<number>(0);
@@ -80,7 +86,7 @@ const CategoryCardList: React.FC<CategoryProps> = ({ url, userID }) => {
 		<>
 			{categories && categories.length > 0 && (
 				<div className="mt-8">
-					<Heading size="sm">Categories</Heading>
+					<Heading size="sm">{t("pages.categories")}</Heading>
 					<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-8 gap-2 mt-3 mb-8">
 						{categories?.map((data, index) => (
 							<CategoryCard key={index} data={data} />

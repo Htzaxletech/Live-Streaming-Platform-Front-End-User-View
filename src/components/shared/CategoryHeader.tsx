@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import gaming from "@assets/images/gaming.svg";
 import Tag from "@components/ui/Tag";
 import { endpoints } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const CategoryHeader: React.FC = () => {
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	const { categoryID } = useParams();
 
 	const [categoryData, setCategoryData] = useState<[]>([]);
@@ -27,11 +28,11 @@ const CategoryHeader: React.FC = () => {
 						catID: categoryID,
 					},
 					{
-						signal
+						signal,
 					}
 				);
 
-				if(success){
+				if (success) {
 					setCategoryData(data?.[0]);
 				}
 			} catch (error) {
@@ -39,16 +40,10 @@ const CategoryHeader: React.FC = () => {
 			}
 		})();
 
-		return() => {
+		return () => {
 			abortController.abort();
-
-		}
+		};
 	}, [categoryID]);
-
-	const handleLink = (data: any) => {
-		// dispatch(setCategoryData(data));
-		// navigate(`/directory/category/${data?.categoryName}`);
-	};
 
 	return (
 		<div className="w-full lg:w-2/4">

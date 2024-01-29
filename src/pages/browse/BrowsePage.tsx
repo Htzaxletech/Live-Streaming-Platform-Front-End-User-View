@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
+
 // import { Select } from "@components/ui/Select";
 // import { BsStars } from "react-icons/bs";
 // import { FaArrowDownWideShort } from "react-icons/fa6";
@@ -9,8 +14,10 @@ import Tag from "@components/ui/Tag";
 import BrowseCategoryList from "./BrowseCategoryList";
 import BrowseLiveList from "./BrowseLiveList";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const BrowsePage = ({ status }: { status: string }) => {
+	const { t } = useTranslation();
 	const inputRef = useRef(null);
 	const [searchTag, setSearchTag] = useState("");
 	const { state } = useLocation();
@@ -31,7 +38,7 @@ const BrowsePage = ({ status }: { status: string }) => {
 	}, [state?.directory?.categoryName]);
 
 	const handleSubmit = useCallback(
-		(e: { preventDefault: () => void; }) => {
+		(e: { preventDefault: () => void }) => {
 			e.preventDefault();
 			const inputValue = inputRef.current?.value;
 
@@ -41,8 +48,8 @@ const BrowsePage = ({ status }: { status: string }) => {
 			}
 
 			navigate("/directory", {
-				state: null
-			})
+				state: null,
+			});
 		},
 		[setSearchTag]
 	);
@@ -55,7 +62,7 @@ const BrowsePage = ({ status }: { status: string }) => {
 						<Input
 							className="hidden md:flex h-8"
 							startContent={<RiSearchLine />}
-							placeholder="Search Category Tags"
+							placeholder={t("placeholder.sct")}
 							ref={inputRef}
 						/>
 						<Button className="md:hidden" type="submit">

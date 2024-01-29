@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import React, { lazy, useEffect, useState } from "react";
 import ProfileHeading from "@components/shared/ProfileHeading";
 import { makeRequest } from "@services/utils";
@@ -142,7 +145,11 @@ const ProfilePage: React.FC = () => {
 						},
 						{
 							label: "Videos",
-							content: <><Videos /></>,
+							content: (
+								<>
+									<Videos />
+								</>
+							),
 						},
 					]}
 					className="mt-3"

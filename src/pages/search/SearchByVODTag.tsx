@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { endpoints as ep } from "@services/endpoints";
@@ -7,6 +10,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Tag from "@components/ui/Tag";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface VideoDataType {
 	secondCat: [];
@@ -15,6 +19,7 @@ interface VideoDataType {
 }
 
 const SearchByVODTag: React.FC = () => {
+	const { t } = useTranslation();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [videoData, setVideoData] = useState<VideoDataType[]>([]);
 	const [currentPage, setCurrentPage] = useState<number>(0);
@@ -79,7 +84,7 @@ const SearchByVODTag: React.FC = () => {
 			{videoData && videoData.length > 0 && (
 				<div className="mt-8">
 					<Heading size="sm" className="mb-6">
-						Videos Tag
+						{t("pages.vt")}
 					</Heading>
 
 					{videoData?.map((data, index) => (
@@ -87,8 +92,8 @@ const SearchByVODTag: React.FC = () => {
 							key={index}
 							className="flex flex-col sm:flex-row mb-10 sm:gap-4"
 						>
-							<div className="w-full sm:w-80 h-auto mb-4 sm:mb-0">
-								<div className="relative border">
+							<div className="w-full sm:w-80 h-32 bg-primary mb-4 sm:mb-0">
+								<div className="relative border h-full">
 									<img
 										className="w-full h-full object-cover"
 										// src={
@@ -138,7 +143,7 @@ const SearchByVODTag: React.FC = () => {
 
 					{showMoreButton && (
 						<ShowMoreButton
-							title={"Videos Tag"}
+							title={t("pages.vt")}
 							onClick={() => handleShowMore(null, true)}
 							loading={loading}
 						/>

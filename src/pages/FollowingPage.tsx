@@ -5,51 +5,53 @@ import LivePage from "./LivePage";
 import Heading from "@components/ui/Heading";
 import { endpoints } from "@services/endpoints";
 import store from "store2";
+import { useTranslation } from "react-i18next";
 
 const ChannelList = lazy(() => import("@pages/ChannelListPage"));
 
 const FollowingPage: React.FC = () => {
 	// const { users } = useSelector((state) => state.user);
+	const { t } = useTranslation();
 
 	return (
 		<div className="container mt-9 pb-20">
-			<Heading size="lg">Following</Heading>
+			<Heading size="lg">{t("navbar.link1")}</Heading>
 			<Tab
 				tabs={[
 					{
-						label: "Overview",
+						label: t("pages.overview"),
 						content: (
 							<>
 								<LivePage
 									url={endpoints.homeLive}
-									title="Live Channels"
+									title={t("pages.lc")}
 								/>
 								<CategoryCardList url={endpoints.homeCategory} />
 							</>
 						),
 					},
 					{
-						label: "Live",
+						label: t("pages.live"),
 						content: (
 							<LivePage
 								url={endpoints.followLive}
 								userID={store.get("id")}
-								title="Live Channels"
+								title={t("pages.lc")}
 							/>
 						),
 					},
 					{
-						label: "Videos",
+						label: t("pages.videos"),
 						content: (
 							<LivePage
 								url={endpoints.vodList}
 								userID={store.get("id")}
-								title="Latest Videos"
+								title={t("pages.lv")}
 							/>
 						),
 					},
 					{
-						label: "Categories",
+						label: t("pages.categories"),
 						content: (
 							<CategoryCardList
 								url={endpoints.followCategory}
@@ -58,7 +60,7 @@ const FollowingPage: React.FC = () => {
 						),
 					},
 					{
-						label: "Channels",
+						label: t("pages.channels"),
 						content: <ChannelList />,
 					},
 				]}

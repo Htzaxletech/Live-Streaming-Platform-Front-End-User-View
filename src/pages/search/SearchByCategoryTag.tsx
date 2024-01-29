@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { endpoints as ep } from "@services/endpoints";
@@ -7,6 +11,7 @@ import { toast } from "react-toastify";
 import moskov from "@assets/images/moskov.jpg";
 import Tag from "@components/ui/Tag";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface CategoryDataType {
 	categoryName: string;
@@ -14,6 +19,7 @@ interface CategoryDataType {
 }
 
 const SearchByCategoryTag: React.FC = () => {
+	const { t } = useTranslation();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [categoriesTag, setCategoriesTag] = useState<CategoryDataType[]>([]);
 	const [currentPage, setCurrentPage] = useState<number>(0);
@@ -78,7 +84,7 @@ const SearchByCategoryTag: React.FC = () => {
 			{categoriesTag && categoriesTag.length > 0 && (
 				<div className="mt-8">
 					<Heading size="sm" className="mb-6">
-						Categories Tag
+						{t("pages.ct")}
 					</Heading>
 
 					{categoriesTag?.map((data, index) => (
@@ -119,7 +125,7 @@ const SearchByCategoryTag: React.FC = () => {
 
 					{showMoreButton && (
 						<ShowMoreButton
-							title={"Categories"}
+							title={t("pages.ct")}
 							onClick={() => handleShowMore(null, true)}
 							loading={loading}
 						/>

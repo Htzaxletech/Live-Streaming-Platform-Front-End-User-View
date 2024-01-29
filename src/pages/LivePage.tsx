@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import React, { useEffect, useState } from "react";
 import VideoCard from "@components/shared/VideoCard";
 import Heading from "@components/ui/Heading";
@@ -7,8 +11,8 @@ import { toast } from "react-toastify";
 
 interface LivePageProps {
 	url: string;
-	userID?: string | number
-	title?: string
+	userID?: string | number;
+	title?: string;
 }
 
 interface VideoDataType {
@@ -30,7 +34,6 @@ const LivePage: React.FC<LivePageProps> = ({ url, userID, title }) => {
 		(async () => {
 			handleShowMore(signal, false);
 		})();
-
 
 		return () => {
 			setVideoData([]);

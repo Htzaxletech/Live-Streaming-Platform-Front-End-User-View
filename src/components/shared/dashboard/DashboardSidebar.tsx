@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import { useTranslation } from "react-i18next";
 import { CiStreamOn } from "react-icons/ci";
 import { MdOutlineSettings } from "react-icons/md";
 import store from "store2";
@@ -6,22 +7,24 @@ import store from "store2";
 const DashboardSidebarItem = lazy(() => import("./DashboardSidebarItem"));
 
 const DashboardSidebar: React.FC = () => {
+	const { t } = useTranslation();
+
 	const items = [
 		{
-			title: "Stream Manager",
+			title: t("pages.stm"),
 			icon: <CiStreamOn />,
 			path: `/dashboard/${store.get("id")}`,
 		},
 		{
-			title: "Setting",
+			title: t("pages.setting"),
 			icon: <MdOutlineSettings />,
 			childrens: [
 				{
-					title: "Stream",
+					title: t("pages.stream"),
 					path: "/dashboard/setting/stream",
 				},
 				{
-					title: "Channel",
+					title: t("pages.ch"),
 					path: "/dashboard/setting/channel",
 				},
 			],

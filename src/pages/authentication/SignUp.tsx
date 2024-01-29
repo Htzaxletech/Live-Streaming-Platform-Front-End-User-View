@@ -15,8 +15,10 @@ import { RootState } from "@store/index";
 import store from "store2";
 import { endpoints as ep } from "@services/endpoints";
 import { handleRequestError, makeRequest } from "@services/utils";
+import { useTranslation } from "react-i18next";
 
 const SignUp: React.FC = () => {
+	const { t } = useTranslation();
 	const [username, setUsername] = useState<string>(
 		store.get("singup_username") || ""
 	);
@@ -66,7 +68,9 @@ const SignUp: React.FC = () => {
 		<div>
 			<Modal isOpen={isOpenSignUp} onClose={handleOnClose}>
 				<div>
-					<AuthHeader title="Join Twitch today" />
+					<AuthHeader
+						title={t("auth.signup_title", { heading: t("auth.heading") })}
+					/>
 					<div className="px-0 pt-6 pb-8 mb-4">
 						<form onSubmit={handleSignUp}>
 							<div className="mb-4">
@@ -74,14 +78,14 @@ const SignUp: React.FC = () => {
 									className="block text-sm font-bold mb-2"
 									htmlFor="username"
 								>
-									Username
+									{t("auth.name")}
 								</label>
 								<Input
 									autoFocus
 									className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
 									id="username"
 									type="text"
-									placeholder="Enter your username"
+									placeholder={t("placeholder.name")}
 									value={username}
 									onChange={(e) => {
 										setUsername(e.target.value);
@@ -94,13 +98,13 @@ const SignUp: React.FC = () => {
 									className="block text-sm font-bold mb-2"
 									htmlFor="password"
 								>
-									Password
+									{t("auth.password")}
 								</label>
 								<Input
 									className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
 									id="password"
 									type="password"
-									placeholder="Enter your password"
+									placeholder={t("placeholder.password")}
 									value={password}
 									onChange={(e) => {
 										setPassword(e.target.value);
@@ -113,13 +117,13 @@ const SignUp: React.FC = () => {
 									className="block text-sm font-bold mb-2"
 									htmlFor="email"
 								>
-									Email
+									{t("auth.email")}
 								</label>
 								<Input
 									className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
 									id="email"
 									type="email"
-									placeholder="Enter your email"
+									placeholder={t("placeholder.email")}
 									value={email}
 									onChange={(e) => {
 										setEmail(e.target.value);
@@ -134,7 +138,7 @@ const SignUp: React.FC = () => {
 									type="submit"
 									disabled={loading}
 								>
-									{loading ? "Loading..." : "Sign Up"}
+									{loading ? "Loading..." : t("navbar.signup")}
 								</Button>
 							</div>
 							<Button
@@ -142,7 +146,7 @@ const SignUp: React.FC = () => {
 								onClick={handleSwitchToLogin}
 								className="w-full bg-transparent text-primary-500 dark:hover:text-slate-100 hover:text-black text-sm"
 							>
-								Already a Twich user? Log In
+								{t("auth.exist")}
 							</Button>
 						</form>
 					</div>

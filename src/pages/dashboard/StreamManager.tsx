@@ -1,5 +1,7 @@
-// /* eslint-disable @typescript-eslint/ban-ts-comment */
-// // @ts-nocheck
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { MediaPlayer, MediaProvider } from "@vidstack/react";
@@ -25,6 +27,7 @@ import store from "store2";
 import { generateStreamUrl } from "@utils/helpers";
 import { useLocation } from "react-router-dom";
 import "@styles/tags.css";
+import { useTranslation } from "react-i18next";
 
 const Button = lazy(() => import("@components/ui/Button"));
 const Modal = lazy(() => import("@pages/authentication/Modal"));
@@ -33,7 +36,7 @@ const StreamChatBox = lazy(() => import("@components/shared/StreamChatBox"));
 
 const StreamManager = () => {
 	const { state } = useLocation();
-
+	const { t } = useTranslation();
 	const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
 
 	const [isOpenStreamInfo, setIsOpenStreamInfo] = useState<boolean>(false);
@@ -265,7 +268,7 @@ const StreamManager = () => {
 								<div className="mt-2">{initFormState.title}</div>
 								<div>
 									<Button color="primary" onClick={handleStartLive}>
-										Start Live
+										{t("pages.start_live")}
 									</Button>
 								</div>
 							</div>
@@ -291,19 +294,19 @@ const StreamManager = () => {
 
 			<Modal isOpen={isOpenStreamInfo} onClose={handleStreamInfo}>
 				<div>
-					<Heading size="md">Edit Stream Info</Heading>
+					<Heading size="md">{t("pages.esi")}</Heading>
 					<div className="px-0 pt-6 mb-4">
 						<form onSubmit={handleSubmit}>
 							<div className="mt-2 flex flex-col md:flex-row gap-2 w-full">
 								<Label className="md:w-[180px] left-0 w-full">
-									Title
+									{t("pages.st")}
 								</Label>
 								<div className="w-full">
 									<textarea
 										id="title"
 										className="flex-shrink resize-none w-full outline-none bg-background-base text-foreground-secondary border border-border rounded-md hover:ring-[1px] hover:ring-border focus-within:!ring-[2px] focus-within:!ring-primary px-[9px] py-2"
 										rows={3}
-										placeholder="My stream title"
+										placeholder={t("placeholder.mst")}
 										value={title}
 										onChange={handleChangeTitle}
 									/>
@@ -312,7 +315,7 @@ const StreamManager = () => {
 
 							<div className="mt-4 flex flex-col md:flex-row gap-2 w-full">
 								<Label className="md:w-[180px] left-0 w-full">
-									Category
+									{t("pages.c")}
 								</Label>
 								<div className="w-full">
 									<ReactTags
@@ -322,7 +325,7 @@ const StreamManager = () => {
 										onAdd={onAddCategory}
 										onDelete={onDeleteCategory}
 										noOptionsText="No matching"
-										placeholderText="Add new category"
+										placeholderText={t("placeholder.anc")}
 										collapseOnSelect
 									/>
 								</div>
@@ -330,7 +333,7 @@ const StreamManager = () => {
 
 							<div className="mt-4 flex flex-col md:flex-row gap-2 w-full">
 								<Label className="md:w-[180px] left-0 w-full">
-									Tags
+									{t("pages.t")}
 								</Label>
 								<div className="w-full">
 									<ReactTags
@@ -340,7 +343,7 @@ const StreamManager = () => {
 										onAdd={onAdd}
 										onDelete={onDelete}
 										noOptionsText="No matching"
-										placeholderText="Add new tag"
+										placeholderText={t("placeholder.ant")}
 									/>
 								</div>
 							</div>
@@ -352,7 +355,7 @@ const StreamManager = () => {
 									type="button"
 									onClick={handleStreamInfo}
 								>
-									Cancel
+									{t("pages.cancel")}
 								</Button>
 								<Button
 									className="min-w-[80px] py-4"
@@ -360,7 +363,7 @@ const StreamManager = () => {
 									type="submit"
 									disabled={loading}
 								>
-									{loading ? "Loading..." : "Done"}
+									{loading ? "Loading..." : t("pages.done")}
 								</Button>
 							</div>
 						</form>

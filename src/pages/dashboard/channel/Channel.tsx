@@ -13,6 +13,7 @@ import { convertToBase64 } from "@utils/helpers";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import store from "store2";
+import { useTranslation } from "react-i18next";
 
 const Button = lazy(() => import("@components/ui/Button"));
 const Heading = lazy(() => import("@components/ui/Heading"));
@@ -27,6 +28,7 @@ const Channel: React.FC = () => {
 		bio: string;
 	}
 
+	const { t } = useTranslation();
 	const profileRef = useRef<HTMLInputElement>(null);
 	const bannerRef = useRef<HTMLInputElement>(null);
 
@@ -141,7 +143,7 @@ const Channel: React.FC = () => {
 	return (
 		<div className="container mx-auto mt-10">
 			<div className="mb-7">
-				<Heading size="sm">Profile Picture</Heading>
+				<Heading size="sm">{t("pages.pp")}</Heading>
 				<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2 flex flex-col md:flex-row gap-2 w-full">
 					<div className="w-full flex justify-center md:w-2/6 lg:w-1/6">
 						<img
@@ -154,7 +156,7 @@ const Channel: React.FC = () => {
 					</div>
 					<div className="w-full md:w-4/6 lg:w-5/6">
 						<Button color="default" onClick={handleProfileClick}>
-							Add Profile Picture
+							{t("pages.app")}
 						</Button>
 						<Input
 							type="file"
@@ -163,15 +165,13 @@ const Channel: React.FC = () => {
 							accept="image/jpeg"
 							onChange={handleProfileChange}
 						/>
-						<div className="mt-2">
-							Must be JPEG, PNG, or GIF and cannot exceed 10MB.
-						</div>
+						<div className="mt-2">{t("pages.imgd")}</div>
 					</div>
 				</div>
 			</div>
 
 			<div className="mb-7">
-				<Heading size="sm">Profile Banner</Heading>
+				<Heading size="sm">{t("pages.pb")}</Heading>
 				<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2 flex flex-col md:flex-row gap-6 w-full">
 					<div className="w-full lg:w-2/6">
 						<img
@@ -184,7 +184,7 @@ const Channel: React.FC = () => {
 					</div>
 					<div className="w-full lg:w-3/6">
 						<Button color="default" onClick={handleBannerClick}>
-							Update
+							{t("pages.update")}
 						</Button>
 						<Input
 							type="file"
@@ -193,15 +193,13 @@ const Channel: React.FC = () => {
 							accept="image/jpeg"
 							onChange={handleBannerChange}
 						/>
-						<div className="mt-2">
-							Must be JPEG, PNG, or GIF and cannot exceed 10MB.
-						</div>
+						<div className="mt-2">{t("pages.imgd")}.</div>
 					</div>
 				</div>
 			</div>
 
 			<div className="mb-7">
-				<Heading size="sm">Profile Settings</Heading>
+				<Heading size="sm">{t("pages.ps")}</Heading>
 				<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2">
 					<form onSubmit={handleSaveChanges}>
 						<div className="flex flex-col md:flex-row gap-2 w-full">
@@ -209,7 +207,7 @@ const Channel: React.FC = () => {
 								className="md:w-[280px] left-0 w-full"
 								htmlFor="userName"
 							>
-								User Name
+								{t("auth.name")}
 							</Label.Root>
 							<div className="w-full">
 								<Input
@@ -227,7 +225,7 @@ const Channel: React.FC = () => {
 								className="md:w-[280px] left-0 w-full"
 								htmlFor="displayName"
 							>
-								Display Name
+								{t("pages.dname")}
 							</Label.Root>
 							<div className="w-full">
 								<Input
@@ -245,7 +243,7 @@ const Channel: React.FC = () => {
 								className="md:w-[280px] left-0 w-full"
 								htmlFor="bio"
 							>
-								Bio
+								{t("pages.bio")}
 							</Label.Root>
 							<div className="w-full">
 								<textarea
@@ -261,7 +259,7 @@ const Channel: React.FC = () => {
 
 						<div className="flex w-full justify-end mt-4">
 							<Button className="py-5" color="primary" type="submit">
-								{loading ? "Loading..." : "Save Changes"}
+								{loading ? "Loading..." : t("pages.sc")}
 							</Button>
 						</div>
 					</form>

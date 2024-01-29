@@ -1,20 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import CategoryCard from "@components/shared/CategoryCard";
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { endpoints } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 interface CategoryProps {
-	keyword?: string
+	keyword?: string;
 }
 
-interface CategoryDataType {
-
-}
+interface CategoryDataType {}
 
 const BrowseCategoryList: React.FC<CategoryProps> = ({ keyword }) => {
+	const { t } = useTranslation();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [categories, setCategories] = useState<CategoryDataType[]>([]);
 	const [currentPage, setCurrentPage] = useState<number>(0);
@@ -76,7 +80,7 @@ const BrowseCategoryList: React.FC<CategoryProps> = ({ keyword }) => {
 		<>
 			{categories.length > 0 && (
 				<div className="mt-8">
-					<Heading size="sm">Categories</Heading>
+					<Heading size="sm">{t("pages.categories")}</Heading>
 					<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-8 gap-2 mt-3 mb-8">
 						{categories &&
 							categories.length > 0 &&

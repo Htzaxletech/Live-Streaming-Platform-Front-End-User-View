@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@store/index";
 import { useEffect } from "react";
 import store from "store2";
+import { useTranslation } from "react-i18next";
 
 const Login = lazy(() => import("@pages/authentication/Login"));
 const SignUp = lazy(() => import("@pages/authentication/SignUp"));
@@ -40,6 +41,7 @@ const classes = tv({
 const { nav, navCol } = classes();
 
 const Navbar: React.FC = () => {
+	const { t } = useTranslation();
 	const dispatch = useDispatch();
 	const { isOpenLogin, isOpenSignUp, isOpenOTP, isOpenTwoFactor } =
 		useSelector((state: RootState) => state.modals);
@@ -80,13 +82,13 @@ const Navbar: React.FC = () => {
 					{!isAuthenticated && (
 						<>
 							<Button onClick={() => dispatch(setOpenLogin(true))}>
-								Log In
+								{t("navbar.login")}
 							</Button>
 							<Button
 								color="primary"
 								onClick={() => dispatch(setOpenSignUp(true))}
 							>
-								Sign Up
+								{t("navbar.signup")}
 							</Button>
 						</>
 					)}

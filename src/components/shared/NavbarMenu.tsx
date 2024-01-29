@@ -22,7 +22,7 @@ const NavbarMenu: React.FC = () => {
 			</NavbarLink>
 
 			<Dropdown.Root modal={false}>
-				<Dropdown.Trigger asChild>
+				<Dropdown.Trigger asChild className="md:hidden">
 					<a
 						data-tooltip-id="my-tooltip"
 						data-tooltip-content="More"
@@ -49,12 +49,12 @@ const NavbarMenu: React.FC = () => {
 									{t("navbar.link2")}
 								</Dropdown.Item>
 							</Link>
-							<Link to={"/channel/1"}>
+							{/* <Link to={"/channel/1"}>
 								<Dropdown.Item>Socket</Dropdown.Item>
 							</Link>
 							<Link to={"/testing"}>
 								<Dropdown.Item>Testing</Dropdown.Item>
-							</Link>
+							</Link> */}
 						</Dropdown.Group>
 					</Dropdown.Content>
 				</Dropdown.Portal>

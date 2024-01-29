@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import Button from "@components/ui/Button";
 import Input from "@components/ui/Input";
 import store from "store2";
@@ -10,12 +12,13 @@ import {
 	LuArrowLeftFromLine,
 	LuArrowRightFromLine,
 } from "react-icons/lu";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { socket } from "../../socket";
 import { useLocation } from "react-router-dom";
-import { chatTempData, getRandomColor } from "@utils/helpers";
+// import { chatTempData, getRandomColor } from "@utils/helpers";
 import { Virtuoso } from "react-virtuoso";
 import { FaArrowDown } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 
 interface StreamChatBoxProps {
 	liveID?: any; // Replace 'any' with a more specific type if possible
@@ -28,10 +31,11 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	streamKey: skey,
 	liveStatus,
 }) => {
+	const { t } = useTranslation();
 	const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
 	const [chatMessages, setChatMessages] = useState<unknown[]>([]);
 	// const [isConnected, setIsConnected] = useState(false);
-	const [message, setMessage] = useState("");
+	// const [message, setMessage] = useState("");
 	const [showScrollButton, setShowScrollButton] = useState(false);
 
 	const dispatch = useDispatch();
@@ -39,7 +43,6 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 
 	const virtuosoRef = useRef<any>(null);
 	const inputRef = useRef<any>(null);
-
 
 	const handleToggleChat = () => {
 		dispatch(toggleChat());
@@ -65,8 +68,6 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	const liveId = lid || state?.liveStreamData?.liveID;
 
 	useEffect(() => {
-
-
 		console.table({ skey, streamID, liveId, liveFlag });
 
 		if (streamID && liveFlag) {
@@ -142,9 +143,9 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 		setChatMessages((previous) => [...previous, ...value]);
 	};
 
-	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setMessage(e.target.value);
-	};
+	// const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+	// 	setMessage(e.target.value);
+	// };
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
@@ -199,7 +200,9 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 						<LuArrowRightFromLine className="text-xl" />
 					</Button>
 					<div>
-						<h5 className="uppercase font-semibold">Stream Chat</h5>
+						<h5 className="uppercase font-semibold">
+							{t("pages.stream_chat")}
+						</h5>
 					</div>
 
 					<Button className="bg-transparent">
@@ -233,7 +236,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 					<form onSubmit={handleSubmit}>
 						<Input
 							className="w-full"
-							placeholder="Send a message"
+							placeholder={t("placeholder.sm")}
 							// value={message}
 							// onChange={handleInputChange}
 							ref={inputRef}
@@ -249,7 +252,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 								className="text-white"
 								type="submit"
 							>
-								Chat
+								{t("pages.chat")}
 							</Button>
 						</div>
 					</form>

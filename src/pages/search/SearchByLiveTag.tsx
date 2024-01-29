@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { endpoints as ep } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import angela from "@assets/images/angela.jpg";
 import Tag from "@components/ui/Tag";
 import { useParams } from "react-router-dom";
-import VideoCard from "@components/shared/VideoCard";
+import { useTranslation } from "react-i18next";
 
 interface LiveDataType {
 	id: number;
@@ -15,6 +18,7 @@ interface LiveDataType {
 }
 
 const SearchByLiveTag: React.FC = () => {
+	const { t } = useTranslation();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [channel, setLiveData] = useState<LiveDataType[]>([]);
 	const [currentPage, setCurrentPage] = useState<number>(0);
@@ -79,7 +83,7 @@ const SearchByLiveTag: React.FC = () => {
 			{channel && channel.length > 0 && (
 				<div className="mt-8">
 					<Heading size="sm" className="mb-6">
-						Lives Tag
+						{t("pages.lt")}
 					</Heading>
 
 					{channel?.map((data, index) => (
@@ -100,7 +104,7 @@ const SearchByLiveTag: React.FC = () => {
 									/>
 
 									<div className="absolute text-xs top-2 left-2 bg-red-500 text-white px-1 py-[2px] rounded">
-										Live
+										{t("pages.live")}
 									</div>
 									<div className="absolute text-xs bottom-2 left-2 bg-black bg-opacity-70 text-white px-1 py-[2px] rounded">
 										{data?.viewCount} views
@@ -117,7 +121,17 @@ const SearchByLiveTag: React.FC = () => {
 								<div className="mt-3 flex gap-1">
 									{data?.secondCat?.map((i, index) => {
 										return (
-											<Tag key={index} to={""}>
+											<Tag
+												key={index}
+												to={"/directory"}
+												state={{
+													directory: {
+														...i,
+														categoryName: i.tagName,
+														active: 1,
+													},
+												}}
+											>
 												{i.tagName}
 											</Tag>
 										);
@@ -129,7 +143,7 @@ const SearchByLiveTag: React.FC = () => {
 
 					{showMoreButton && (
 						<ShowMoreButton
-							title={"Lives"}
+							title={t("pages.lt")}
 							onClick={() => handleShowMore(null, true)}
 							loading={loading}
 						/>

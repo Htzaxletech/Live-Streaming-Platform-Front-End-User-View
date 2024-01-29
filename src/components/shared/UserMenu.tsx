@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GoPerson } from "react-icons/go";
-import { lazy, useState } from "react";
+import { useState } from "react";
 import { Dropdown } from "@components/ui/Dropdown";
 
 import Button from "@components/ui/Button";
@@ -22,6 +22,7 @@ import { setOpenLogin } from "@store/slices/modalSlice";
 import { logout } from "@store/slices/authSlice";
 import { RootState } from "@store/index";
 import store from "store2";
+import { useTranslation } from "react-i18next";
 
 // const UserProfile = lazy(() => import("./UserProfile"));
 // const LanguageSwitch = lazy(() => import("./LanguageSwitch"));
@@ -52,6 +53,8 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ icon, title }) => {
 };
 
 const LanguageHeader: React.FC<LanguageHeaderProps> = ({ openLanguage }) => {
+	const { t } = useTranslation();
+
 	return (
 		<div className="flex w-full justify-between cursor-pointer">
 			<div
@@ -70,7 +73,7 @@ const LanguageHeader: React.FC<LanguageHeaderProps> = ({ openLanguage }) => {
 						openLanguage ? "font-semibold" : ""
 					}`}
 				>
-					Language
+					{t("navbar.language")}
 				</label>
 				{openLanguage && <div className="invisible"></div>}
 			</div>
@@ -87,6 +90,7 @@ const UserMenu = () => {
 	const isAuthenticated = useSelector(
 		(state: RootState) => state.auth.isAuthenticated
 	);
+	const { t } = useTranslation();
 
 	const handleLogout = () => {
 		dispatch(logout());
@@ -173,7 +177,7 @@ const UserMenu = () => {
 										>
 											<DashboardHeader
 												icon={<BiLogOut className="icon" />}
-												title="Log Out"
+												title={t("navbar.logout")}
 											/>
 										</Dropdown.Item>
 									</>
@@ -186,7 +190,7 @@ const UserMenu = () => {
 										>
 											<DashboardHeader
 												icon={<BiLogIn className="icon" />}
-												title="Log In"
+												title={t("navbar.login")}
 											/>
 										</Dropdown.Item>
 									</>

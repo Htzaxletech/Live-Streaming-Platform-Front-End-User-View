@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleSidebar } from "@store/slices/sidebarSlice";
 import { RootState } from "store";
 import { lazy } from "react";
+import { useTranslation } from "react-i18next";
 
 const DashboardSidebar = lazy(
 	() => import("@components/shared/dashboard/DashboardSidebar")
@@ -31,6 +32,7 @@ const sidebar = tv({
 });
 
 const Sidebar: FC<SidebarProps> = ({ status }) => {
+	const { t } = useTranslation();
 	const collapsed = useSelector(
 		(state: RootState) => state.sidebar.isSidebarCollapsed
 	);
@@ -48,7 +50,7 @@ const Sidebar: FC<SidebarProps> = ({ status }) => {
 						<>
 							{status === "user" ? (
 								<div className="text-foreground flex-nowrap text-lg font-semibold absolute left-3 top-4 mx-auto">
-									For You
+									{t("sidebar.4u")}
 								</div>
 							) : (
 								<div className="text-foreground flex-nowrap font-semibold absolute left-3 top-4 mx-auto">

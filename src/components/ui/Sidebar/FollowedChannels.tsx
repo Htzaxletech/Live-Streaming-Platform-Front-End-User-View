@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { convertToLowerCase } from "@utils/helpers";
 import store from "store2";
+import { useTranslation } from "react-i18next";
 
 const SidebarItem = lazy(() => import("../Sidebaritem"));
 
@@ -46,6 +47,7 @@ const FollowedChannels: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const navigate = useNavigate();
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -121,7 +123,7 @@ const FollowedChannels: React.FC = () => {
 			<div className="flex">
 				{!collapsed && (
 					<div className="text-foreground/50 flex-nowrap text-md tracking-wide font-semibold absolute left-3 top-16 mx-auto">
-						Followed Channels
+						{t("sidebar.followed")}
 					</div>
 				)}
 

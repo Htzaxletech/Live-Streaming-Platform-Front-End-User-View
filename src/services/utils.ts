@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
+
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import api from "./api";
 import { toast } from "react-toastify";

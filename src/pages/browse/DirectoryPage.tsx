@@ -7,13 +7,15 @@ import Tab from "@components/ui/Tab";
 import BrowsePage from "./BrowsePage";
 import DirectoryCategory from "@components/shared/DirectoryCategory";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const DirectoryPage = () => {
 	const { state } = useLocation();
+	const { t } = useTranslation();
 	
 	return (
 		<div className="container py-6 pb-20 px-4">
-			<Heading className="my-4 text-5xl">Browse</Heading>
+			<Heading className="my-4 text-5xl">{t("navbar.link2")}</Heading>
 
 			<DirectoryCategory />
 
@@ -21,11 +23,11 @@ const DirectoryPage = () => {
 				active={state?.directory?.active}
 				tabs={[
 					{
-						label: "Categories",
+						label: t("pages.categories"),
 						content: <BrowsePage status="categories" />,
 					},
 					{
-						label: "Live Channels",
+						label: t("pages.lc"),
 						content: <BrowsePage status="live" />,
 					},
 				]}

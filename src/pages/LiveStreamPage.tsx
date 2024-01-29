@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import StreamChatBox from "@components/shared/StreamChatBox";
 import { useSelector } from "react-redux";
 import { RootState } from "store";

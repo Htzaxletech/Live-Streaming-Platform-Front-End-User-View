@@ -14,8 +14,10 @@ import { endpoints as ep } from "@services/endpoints";
 import store from "store2";
 // import ErrorMessage from "@components/shared/ErrorMessage";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const OneTimePwd: React.FC = () => {
+	const { t } = useTranslation();
 	const dispatch = useDispatch();
 	const [otp, setOtp] = useState<string>("");
 	// const [errorMessage, setErrorMessage] = useState<string>("");
@@ -86,7 +88,9 @@ const OneTimePwd: React.FC = () => {
 		<div>
 			<Modal isOpen={isOpenOTP} onClose={handleOnClose}>
 				<div>
-					<AuthHeader title="Join Twitch today" />
+					<AuthHeader
+						title={t("auth.signup_title", { heading: t("auth.heading") })}
+					/>
 					<div className="px-0 pt-6 pb-4">
 						<form onSubmit={handleOTPVerify}>
 							{/* {errorMessage && (
@@ -101,7 +105,7 @@ const OneTimePwd: React.FC = () => {
 									className="block text-sm font-bold mb-2"
 									htmlFor="otp"
 								>
-									Enter your OTP code
+									{t("auth.otp")}
 								</label>
 								<Input
 									autoFocus
@@ -119,7 +123,7 @@ const OneTimePwd: React.FC = () => {
 								type="submit"
 								disabled={loading}
 							>
-								{loading ? "Loading..." : "Verify"}
+								{loading ? "Loading..." : t("auth.verify")}
 							</Button>
 							<Button
 								className="w-full"
@@ -127,7 +131,7 @@ const OneTimePwd: React.FC = () => {
 								onClick={handleOtpResend}
 								disabled={loading2}
 							>
-								{loading2 ? "Loading..." : "Resend"}
+								{loading2 ? "Loading..." : t("auth.resend")}
 							</Button>
 						</form>
 					</div>

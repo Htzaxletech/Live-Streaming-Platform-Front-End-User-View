@@ -17,8 +17,10 @@ import { endpoints as ep } from "@services/endpoints";
 import store from "store2";
 import { toast } from "react-toastify";
 import { login } from "@store/slices/authSlice";
+import { useTranslation } from "react-i18next";
 
 const TwoFactor: React.FC = () => {
+	const { t } = useTranslation();
 	const [code, setCode] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
 
@@ -79,7 +81,7 @@ const TwoFactor: React.FC = () => {
 					{store.get("firstTime") ? (
 						<div>
 							<Heading size="md" className="mb-3">
-								Two-Factor Authentication
+								{t("auth.2fa")}
 							</Heading>
 							<div className="px-0 pt-6">
 								<div className="mb-6">
@@ -87,11 +89,9 @@ const TwoFactor: React.FC = () => {
 										className="block text-sm font-bold mb-1"
 										htmlFor="code"
 									>
-										Step 1: Download an authenticator app
+										{t("auth.step1_label")}
 									</label>
-									<p className="text-sm">
-										Download and install any authenticator app
-									</p>
+									<p className="text-sm">{t("auth.step1_p")}</p>
 								</div>
 
 								<div className="mb-6">
@@ -99,12 +99,9 @@ const TwoFactor: React.FC = () => {
 										className="block text-sm font-bold mb-1"
 										htmlFor="code"
 									>
-										Step 2: Scan the QR code
+										{t("auth.step2_label")}
 									</label>
-									<p className="text-sm mb-1">
-										Open the authenticator app and scan the image
-										below
-									</p>
+									<p className="text-sm mb-1">{t("auth.step2_p")}</p>
 									<div className="flex justify-center mt-5">
 										<img src={image} alt="QR Code" />
 									</div>
@@ -115,9 +112,9 @@ const TwoFactor: React.FC = () => {
 										className="block text-sm font-bold mb-1"
 										htmlFor="code"
 									>
-										Step 3: Verify your code
+										{t("auth.step3_label")}
 									</label>
-									<p className="mb-3">Enter 6 digit code generated</p>
+									<p className="mb-3">{t("auth.step3_p")}</p>
 									<Input
 										autoFocus
 										className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -134,14 +131,14 @@ const TwoFactor: React.FC = () => {
 										type="button"
 										onClick={handleBack}
 									>
-										Back
+										{t("auth.back")}
 									</Button>
 									<Button
 										className="mb-3"
 										color="primary"
 										type="submit"
 									>
-										Submit
+										{t("auth.submit")}
 									</Button>
 								</div>
 							</div>
@@ -150,7 +147,7 @@ const TwoFactor: React.FC = () => {
 						<div>
 							<div className="mb-6">
 								<p className="mb-3 font-semibold">
-									Enter 6 digit code from Microsoft Authenticator
+									{t("auth.confirm_otp")}
 								</p>
 								<Input
 									autoFocus
@@ -164,7 +161,7 @@ const TwoFactor: React.FC = () => {
 
 							<div className="flex gap-2 justify-end">
 								<Button type="button" onClick={handleBack}>
-									Back
+									{t("auth.back")}
 								</Button>
 								<Button
 									className="mb-3"
@@ -172,7 +169,7 @@ const TwoFactor: React.FC = () => {
 									type="submit"
 									disabled={loading}
 								>
-									{loading ? "Loading..." : "Submit"}
+									{loading ? "Loading..." : t("auth.submit")}
 								</Button>
 							</div>
 						</div>

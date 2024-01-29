@@ -5,6 +5,7 @@ import { RiSearchLine } from "react-icons/ri"
 // import Button from "@components/ui/Button"
 // import Input from "@components/ui/Input"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next";
 
 const Button = lazy(() => import("@components/ui/Button"));
 const Input = lazy(() => import("@components/ui/Input"));
@@ -14,6 +15,7 @@ const classes = tv({
 })
 
 const NavbarSearchBox = ({ className }: { className?: string }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null)
   const [searchValue, setSearchValue] = useState<string>("")
@@ -37,7 +39,7 @@ const NavbarSearchBox = ({ className }: { className?: string }) => {
     <form onSubmit={handleSubmit} className={classes({ class: className })}>
       <Input
         ref={inputRef}
-        placeholder="Search"
+        placeholder={t("navbar.search")}
         className="rounded-e-none flex-1"
         value={searchValue}
         onClear={clearInputValue}

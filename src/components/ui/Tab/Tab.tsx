@@ -17,7 +17,7 @@ const Tab: React.FC<TabsProps> = ({ tabs, className, active }) => {
   return (
     <div className={`w-full ${className || ""}`}>
       <div className="flex">
-        {tabs.map((tab, index) => (
+        {tabs && tabs.map((tab, index) => (
           <button
             key={index}
             onClick={() => setActiveTab(index)}
@@ -31,7 +31,7 @@ const Tab: React.FC<TabsProps> = ({ tabs, className, active }) => {
           </button>
         ))}
       </div>
-      <div className="mt-4">{tabs[activeTab].content}</div>
+      <div className="mt-4">{tabs?.[activeTab].content}</div>
     </div>
   );
 };

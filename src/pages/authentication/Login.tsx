@@ -16,11 +16,13 @@ import {
 import store from "store2";
 import { toast } from "react-toastify";
 import { login } from "@store/slices/authSlice";
+import { useTranslation } from "react-i18next";
 
 const Login: React.FC = () => {
 	const [username, setUsername] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
+	const { t } = useTranslation();
 
 	const dispatch = useDispatch();
 	const { isOpenLogin } = useSelector((state: RootState) => state.modals);	
@@ -73,7 +75,7 @@ const Login: React.FC = () => {
 		<div>
 			<Modal isOpen={isOpenLogin} onClose={handleOnClose}>
 				<div>
-					<AuthHeader title="Login to Twitch" />
+					<AuthHeader title={t("auth.login_title", { heading: t("auth.heading") })} />
 					<div className="px-0 pt-6 pb-8 mb-4">
 						<form onSubmit={handleLogin}>
 							<div className="mb-4">
@@ -81,14 +83,14 @@ const Login: React.FC = () => {
 									className="block text-sm font-bold mb-2"
 									htmlFor="username"
 								>
-									Username
+									{t("auth.name")}
 								</label>
 								<Input
 									autoFocus
 									className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
 									id="username"
 									type="text"
-									placeholder="Enter your username"
+									placeholder={t("placeholder.name")}
 									value={username}
 									onChange={(e) => setUsername(e.target.value)}
 								/>
@@ -98,13 +100,13 @@ const Login: React.FC = () => {
 									className="block text-sm font-bold mb-2"
 									htmlFor="password"
 								>
-									Password
+									{t("auth.password")}
 								</label>
 								<Input
 									className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
 									id="password"
 									type="password"
-									placeholder="Enter your password"
+									placeholder={t("placeholder.password")}
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
 								/>
@@ -116,7 +118,7 @@ const Login: React.FC = () => {
 									type="submit"
 									disabled={loading}
 								>
-									{loading ? "Loading..." : "Login"}
+									{loading ? "Loading..." : t("navbar.login")}
 								</Button>
 							</div>
 							<Button
@@ -124,7 +126,7 @@ const Login: React.FC = () => {
 								onClick={handleSwitchToSignUp}
 								className="w-full bg-transparent text-primary-500 dark:hover:text-slate-100 hover:text-black text-sm"
 							>
-								Don't have an account? Sign Up
+								{t("auth.create")}
 							</Button>
 						</form>
 					</div>

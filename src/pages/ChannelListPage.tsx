@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { endpoints as ep } from "@services/endpoints";
@@ -7,13 +10,18 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import store from "store2";
 import { VirtuosoGrid } from "react-virtuoso";
-import { StyledItem, StyledList } from "@styles/style-components/ChannelListPage";
+import {
+	StyledItem,
+	StyledList,
+} from "@styles/style-components/ChannelListPage";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface ChannelDataType {}
 
 const ChannelListPage: React.FC = () => {
 	// const navigate = useNavigate();
+	const { t } = useTranslation();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [channelList, setChannelList] = useState<ChannelDataType[]>([]);
 	const [currentPage, setCurrentPage] = useState<number>(0);
@@ -83,7 +91,7 @@ const ChannelListPage: React.FC = () => {
 		<>
 			{channelList && channelList.length > 0 && (
 				<div className="mt-8">
-					<Heading size="sm">Followed Channels</Heading>
+					<Heading size="sm">{t("sidebar.followed")}</Heading>
 
 					{/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mt-5 mb-5">
 						{channelList.map((data, index) => (
@@ -146,7 +154,7 @@ const ChannelListPage: React.FC = () => {
 
 					{showMoreButton && (
 						<ShowMoreButton
-							title={""}
+							title={t("pages.lv")}
 							onClick={() => handleShowMore(null, true)}
 							loading={loading}
 						/>

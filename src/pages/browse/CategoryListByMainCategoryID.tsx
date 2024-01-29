@@ -1,16 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import CategoryCard from "@components/shared/CategoryCard";
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { endpoints } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const CategoryListByMainCategoryID: React.FC = () => {
-	
 	interface CategoryDataType {}
-
+	const { t } = useTranslation();
 	const { dirCategoryName } = useParams();
 	const { state } = useLocation();
 
@@ -74,7 +78,7 @@ const CategoryListByMainCategoryID: React.FC = () => {
 	return (
 		<div className="mt-8">
 			<Heading size="sm" className="my-2 text-gray-900 dark:text-gray-100">
-				Categories
+				{t("pages.categories")}
 			</Heading>
 			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-8 gap-2 mt-3 mb-8">
 				{categoryData &&

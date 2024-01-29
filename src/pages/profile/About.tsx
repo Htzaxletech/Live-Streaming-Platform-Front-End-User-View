@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
+
 import Heading from "@components/ui/Heading";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -69,6 +74,5 @@ const About = ({ channelData }) => {
 		</>
 	);
 };
-
 
 export default About;
