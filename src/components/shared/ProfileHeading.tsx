@@ -109,7 +109,17 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 											{gameTags &&
 												gameTags.length > 0 &&
 												gameTags.map((tag, index) => (
-													<Tag to="" key={index}>
+													<Tag
+														key={index}
+														to={"/directory"}
+														state={{
+															directory: {
+																...tag,
+																categoryName: tag.tagName,
+																active: 1,
+															},
+														}}
+													>
 														{tag?.tagName}
 													</Tag>
 												))}
@@ -167,7 +177,7 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 											/>
 											<span className="text-danger">{viewers}</span>
 										</div>
-										<div className="">
+										<div className="w-20 text-center">
 											<span>{time}</span>
 										</div>
 									</div>

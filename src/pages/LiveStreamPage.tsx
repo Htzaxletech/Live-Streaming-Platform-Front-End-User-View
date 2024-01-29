@@ -22,6 +22,8 @@ import { endpoints } from "@services/endpoints";
 import { toast } from "react-toastify";
 import { generateStreamUrl } from "@utils/helpers";
 import store from "store2";
+import { socket } from "@socket/index";
+import useStreamingDuration from "@hooks/useStreamingDuration";
 
 const LiveStreamPage = () => {
 	const navigate = useNavigate();
@@ -30,11 +32,15 @@ const LiveStreamPage = () => {
 	const [channelData, setChannelData] = useState<[]>([]);
 	const [followStatus, setFollowStatus] = useState<number>(0);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [viewCount, setViewCount] = useState<number>(0);
+	const [startTime, setStartTime] = useState<any>("2024-01-29T16:00:00");
+	// const startTime = "2024-01-29T16:00:00";
+	const duration = useStreamingDuration(startTime);
 
 	useEffect(() => {
 		(async () => {
 			if (!state?.liveStreamData) {
-				navigate("/");
+				// navigate("/");
 			} else {
 				try {
 					const response = await makeRequest(
@@ -54,6 +60,7 @@ const LiveStreamPage = () => {
 				}
 			}
 		})();
+
 	}, [state?.liveStreamData?.channelID]);
 
 	const handleFollow = async () => {
@@ -76,9 +83,6 @@ const LiveStreamPage = () => {
 			setLoading(false);
 		}
 	};
-
-	console.log("channelData?.streamKey", channelData?.streamKey);
-	console.log("state?.liveStreamData", state?.liveStreamData);
 
 	return (
 		<div>
@@ -103,8 +107,8 @@ const LiveStreamPage = () => {
 						streamerName={channelData?.displayName}
 						streamTitle={channelData?.title}
 						gameTags={channelData?.tags}
-						viewers={channelData?.viewCount}
-						time={"20:00:11"}
+						viewers={viewCount}
+						time={duration}
 						profileImage={channelData?.s3path}
 						handleFollow={handleFollow}
 						followStatus={followStatus}
@@ -128,6 +132,8 @@ const LiveStreamPage = () => {
 			<StreamChatBox
 				streamKey={channelData?.streamKey}
 				liveStatus={channelData?.live_status}
+				channelID={channelData?.channelID}
+				setViewCount={setViewCount}
 			/>
 		</div>
 	);

@@ -5,7 +5,7 @@
 		"login": "Login",
 		"logout": "Logout",
 		"signup": "Sign Up",
-		"language": "language",
+		"language": "Language",
 		"theme": "Dark Theme",
 		"search": "Search"
 	},
@@ -66,9 +66,11 @@
 		"cancel": "Cancel",
 		"done": "Done",
 		"start_live": "Start Live",
+		"end_live": "End Live",
 		"setting": "Setting",
 		"stream": "Stream",
 		"ch": "Channel",
+		"cp": "Channel Profile",
 		"psk": "Primary Stream Key",
 		"show": "Show",
 		"hide": "Hide",
@@ -86,7 +88,7 @@
 		"dname": "Display Name",
 		"bio": "Bio",
 		"sc": "Save Changes",
-		"stream_chat": "Stream Chat",
+		"stream_chat": "Live Chat",
 		"chat": "Chat"
 	},
 	"title": {

@@ -47,16 +47,22 @@ const StreamManager = () => {
 	const [selectedCategory, setSelectedCategory] = useState<Tag[]>([]);
 	const [suggestionsCategory, setSuggesstionsCategory] = useState<Tag[]>([]);
 	const [channelData, setChanelData] = useState([]);
+	const [isStartLive, setIsStartLive] = useState(0);
 
 	interface FormState {
 		title: string;
 		categoryImage: string;
 	}
 
+	// const [initFormState, setInitialFormState] = useState<FormState>({
+	// 	title: "",
+	// 	categoryImage:
+	// 		"https://play-lh.googleusercontent.com/uqq6a-fHayQxsNQkxB9ZZXag8N7Du5mOEKcScr9yltHqx3RKgCdr9VJHKGO2vY_GUe0",
+	// });
+
 	const [initFormState, setInitialFormState] = useState<FormState>({
-		title: "",
-		categoryImage:
-			"https://play-lh.googleusercontent.com/uqq6a-fHayQxsNQkxB9ZZXag8N7Du5mOEKcScr9yltHqx3RKgCdr9VJHKGO2vY_GUe0",
+		title: channelData?.title || "",
+		categoryImage: channelData?.s3categoryImage || "",
 	});
 
 	useEffect(() => {
@@ -68,12 +74,16 @@ const StreamManager = () => {
 				// Multiple requests
 				const requests = [
 					{ method: "get", url: ep.tags, config: { signal } },
-					{ method: "get", url: ep.secondCategory, config: { signal } },
+					{
+						method: "get",
+						url: ep.secondCategoryList,
+						config: { signal },
+					},
 					{
 						method: "get",
 						url: ep.liveByUserID,
 						data: {
-							userID: 1,
+							userID: store.get("id"),
 						},
 						config: { signal },
 					},
@@ -117,8 +127,9 @@ const StreamManager = () => {
 					if (channel?.success) {
 						const data = channel?.data[0];
 						setChanelData(data);
+						setIsStartLive(data.live_status);
+						console.log("channel", data);
 					}
-					console.log("channel", channel);
 				}
 			} catch (error) {
 				// Check if the error is due to the request being aborted
@@ -191,12 +202,16 @@ const StreamManager = () => {
 			const response = await makeRequest("post", ep.updateStreamInfo, data);
 
 			if (response?.success) {
+				const isSelectedExist = suggestionsCategory.find(
+					(category) => category.ID === selectedCategory[0].ID
+				);
+
 				setInitialFormState({
 					...initFormState,
 					title: title,
-					categoryImage:
-						"https://play-lh.googleusercontent.com/wRXSrwwbzBBlTpowK6onSs3rfBV-4nqVvLJJ7yAZa7jzdGNHpHH2hDhKCyKWj_3nqw=w240-h480-rw",
+					categoryImage: isSelectedExist?.s3categoryImage || "",
 				});
+
 				handleStreamInfo();
 				toast.success(response?.message);
 			} else {
@@ -208,18 +223,20 @@ const StreamManager = () => {
 		}
 	};
 
-	const handleStartLive = async () => {
+	const handleLive = async () => {
+		setLoading(true);
+
 		try {
 			const data = {
-				isStart: 0,
-				liveID: 1,
+				isStart: !isStartLive,
+				liveID: channelData?.liveID,
 			};
 
 			const response = await makeRequest("post", ep.updateStreamInfo, data);
-			console.log("response", response);
 
 			if (response?.success) {
 				toast.success(response?.message);
+				setIsStartLive(!isStartLive);
 			} else {
 				toast.error(response?.message);
 			}
@@ -232,7 +249,7 @@ const StreamManager = () => {
 	return (
 		<div>
 			<div className="flex-1 flex flex-col pt-4">
-				<div className={` ${isChatOpen ? "md:mr-60 lg:mr-72" : "mr-0"}`}>
+				<div className={`${isChatOpen ? "md:mr-60 lg:mr-72" : "mr-0"}`}>
 					<div className="h-50 xl:h-[550px] flex justify-center">
 						{state?.liveStreamData?.streamKey ||
 							(channelData?.streamKey && (
@@ -255,20 +272,23 @@ const StreamManager = () => {
 						<div className="py-5 rounded-md mt-2 flex flex-col md:flex-row gap-6 w-full">
 							<div className="w-full lg:w-[200px]">
 								<img
-									src={
-										initFormState.categoryImage ||
-										"https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg"
-									}
+									src={channelData?.s3categoryImage}
 									alt="Category Image"
 									className="w-[150px] h-[100px] md:h-[150px] object-cover border border-black"
 									loading="lazy"
 								/>
 							</div>
 							<div className="w-full flex lg:flex-row items center justify-between">
-								<div className="mt-2">{initFormState.title}</div>
+								<div className="mt-2">{channelData?.title}</div>
 								<div>
-									<Button color="primary" onClick={handleStartLive}>
-										{t("pages.start_live")}
+									<Button
+										color={isStartLive ? "danger" : "primary"}
+										disabled={loading}
+										onClick={handleLive}
+									>
+										{isStartLive
+											? t("pages.end_live")
+											: t("pages.start_live")}
 									</Button>
 								</div>
 							</div>

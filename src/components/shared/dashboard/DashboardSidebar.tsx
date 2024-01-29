@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { useTranslation } from "react-i18next";
 import { CiStreamOn } from "react-icons/ci";
 import { MdOutlineSettings } from "react-icons/md";
+import { PiTelevision } from "react-icons/pi";
 import store from "store2";
 
 const DashboardSidebarItem = lazy(() => import("./DashboardSidebarItem"));
@@ -10,6 +11,11 @@ const DashboardSidebar: React.FC = () => {
 	const { t } = useTranslation();
 
 	const items = [
+		{
+			title: t("pages.cp"),
+			icon: <PiTelevision />,
+			path: "/dashboard/setting/channel",
+		},
 		{
 			title: t("pages.stm"),
 			icon: <CiStreamOn />,
@@ -22,10 +28,6 @@ const DashboardSidebar: React.FC = () => {
 				{
 					title: t("pages.stream"),
 					path: "/dashboard/setting/stream",
-				},
-				{
-					title: t("pages.ch"),
-					path: "/dashboard/setting/channel",
 				},
 			],
 		},

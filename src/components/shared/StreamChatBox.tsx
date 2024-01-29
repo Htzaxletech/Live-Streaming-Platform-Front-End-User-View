@@ -12,7 +12,7 @@ import {
 	LuArrowLeftFromLine,
 	LuArrowRightFromLine,
 } from "react-icons/lu";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
 import { socket } from "../../socket";
 import { useLocation } from "react-router-dom";
 // import { chatTempData, getRandomColor } from "@utils/helpers";
@@ -24,16 +24,21 @@ interface StreamChatBoxProps {
 	liveID?: any; // Replace 'any' with a more specific type if possible
 	streamKey?: any; // Replace 'any' with a more specific type if possible
 	liveStatus?: number;
+	channelID?: number;
+	setViewCount?: SetStateAction;
 }
 
 const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	liveID: lid,
 	streamKey: skey,
 	liveStatus,
+	channelID,
+	setViewCount,
 }) => {
 	const { t } = useTranslation();
 	const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
 	const [chatMessages, setChatMessages] = useState<unknown[]>([]);
+
 	// const [isConnected, setIsConnected] = useState(false);
 	// const [message, setMessage] = useState("");
 	const [showScrollButton, setShowScrollButton] = useState(false);
@@ -66,22 +71,22 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	const userID = store.get("id");
 	const streamID = skey || state?.liveStreamData?.streamKey;
 	const liveId = lid || state?.liveStreamData?.liveID;
+	const channelId = channelID || state?.liveStreamData?.channelID;
 
 	useEffect(() => {
-		console.table({ skey, streamID, liveId, liveFlag });
-
 		if (streamID && liveFlag) {
 			socket.disconnect();
 			socket.connect();
-			// socket.timeout(3000).emit("add_user_count", { userID });
 
 			socket.on("connect", onConnect);
 			socket.on("disconnect", onDisconnect);
 			socket.on("chat_list_message", onMessageEvent);
+			socket.on("add_user_count", onViewCountEvent);
+			socket.on("reduce_user_count", onViewCountEvent);
 		}
 
 		return () => {
-			socket.emit("remove_user_count", { userID });
+			socket.emit("reduce_user_count", { channelID: channelId });
 
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
@@ -90,7 +95,6 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	}, [streamID]);
 
 	const onConnect = () => {
-		console.log("onConnect", socket.connected);
 		socket.timeout(3000).emit(
 			"livestream_connect",
 			{
@@ -112,6 +116,12 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 				console.log("chat_connect");
 			}
 		);
+
+		socket
+			.timeout(3000)
+			.emit("add_user_count", { channelID: channelId }, () => {
+				console.log("add_user_count");
+			});
 	};
 
 	const onDisconnect = () => {
@@ -138,8 +148,11 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 		);
 	};
 
+	const onViewCountEvent = (value: any) => {
+		setViewCount(value);
+	};
+
 	const onMessageEvent = (value: any) => {
-		console.log("onMessageEvent", value);
 		setChatMessages((previous) => [...previous, ...value]);
 	};
 
@@ -241,7 +254,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 							// onChange={handleInputChange}
 							ref={inputRef}
 							endContent={
-								<Button className="bg-transparent">
+								<Button type="button" className="bg-transparent">
 									<img src="/src/assets/images/emote.svg" />
 								</Button>
 							}

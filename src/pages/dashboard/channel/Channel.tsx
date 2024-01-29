@@ -37,6 +37,10 @@ const Channel: React.FC = () => {
 	const [profileImageBase64Url, setProfileImageBase64Url] =
 		useState<string>("");
 	const [bannerImageBase64Url, setBannerImageBase64Url] = useState<string>("");
+	const [imageName, setImageName] = useState({
+		profile: "",
+		banner: ""
+	})
 
 	const initialForm = {
 		selectedImageUrl: "https://i.stack.imgur.com/l60Hf.png",
@@ -73,6 +77,10 @@ const Channel: React.FC = () => {
 			const base64Url = await convertToBase64(file);
 			const splittedUrl = base64Url.split(",")[1];
 			setProfileImageBase64Url(splittedUrl);
+			setImageName((prevState) => ({
+				...prevState,
+				profile: file.name,
+			}));
 		}
 	};
 
@@ -88,6 +96,10 @@ const Channel: React.FC = () => {
 			const base64Url = await convertToBase64(file);
 			const splittedUrl = base64Url.split(",")[1];
 			setBannerImageBase64Url(splittedUrl);
+			setImageName((prevState) => ({
+				...prevState,
+				banner: file.name,
+			}));
 		}
 	};
 
@@ -119,6 +131,8 @@ const Channel: React.FC = () => {
 				bio,
 				profileImage: profileImageBase64Url,
 				bannerImage: bannerImageBase64Url,
+				profileName: imageName.profile,
+				bannerName: imageName.banner
 			};
 
 			const { success, message } = await makeRequest(

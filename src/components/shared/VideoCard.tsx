@@ -8,6 +8,7 @@ import Tag from "@components/ui/Tag";
 import { convertToLowerCase } from "@utils/helpers";
 import { useNavigate } from "react-router-dom";
 import { tv } from "tailwind-variants";
+import { useTranslation } from "react-i18next";
 
 interface DataProps {
 	ID: number;
@@ -22,6 +23,7 @@ interface VideoCardProps {
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
+	const { t } = useTranslation();
 	const navigate = useNavigate();
 
 	const card = tv({
@@ -95,14 +97,14 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 
 					{data?.live_status === 1 && (
 						<>
-							<div className={live()}>Live</div>
+							<div className={live()}>{t("pages.live")}</div>
 							<div className={view()}>{data?.viewCount} views</div>
 						</>
 					)}
 					{data?.live_status === 0 && (
 						<>
 							<div className={videoLength()}>
-								{data?.duration || "07:03:46"}
+								{data?.duration || "00:00:00"}
 							</div>
 							{/* <div className={lastUploaded()}>{1} day ago</div> */}
 						</>

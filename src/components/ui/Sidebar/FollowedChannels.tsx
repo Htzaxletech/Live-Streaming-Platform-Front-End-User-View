@@ -67,7 +67,6 @@ const FollowedChannels: React.FC = () => {
 				); // Pass the signal to the request
 
 				if (response?.success) {
-					console.log("Followed Channel Sidebar", response?.data);
 					setUserData(response?.data);
 				} else {
 					toast.error(response?.message);
@@ -82,10 +81,13 @@ const FollowedChannels: React.FC = () => {
 			}
 		};
 
+		const fetchDataInterval = setInterval(fetchData, 30000); // Call fetchData every 30 seconds
+
 		fetchData();
 
 		return () => {
 			// Abort the ongoing request when the component unmounts
+			clearInterval(fetchDataInterval);
 			abortController.abort();
 		};
 	}, []);
@@ -114,7 +116,7 @@ const FollowedChannels: React.FC = () => {
 				},
 			});
 		} else {
-			navigate(`/profile/${data?.channelID}`);
+			navigate(`/profile/${data?.userID}`);
 		}
 	};
 

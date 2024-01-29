@@ -11,27 +11,33 @@ interface ProfileStreamInfoProps {
 const ProfileStreamInfo: React.FC<ProfileStreamInfoProps> = ({
   isLive = false,
   message,
-  viewer,
+  // viewer,
 
 }) => {
 
   return (
-    <div className="bg-background-base p-5 w-full max-w-sm h-40">
-      <div className="flex flex-col justify-between items-stretch h-full">
-        <div className="w-[80%]">
-          {
-            isLive ?
-              <Badge color="danger" className="rounded" >Live Now</Badge> : <Badge color="default" className="rounded uppercase" >offline</Badge>
-          }
-          <Heading className="text-lg" >{message}</Heading>
-        </div>
+		<div className="bg-background-base p-5 w-full max-w-sm h-40">
+			<div className="flex flex-col justify-between items-stretch h-full">
+				<div className="w-[80%]">
+					<div>
+						{isLive ? (
+							<Badge color="danger" className="rounded">
+								Live Now
+							</Badge>
+						) : (
+							<Badge color="default" className="rounded uppercase">
+								offline
+							</Badge>
+						)}
+					</div>
+					<Heading className="text-lg mt-5">{message}</Heading>
+				</div>
 
-        <div className="">
+				{/* <div className="">
           <span className="text-primary font-light text-sm">Watch now with {viewer} viewers</span>
-        </div>
-      </div>
-
-    </div>
+        </div> */}
+			</div>
+		</div>
   );
 };
 

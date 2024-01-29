@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLiveStreams } from "@store/slices/liveStreamsSlice";
 import { RootState } from "@store/index";
 import "@styles/HomeCarousel.css";
+import { Link } from "react-router-dom";
 
 function HomeCarousel() {
 	const ref = React.useRef<any>();
@@ -151,6 +152,7 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 		title,
 		viewCount,
 		s3channelpath,
+		userID,
 	} = data[dataIndex];
 
 	return (
@@ -202,7 +204,9 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 										/>
 									</div>
 									<div className="profile-info">
-										<div className="username">{channelName}</div>
+										<Link to={`/profile/${userID}`}>
+											<div className="username">{channelName}</div>
+										</Link>
 										<div className="game">{categoryName}</div>
 										<div className="viewers">{viewCount} viewers</div>
 									</div>
@@ -211,7 +215,17 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 									{tags.length > 0 &&
 										tags.map((i: any, index: number) => {
 											return (
-												<Tag key={index} to={""}>
+												<Tag
+													key={index}
+													to={"/directory"}
+													state={{
+														directory: {
+															...i,
+															categoryName: i.tagName,
+															active: 1,
+														},
+													}}
+												>
 													{i.tagName}
 												</Tag>
 											);

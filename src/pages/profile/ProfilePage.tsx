@@ -108,7 +108,7 @@ const ProfilePage: React.FC = () => {
 				<div className="hidden md:inline md:absolute md:top-28 md:left-10">
 					<ProfileStreamInfo
 						isLive={channelData?.live_status}
-						message={"Check out this mobile legends: Bang Bang"}
+						message={"Streamer is currently offline"}
 						viewer={channelData?.followers?.[0]?.follower}
 					/>
 				</div>

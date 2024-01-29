@@ -8,6 +8,7 @@ export const endpoints = {
 	tags: "/streams/tags",
 	mainCategory: "/browse/main_category",
 	secondCategory: "/browse/second_category",
+	secondCategoryList: "browse/second_category_list",
 	browseCategoryByMainID: "/browse/categoryByMainID",
 	browseLiveByMainID: "/browse/liveByMainID",
 	browseLive: "/streams/get_streams_browse",
