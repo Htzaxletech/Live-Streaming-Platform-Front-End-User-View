@@ -4,6 +4,12 @@ const useStreamingDuration = (startTimeString: string) => {
 	const [duration, setDuration] = useState("");
 
 	useEffect(() => {
+		// Check if startTimeString is empty
+		if (!startTimeString) {
+			setDuration("00:00:00");
+			return;
+		}
+
 		const startTime = new Date(startTimeString).getTime();
 		const currentTime = new Date().getTime();
 

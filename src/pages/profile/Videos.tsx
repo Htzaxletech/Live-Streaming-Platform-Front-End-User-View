@@ -10,10 +10,12 @@ import { toast } from "react-toastify";
 import { endpoints } from "@services/endpoints";
 import store from "store2";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
+import { useTranslation } from "react-i18next";
 
 interface VideoDataType {}
 
 const Videos: React.FC = () => {
+	const { t } = useTranslation();
 	const [videoData, setVideoData] = useState<VideoDataType[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [currentPage, setCurrentPage] = useState<number>(0);
@@ -75,7 +77,7 @@ const Videos: React.FC = () => {
 		<>
 			{videoData && videoData.length > 0 && (
 				<div className="mt-8">
-					<Heading size="sm">Recent broadcasts</Heading>
+					<Heading size="sm">{t("pages.rb")}</Heading>
 					<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 mt-3 mb-4">
 						{videoData?.map((data, index) => (
 							<VideoCard key={index} data={data} />

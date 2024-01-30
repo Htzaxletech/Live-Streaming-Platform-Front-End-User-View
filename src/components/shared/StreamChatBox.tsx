@@ -12,7 +12,7 @@ import {
 	LuArrowLeftFromLine,
 	LuArrowRightFromLine,
 } from "react-icons/lu";
-import { FormEvent, SetStateAction, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { socket } from "../../socket";
 import { useLocation } from "react-router-dom";
 // import { chatTempData, getRandomColor } from "@utils/helpers";
@@ -25,7 +25,7 @@ interface StreamChatBoxProps {
 	streamKey?: any; // Replace 'any' with a more specific type if possible
 	liveStatus?: number;
 	channelID?: number;
-	setViewCount?: SetStateAction;
+	setViewCount?: any;
 }
 
 const StreamChatBox: React.FC<StreamChatBoxProps> = ({
@@ -74,7 +74,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	const channelId = channelID || state?.liveStreamData?.channelID;
 
 	useEffect(() => {
-		if (streamID && liveFlag) {
+		if (streamID && liveId && liveFlag) {
 			socket.disconnect();
 			socket.connect();
 
@@ -87,7 +87,30 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 
 		return () => {
 			socket.emit("reduce_user_count", { channelID: channelId });
+			socket.emit(
+				"livestream_disconnect",
+				{
+					userID,
+					streamKey: streamID,
+				},
+				() => {
+					console.log("livestream_disconnect");
+				}
+			);
 
+			socket.emit(
+				"chat_disconnect",
+				{
+					userID,
+					liveID: liveId,
+				},
+				() => {
+					console.log("chat_disconnect");
+				}
+			);
+
+			socket.off("add_user_count", onViewCountEvent);
+			socket.off("reduce_user_count", onViewCountEvent);
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
 			socket.off("chat_list_message", onMessageEvent);
@@ -162,23 +185,20 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		console.log("input", inputRef?.current?.value);
 
 		const message = inputRef.current.value;
-		// setChatMessages((previous) => [...previous, message]);
-		console.log("message", message);
 
-		socket.emit(
-			"add_chat_message",
-			{ userID: store.get("id"), liveID: liveId, message },
-			() => {
-				console.log("message sent");
-			}
-		);
+		if (message){
+			socket.emit(
+				"add_chat_message",
+				{ userID: store.get("id"), liveID: liveId, message },
+				() => {
+					console.log("message sent");
+				}
+			);
 
-		inputRef.current.value = "";
-
-		// setMessage("");
+			inputRef.current.value = "";
+		}
 	};
 
 	const chatContent = (_, chat: any) => (

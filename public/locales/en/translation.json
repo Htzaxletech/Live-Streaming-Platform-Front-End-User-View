@@ -89,7 +89,9 @@
 		"bio": "Bio",
 		"sc": "Save Changes",
 		"stream_chat": "Live Chat",
-		"chat": "Chat"
+		"chat": "Chat",
+		"rb": "Recent broadcasts",
+		"rc": "Recent Categories"
 	},
 	"title": {
 		"part1": "Title One",

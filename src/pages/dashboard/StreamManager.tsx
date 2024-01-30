@@ -28,6 +28,7 @@ import { generateStreamUrl } from "@utils/helpers";
 import { useLocation } from "react-router-dom";
 import "@styles/tags.css";
 import { useTranslation } from "react-i18next";
+import { socket } from "@socket/index";
 
 const Button = lazy(() => import("@components/ui/Button"));
 const Modal = lazy(() => import("@pages/authentication/Modal"));
@@ -46,8 +47,33 @@ const StreamManager = () => {
 	const [suggestionsTag, setSuggesstionsTag] = useState<Tag[]>([]);
 	const [selectedCategory, setSelectedCategory] = useState<Tag[]>([]);
 	const [suggestionsCategory, setSuggesstionsCategory] = useState<Tag[]>([]);
-	const [channelData, setChanelData] = useState([]);
+	const [viewCount, setViewCount] = useState<number>(0);
+
+	const [channelData, setChanelData] = useState({
+		isStart: 0,
+		liveID: 22,
+		ID: 1,
+		userID: 10,
+		streamKey: "3bef6fba",
+		categoryID: 1,
+		title: null,
+		showpast: 1,
+		created_at: null,
+		updated_at: null,
+		deleted_at: null,
+		streaminfoID: 10,
+		mainCategoryID: 1,
+		categoryName: "Basketball",
+		parentID: 0,
+		description: "Hello it is testing",
+		image: "088f29.png",
+		tags: [],
+		s3categoryImage:
+			"https://axletechs3bucket.s3.ap-southeast-1.amazonaws.com/Live_Streaming/088f29.png",
+		live_status: 0,
+	});
 	const [isStartLive, setIsStartLive] = useState(0);
+	const [streamKey, setStreamKey] = useState<string>("");
 
 	interface FormState {
 		title: string;
@@ -65,6 +91,8 @@ const StreamManager = () => {
 		categoryImage: channelData?.s3categoryImage || "",
 	});
 
+	
+
 	useEffect(() => {
 		const abortController = new AbortController();
 		const signal = abortController.signal;
@@ -79,14 +107,14 @@ const StreamManager = () => {
 						url: ep.secondCategoryList,
 						config: { signal },
 					},
-					{
-						method: "get",
-						url: ep.liveByUserID,
-						data: {
-							userID: store.get("id"),
-						},
-						config: { signal },
-					},
+					// {
+					// 	method: "get",
+					// 	url: ep.liveByUserID,
+					// 	data: {
+					// 		userID: store.get("id"),
+					// 	},
+					// 	config: { signal },
+					// },
 				];
 
 				const responses = await makeMultipleRequests(requests);
@@ -124,12 +152,14 @@ const StreamManager = () => {
 						toast.error(category?.message);
 					}
 
-					if (channel?.success) {
-						const data = channel?.data[0];
-						setChanelData(data);
-						setIsStartLive(data.live_status);
-						console.log("channel", data);
-					}
+					// if (channel?.success) {
+					// 	const data = channel?.data[0];
+
+					// 	setChanelData(data);
+					// 	setStreamKey(data?.streamKey);
+					// 	setIsStartLive(data.live_status);
+					// }
+					
 				}
 			} catch (error) {
 				// Check if the error is due to the request being aborted
@@ -139,10 +169,38 @@ const StreamManager = () => {
 			}
 		})();
 
+		fetchData();
+
+		const interval = setInterval(fetchData, 20000); 
+
 		return () => {
+			clearInterval(interval); // Clear interval when the component unmounts
 			abortController.abort();
 		};
 	}, []);
+
+	const fetchData = async () => {
+		try {
+			const data = {
+				userID: store.get("id"),
+			};
+
+			const response = await makeRequest("get", ep.liveByUserID, data);
+
+			if (response?.success) {
+				const data = response?.data[0];
+
+				setChanelData(data);
+				setStreamKey(data?.streamKey);
+				setIsStartLive(data.live_status);
+			} else {
+				toast.error(response?.message);
+			}
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
+		}
+	}
 
 	const onAdd = useCallback(
 		(newTag: Tag) => {
@@ -206,11 +264,20 @@ const StreamManager = () => {
 					(category) => category.ID === selectedCategory[0].ID
 				);
 
-				setInitialFormState({
-					...initFormState,
-					title: title,
-					categoryImage: isSelectedExist?.s3categoryImage || "",
-				});
+
+				setChanelData((prevData) => ({
+					...prevData,
+					title,
+					s3categoryImage: isSelectedExist
+						? isSelectedExist.s3categoryImage
+						: prevData.s3categoryImage,
+				}));
+
+				// setInitialFormState({
+				// 	...initFormState,
+				// 	title: title,
+				// 	categoryImage: isSelectedExist?.s3categoryImage || "",
+				// });
 
 				handleStreamInfo();
 				toast.success(response?.message);
@@ -228,14 +295,15 @@ const StreamManager = () => {
 
 		try {
 			const data = {
-				isStart: !isStartLive,
-				liveID: channelData?.liveID,
+				isStart: isStartLive ? 0 : 1,
+				streamKey:
+					channelData?.streamKey || state?.liveStreamData?.streamKey,
 			};
 
-			const response = await makeRequest("post", ep.updateStreamInfo, data);
+			const response = await makeRequest("post", ep.startLive, data);
 
 			if (response?.success) {
-				toast.success(response?.message);
+				// toast.success(response?.message);
 				setIsStartLive(!isStartLive);
 			} else {
 				toast.error(response?.message);
@@ -251,21 +319,22 @@ const StreamManager = () => {
 			<div className="flex-1 flex flex-col pt-4">
 				<div className={`${isChatOpen ? "md:mr-60 lg:mr-72" : "mr-0"}`}>
 					<div className="h-50 xl:h-[550px] flex justify-center">
-						{state?.liveStreamData?.streamKey ||
-							(channelData?.streamKey && (
-								<MediaPlayer
-									src={generateStreamUrl(
-										state?.liveStreamData?.streamKey ||
-											channelData?.streamKey
-									)}
-									autoplay
-									className="h-full rounded-none"
-								>
-									<MediaProvider></MediaProvider>
-									<DefaultAudioLayout icons={defaultLayoutIcons} />
-									<DefaultVideoLayout icons={defaultLayoutIcons} />
-								</MediaPlayer>
-							))}
+						{/* {state?.liveStreamData?.streamKey ||
+							(channelData?.streamKey && ( */}
+						<MediaPlayer
+							// src={generateStreamUrl(
+							// 	state?.liveStreamData?.streamKey ||
+							// 		channelData?.streamKey
+							// )}
+							src={generateStreamUrl(channelData?.streamKey)}
+							autoplay
+							className="h-full rounded-none"
+						>
+							<MediaProvider></MediaProvider>
+							<DefaultAudioLayout icons={defaultLayoutIcons} />
+							<DefaultVideoLayout icons={defaultLayoutIcons} />
+						</MediaPlayer>
+						{/* ))} */}
 					</div>
 
 					<div className="container">
@@ -310,6 +379,7 @@ const StreamManager = () => {
 				streamKey={channelData?.streamKey}
 				liveID={channelData?.liveID}
 				liveStatus={channelData?.live_status}
+				setViewCount={setViewCount}
 			/>
 
 			<Modal isOpen={isOpenStreamInfo} onClose={handleStreamInfo}>

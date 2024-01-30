@@ -33,14 +33,14 @@ const LiveStreamPage = () => {
 	const [followStatus, setFollowStatus] = useState<number>(0);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [viewCount, setViewCount] = useState<number>(0);
-	const [startTime, setStartTime] = useState<any>("2024-01-29T16:00:00");
+	const [startTime, setStartTime] = useState<any>("");
 	// const startTime = "2024-01-29T16:00:00";
 	const duration = useStreamingDuration(startTime);
 
 	useEffect(() => {
 		(async () => {
 			if (!state?.liveStreamData) {
-				// navigate("/");
+				navigate("/");
 			} else {
 				try {
 					const response = await makeRequest(
@@ -54,6 +54,7 @@ const LiveStreamPage = () => {
 
 					console.log("Live Stream Page Response", response);
 					setFollowStatus(response?.data[0]?.follow_status);
+					setStartTime(response?.data[0]?.live_start);
 					setChannelData(response?.data[0]);
 				} catch (error) {
 					toast.error(error);
@@ -113,7 +114,7 @@ const LiveStreamPage = () => {
 						handleFollow={handleFollow}
 						followStatus={followStatus}
 						loading={loading}
-						isLive={channelData?.live_status === 1 ? true : false}
+						isLive={channelData?.live_status === 1 ? true : true}
 					/>
 
 					<ProfileDescription
