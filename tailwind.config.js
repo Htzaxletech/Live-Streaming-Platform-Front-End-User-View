@@ -24,6 +24,8 @@ export default {
           item: "rgb(var(--color-background-item) / <alpha-value>)",
           "item-hover":
             "rgb(var(--color-background-item-hover) / <alpha-value>)",
+
+          
         },
         border: {
           DEFAULT: "rgb(var(--color-border) / <alpha-value>)",
@@ -56,6 +58,11 @@ export default {
           950: "#4b0408",
           DEFAULT: "#ff323d",
         },
+
+        select: {
+          DEFAULT: "rgba(24,24,27,255)", // Replace with your desired color code
+          hover: "rgba(29, 28, 28, 0.4)", // Optional: Define a hover color
+        },
       },
       opacity: {
         15: ".15",
@@ -70,7 +77,24 @@ export default {
       spacing: {
         2.5: "0.625rem",
       },
+      container: {
+        center: true,
+        padding: "1rem", // Add padding to the container if needed
+        screens: {
+          sm: "100%",
+          md: "100%",
+          lg: "1024px", // Customize the max-width for large screens
+          xl: "1280px", // Customize the max-width for extra-large screens
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss-animate'),
+    require('@vidstack/react/tailwind.cjs'),
+    ({ addVariant }) => {
+      addVariant('hocus', ['&:hover', '&:focus-visible']);
+      addVariant('group-hocus', ['.group:hover &', '.group:focus-visible &']);
+    },
+  ],
 }

@@ -1,0 +1,26 @@
+.sidebar-item {
+	padding: 0.75em 1em;
+	display: block;
+	transition: background-color 0.15s;
+	border-radius: 5px;
+}
+
+.sidebar-title {
+	display: flex;
+    align-items: center;
+	justify-content: space-between;
+}
+
+.sidebar-content {
+	padding-top: 0.25em;
+	height: 0;
+	overflow: hidden;
+}
+
+.sidebar-item.open > .sidebar-content {
+	height: auto;
+}
+
+.sidebar-item.plain {
+	text-decoration: none;
+}

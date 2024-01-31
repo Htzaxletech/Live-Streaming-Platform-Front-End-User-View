@@ -25,7 +25,7 @@ const button = tv({
         "hover:bg-primary-600",
         "active:bg-primary-700",
       ],
-      danger: ["bg-danger text-foreground", "hover:bg-danger-600"],
+      danger: ["bg-danger text-white", "hover:bg-danger-600"],
       white: ["bg-white text-black", "hover:bg-white/90", "active:bg-white/80"],
     },
     size: {

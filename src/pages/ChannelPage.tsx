@@ -56,13 +56,13 @@ export default function ChannelPage() {
 
     socket.on("connect", onConnect)
     socket.on("disconnect", onDisconnect)
-    socket.on("chat_list_message", onFooEvent)
+    socket.on("added_live_emitter", onFooEvent)
     console.log("listen events")
 
     return () => {
       socket.off("connect", onConnect)
       socket.off("disconnect", onDisconnect)
-      socket.off("chat_list_message", onFooEvent)
+      socket.off("added_live_emitter", onFooEvent)
     }
   }, [params.id])
 

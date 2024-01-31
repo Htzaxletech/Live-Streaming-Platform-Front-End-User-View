@@ -1,17 +1,105 @@
 {
-  "navbar": {
-    "link1": "Following",
-    "link2": "Browse",
-    "login": "Log In",
-    "signup": "Sign Up"
-  },
-  "title": {
-    "part1": "Title One",
-    "part2": "Edit <1>src/App.js</1> and save to reload."
-  },
-  "counter_one": "Changed language just once",
-  "counter_other": "Changed language already {{count}} times",
-  "footer": {
-    "date": "Today is {{date, DATE_HUGE}}"
-  }
+	"navbar": {
+		"link1": "Following",
+		"link2": "Browse",
+		"login": "Login",
+		"logout": "Logout",
+		"signup": "Sign Up",
+		"language": "Language",
+		"theme": "Dark Theme",
+		"search": "Search"
+	},
+	"sidebar": {
+		"4u": "For You",
+		"followed": "Followed Channels"
+	},
+	"auth": {
+		"heading": "Twitch",
+		"login_title": "Login to {{heading}}",
+		"signup_title": "Join {{heading}} today",
+		"2fa": "Two-Factor Authentication",
+		"step1_label": "Step 1: Download an authenticator app",
+		"step1_p": "Download and install any authenticator app",
+		"step2_label": "Step 2: Scan the QR code",
+		"step2_p": "Open the authenticator app and scan the image below",
+		"step3_label": "Step 3: Verify your code",
+		"step3_p": "Enter 6 digit code generated",
+		"confirm_otp": "Enter 6 digit code from Microsoft Authenticator",
+		"name": "User Name",
+		"password": "Password",
+		"email": "Email",
+		"otp": "Enter your OTP code",
+		"create": "Don't have an account? Sign Up",
+		"exist": "Already a Twich user? Log In",
+		"verify": "Verify",
+		"resend": "Resend",
+		"submit": "Submit",
+		"back": "Back"
+	},
+	"placeholder": {
+		"name": "Enter your username",
+		"password": "Enter your password",
+		"email": "Enter your email",
+		"sct": "Search Category Tags",
+		"mst": "My Stream Title",
+		"anc": "Add new category",
+		"ant": "Add new tag",
+		"sm": "Send a message"
+	},
+	"pages": {
+		"overview": "Overview",
+		"live": "Live",
+		"lt": "Live Tag",
+		"videos": "Videos",
+		"vt": "Videos Tag",
+		"categories": "Categories",
+		"ct": "Categories Tag",
+		"channels": "Channels",
+		"lc": "Live Channels",
+		"lv": "Latest Videos",
+		"showmore": "Show More {{title}}",
+		"stm": "Stream Manager",
+		"esi": "Edit Stream Info",
+		"st": "Title",
+		"c": "Category",
+		"t": "Tags",
+		"cancel": "Cancel",
+		"done": "Done",
+		"start_live": "Start Live",
+		"end_live": "End Live",
+		"setting": "Setting",
+		"stream": "Stream",
+		"ch": "Channel",
+		"cp": "Channel Profile",
+		"psk": "Primary Stream Key",
+		"show": "Show",
+		"hide": "Hide",
+		"copy": "Copy",
+		"reset": "Reset",
+		"vdset": "VOD Settings",
+		"spb": "Store past broadcast",
+		"spbd": "Automatically save broadcasts for up to 7 days",
+		"pp": "Profile Picture",
+		"pb": "Profile Banner",
+		"imgd": "Must be JPEG, PNG, or GIF and cannot exceed 10MB.",
+		"app": "Add Profile Picture",
+		"update": "Update",
+		"ps": "Profile Settings",
+		"dname": "Display Name",
+		"bio": "Bio",
+		"sc": "Save Changes",
+		"stream_chat": "Live Chat",
+		"chat": "Chat",
+		"rb": "Recent broadcasts",
+		"rc": "Recent Categories"
+	},
+	"title": {
+		"part1": "Title One",
+		"part2": "Edit <1>src/App.js</1> and save to reload."
+	},
+	"counter_one": "Changed language just once",
+	"counter_other": "Changed language already {{count}} times",
+	"footer": {
+		"date": "Today is {{date, DATE_HUGE}}"
+	}
 }

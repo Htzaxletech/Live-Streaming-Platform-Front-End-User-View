@@ -1,43 +1,25 @@
-import { GoPerson } from "react-icons/go"
+// import HomeCarousel from "@components/shared/HomeCarousel";
+import LivePage from "./LivePage";
+import CategoryCardList from "./CategoryCardListPage";
+import { endpoints as ep } from "@services/endpoints";
+import { lazy } from "react";
+import { useTranslation } from "react-i18next";
 
-import Button from "@components/ui/Button"
-import { CategoryLink } from "@components/ui/CategoryLink"
-import Tag from "@components/ui/Tag"
-import Icon from "@components/shared/Icon"
-
-import categoryimg from "../assets/images/gaming.svg"
-import LanguageSwitch from "@components/shared/LanguageSwitch"
-import NavbarLink from "@components/shared/Navbar/NavbarLink"
+const HomeCarousel = lazy(() => import("@components/shared/HomeCarousel"));
 
 const HomePage = () => {
-  return (
-    <div className="flex gap-5 flex-col w-fit">
-      <NavbarLink to={"/channel/1"}>Socket</NavbarLink>
-      <div className="flex p-5 gap-10">
-        <Button color="default">Default</Button>
-        <a
-          data-tooltip-id="my-tooltip"
-          data-tooltip-content="Tooltip"
-          data-tooltip-place="top"
-        >
-          <Button color="primary">With Tooltip</Button>
-        </a>
-        <CategoryLink
-          to="http://www.google.com"
-          color="default"
-          size="md"
-          icon={<img src={categoryimg} alt="icon" />}
-        >
-          Games
-        </CategoryLink>
-      </div>
-      <div className="flex p-5 gap-2.5">
-        <Tag to="/directory">Directory</Tag>
-        <Icon icon={GoPerson} className="text-primary" />
-      </div>
-      <LanguageSwitch />
-    </div>
-  )
-}
+	const { t } = useTranslation();
 
-export default HomePage
+	return (
+		<div className="container mx-auto py-10 pb-16 px-4">
+			<div className="hidden md:block">
+				<HomeCarousel />
+			</div>
+
+			<LivePage url={ep.homeLive} title={t("pages.lc")} />
+			<CategoryCardList url={ep.homeCategory} />
+		</div>
+	);
+};
+
+export default HomePage;
