@@ -154,7 +154,7 @@ const ChannelListPage: React.FC = () => {
 
 					{showMoreButton && (
 						<ShowMoreButton
-							title={t("pages.lv")}
+							title={t("pages.channels")}
 							onClick={() => handleShowMore(null, true)}
 							loading={loading}
 						/>
