@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
 	"navbar": {
 		"link1": "Following",
 		"link2": "Browse",
@@ -102,4 +103,21 @@
 	"footer": {
 		"date": "Today is {{date, DATE_HUGE}}"
 	}
+=======
+  "navbar": {
+    "link1": "Following",
+    "link2": "Browse",
+    "login": "Log In",
+    "signup": "Sign Up"
+  },
+  "title": {
+    "part1": "Title One",
+    "part2": "Edit <1>src/App.js</1> and save to reload."
+  },
+  "counter_one": "Changed language just once",
+  "counter_other": "Changed language already {{count}} times",
+  "footer": {
+    "date": "Today is {{date, DATE_HUGE}}"
+  }
+>>>>>>> master
 }

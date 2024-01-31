@@ -81,3 +81,6 @@ export const Separator = (props: DropdownMenu.DropdownMenuSeparatorProps) => (
 export const Root = DropdownMenu.Root
 export const Trigger = DropdownMenu.Trigger
 export const Portal = DropdownMenu.Portal
+export const Sub = DropdownMenu.Sub
+export const SubTrigger = DropdownMenu.SubTrigger
+export const SubContent = DropdownMenu.SubContent

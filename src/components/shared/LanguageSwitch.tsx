@@ -21,7 +21,7 @@ const LanguageSwitch: React.FC<LanguageSwitchProps> = () => {
 	const handleOnSelect = (e: Event, lng: string) => {
 		e.preventDefault();
 		handleChangeLng(lng);
-	}
+	};
 
 	return (
 		<div>
