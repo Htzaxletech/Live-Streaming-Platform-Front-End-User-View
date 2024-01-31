@@ -109,6 +109,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 				}
 			);
 
+			store.set("isConnectedUserCount", false);
 			socket.off("add_user_count", onViewCountEvent);
 			socket.off("reduce_user_count", onViewCountEvent);
 			socket.off("connect", onConnect);
@@ -140,11 +141,17 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 			}
 		);
 
-		socket
-			.timeout(3000)
-			.emit("add_user_count", { channelID: channelId }, () => {
-				console.log("add_user_count");
-			});
+		if (!store.get("isConnectedUserCount")) {
+			store.set("isConnectedUserCount", true);
+
+			socket
+				.timeout(3000)
+				.emit("add_user_count", { channelID: channelId }, () => {
+					console.log("add_user_count");
+				});
+		} else {
+			console.log("already connected add_user_count");
+		}
 	};
 
 	const onDisconnect = () => {

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// @ts-nocheck
 import StreamChatBox from "@components/shared/StreamChatBox";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
@@ -22,7 +21,6 @@ import { endpoints } from "@services/endpoints";
 import { toast } from "react-toastify";
 import { generateStreamUrl } from "@utils/helpers";
 import store from "store2";
-import { socket } from "@socket/index";
 import useStreamingDuration from "@hooks/useStreamingDuration";
 
 const LiveStreamPage = () => {
@@ -38,6 +36,9 @@ const LiveStreamPage = () => {
 	const duration = useStreamingDuration(startTime);
 
 	useEffect(() => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
 		(async () => {
 			if (!state?.liveStreamData) {
 				navigate("/");
@@ -49,7 +50,8 @@ const LiveStreamPage = () => {
 						{
 							channelID: state?.liveStreamData?.channelID,
 							userID: store.get("id"),
-						}
+						},
+						{ signal }
 					);
 
 					console.log("Live Stream Page Response", response);
@@ -62,7 +64,48 @@ const LiveStreamPage = () => {
 			}
 		})();
 
+		return () => {
+			abortController.abort();
+		};
 	}, [state?.liveStreamData?.channelID]);
+
+	useEffect(() => {
+		if (channelData.channelID) {
+			fetchViewerCount();
+		}
+
+		const interval = setInterval(fetchViewerCount, 10000);
+
+		return () => {
+			clearInterval(interval);
+		};
+	}, [channelData.channelID]);
+
+	const fetchViewerCount = async () => {
+		try {
+			const reqData = {
+				channelID: channelData?.channelID,
+			};
+
+			const response = await makeRequest(
+				"get",
+				endpoints.getViewCount,
+				reqData
+			);
+
+			console.log("fetchViewerCount", response);
+
+			if (response?.success) {
+				const data = response?.data;
+				setViewCount(data);
+			} else {
+				toast.error(response?.message);
+			}
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
+		}
+	};
 
 	const handleFollow = async () => {
 		setLoading(true);

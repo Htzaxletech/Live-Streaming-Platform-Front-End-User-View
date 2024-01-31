@@ -47,7 +47,7 @@ interface CategoryLinkWithIconProps extends CategoryLinkProps {
 
 const CategoryLink: FC<CategoryLinkWithIconProps> = forwardRef(
     ({ children, className, color, size, icon, to, ...rest }, forwardedRef) => {
-        const containerClasses = "min-w-[200px] max-w-[250px]";
+        const containerClasses = "w-[250px] py-2";
         return (
             <div className={containerClasses}>
                 <Link
@@ -57,8 +57,8 @@ const CategoryLink: FC<CategoryLinkWithIconProps> = forwardRef(
                     className={categorylink({ color, size, activeBorder: rest["aria-current"] === "page", class: className })}
                 >
                     <span className="flex items-center justify-between">
-                        <span className="mr-12 text-xl lg:text-2xl">{children}</span>
-                        {icon && <span className="ml-10">{icon}</span>}
+                        <span className="text-xl lg:text-2xl w-[170px]">{children}</span>
+                        {icon && <span className="w-auto h-14 max-w-[58px]">{icon}</span>}
                     </span>
                 </Link>
             </div>

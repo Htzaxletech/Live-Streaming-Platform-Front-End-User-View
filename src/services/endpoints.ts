@@ -42,5 +42,6 @@ export const endpoints = {
 	profileRecentVOD: "/profile/recentVODdataByuserID",
 	profileRecentCategory: "/profile/recentCategorydataByuserID",
 	categoryDetail: "/browse/categoryDetail",
+	getViewCount: "/streams/get_viewcounts",
 	// Add more endpoints as needed
 };

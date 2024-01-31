@@ -60,16 +60,19 @@ const BrowsePage = ({ status }: { status: string }) => {
 				<div className="flex flex-wrap items-center justify-between mb-6">
 					<div className="flex items-center gap-2">
 						<Input
-							className="hidden md:flex h-8"
+							className="flex h-8"
 							startContent={<RiSearchLine />}
 							placeholder={t("placeholder.sct")}
 							ref={inputRef}
 						/>
-						<Button className="md:hidden" type="submit">
-							<RiSearchLine />
-						</Button>
-						{searchTag && <Tag to="">{searchTag || ""}</Tag>}
+
+						{searchTag && (
+							<Tag to="" className="hidden md:flex">
+								{searchTag || ""}
+							</Tag>
+						)}
 					</div>
+
 					{/* <div>
 						<span className="font-semibold hidden sm:inline">
 							Sort By
@@ -77,6 +80,11 @@ const BrowsePage = ({ status }: { status: string }) => {
 						<Select options={options} className="z-10 h-8" />
 					</div> */}
 				</div>
+				{searchTag && (
+					<Tag className="md:hidden" to="">
+						{searchTag || ""}
+					</Tag>
+				)}
 			</form>
 
 			{status === "categories" && <BrowseCategoryList keyword={searchTag} />}
