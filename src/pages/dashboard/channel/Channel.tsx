@@ -14,6 +14,7 @@ import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import store from "store2";
 import { useTranslation } from "react-i18next";
+import SocialLink from "./SocialLink";
 
 const Button = lazy(() => import("@components/ui/Button"));
 const Heading = lazy(() => import("@components/ui/Heading"));
@@ -45,7 +46,7 @@ const Channel: React.FC = () => {
 	const initialForm = {
 		selectedImageUrl: "https://i.stack.imgur.com/l60Hf.png",
 		selectedBannerUrl:
-			"https://img.freepik.com/free-vector/black-banner-with-yellow-geometric-shapes_1017-32327.jpg?size=338&ext=jpg&ga=GA1.1.632798143.1705881600&semt=ais",
+			"https://www.hkiod.com/wp-content/plugins/tutor/assets/images/placeholder.svg",
 		userName: "",
 		displayName: "",
 		bio: "",
@@ -218,7 +219,7 @@ const Channel: React.FC = () => {
 					<form onSubmit={handleSaveChanges}>
 						<div className="flex flex-col md:flex-row gap-2 w-full">
 							<Label.Root
-								className="md:w-[280px] left-0 w-full"
+								className="md:w-[280px] left-0 w-full font-semibold"
 								htmlFor="userName"
 							>
 								{t("auth.name")}
@@ -236,7 +237,7 @@ const Channel: React.FC = () => {
 
 						<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
 							<Label.Root
-								className="md:w-[280px] left-0 w-full"
+								className="md:w-[280px] left-0 w-full font-semibold"
 								htmlFor="displayName"
 							>
 								{t("pages.dname")}
@@ -254,7 +255,7 @@ const Channel: React.FC = () => {
 
 						<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
 							<Label.Root
-								className="md:w-[280px] left-0 w-full"
+								className="md:w-[280px] left-0 w-full font-semibold"
 								htmlFor="bio"
 							>
 								{t("pages.bio")}
@@ -279,6 +280,7 @@ const Channel: React.FC = () => {
 					</form>
 				</div>
 			</div>
+			<SocialLink />
 		</div>
 	);
 };

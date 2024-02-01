@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import StreamChatBox from "@components/shared/StreamChatBox";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
@@ -164,11 +165,30 @@ const LiveStreamPage = () => {
 						streamerName={channelData?.displayName}
 						followerCount={channelData?.followers?.[0].follower}
 						description={channelData?.description}
-						socialLinks={{
-							facebook: "www.facebook.com/username",
-							instagram: "www.instagram.com/username",
-							youtube: "www.youtube.com/username",
-						}}
+						// socialLinks={{
+						// 	facebook: "www.facebook.com/username",
+						// 	instagram: "www.instagram.com/username",
+						// 	youtube: "www.youtube.com/username",
+						// }}
+						socialLinks={[
+							{
+								id: 1,
+								title: "Facebook",
+								link: "https://www.facebook.com/",
+							},
+							{ id: 2, title: "Skype", link: "https://web.skype.com/" },
+							{ id: 3, title: "Twitch", link: "https://www.twitch.tv/" },
+							{
+								id: 4,
+								title: "Instagram",
+								link: "https://www.instagram.com/",
+							},
+							{
+								id: 5,
+								title: "Axle Tech",
+								link: "https://axletechmm.com/",
+							},
+						]}
 					/>
 				</div>
 			</div>

@@ -35,6 +35,14 @@ const dashboardRoutes = {
 			),
 		},
 		{
+			path: "/dashboard/channel",
+			element: (
+				<Suspense fallback={<LoadingIndicator />}>
+					<Channel />
+				</Suspense>
+			),
+		},
+		{
 			path: "/dashboard/setting",
 			children: [
 				{
@@ -45,14 +53,14 @@ const dashboardRoutes = {
 						</Suspense>
 					),
 				},
-				{
-					path: "/dashboard/setting/channel",
-					element: (
-						<Suspense fallback={<LoadingIndicator />}>
-							<Channel />
-						</Suspense>
-					),
-				},
+				// {
+				// 	path: "/dashboard/setting/channel",
+				// 	element: (
+				// 		<Suspense fallback={<LoadingIndicator />}>
+				// 			<Channel />
+				// 		</Suspense>
+				// 	),
+				// },
 			],
 		},
 	],

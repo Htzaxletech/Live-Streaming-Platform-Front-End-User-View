@@ -1,73 +1,103 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// @ts-nocheck
-
 import Heading from "@components/ui/Heading";
-import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
+import { CiLink } from "react-icons/ci";
+import {
+	FaDiscord,
+	FaFacebook,
+	FaInstagram,
+	FaPinterest,
+	FaSkype,
+	FaTelegram,
+	FaTiktok,
+	FaTwitch,
+	FaTwitter,
+	FaYoutube,
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const About = ({ channelData }) => {
-	const socialLinks = {
-		facebook: "www.facebook.com/username",
-		instagram: "www.instagram.com/username",
-		youtube: "www.youtube.com/username",
+	const iconMapping: { [key: string]: React.ElementType } = {
+		facebook: FaFacebook,
+		skype: FaSkype,
+		twitch: FaTwitch,
+		instagram: FaInstagram,
+		youtube: FaYoutube,
+		pinterest: FaPinterest,
+		tiktok: FaTiktok,
+		telegram: FaTelegram,
+		discord: FaDiscord,
+		twitter: FaTwitter,
 	};
 
-	const getIcon = (platform: string) => {
-		switch (platform) {
-			case "youtube":
-				return (
-					<div className="flex justify-center items-center text-foreground-secondary text-sm">
-						<FaYoutube className="text-lg me-1" /> Youtube Channel
-					</div>
-				);
-			case "facebook":
-				return (
-					<div className="flex justify-center items-center text-foreground-secondary text-sm">
-						<FaFacebook className="text-lg me-1" /> Facebook
-					</div>
-				);
-			case "instagram":
-				return (
-					<div className="flex justify-center items-center text-foreground-secondary text-sm">
-						<FaInstagram className="text-lg me-1" /> Instagram
-					</div>
-				);
-
-			default:
-				return null;
+	const getIconForUrl = (url: string) => {
+		try {
+			const domain = new URL(url).hostname;
+			const matchedDomain = Object.keys(iconMapping).find((key) =>
+				domain.includes(key)
+			);
+			const IconComponent = matchedDomain
+				? iconMapping[matchedDomain]
+				: CiLink;
+			return <IconComponent className="me-2" size={19} />;
+		} catch (error) {
+			return <CiLink className="me-2" />;
 		}
 	};
+
+	const socialLinks = [
+		{
+			id: 1,
+			title: "Facebook",
+			link: "https://www.facebook.com/",
+		},
+		{ id: 2, title: "Skype", link: "https://web.skype.com/" },
+		{ id: 3, title: "Twitch", link: "https://www.twitch.tv/" },
+		{
+			id: 4,
+			title: "Instagram",
+			link: "https://www.instagram.com/",
+		},
+		{
+			id: 5,
+			title: "Axle Tech",
+			link: "https://axletechmm.com/",
+		},
+	];
 
 	return (
 		<>
 			<div className="bg-background-base rounded-xl px-8 py-6 mx-28">
 				<Heading>About {channelData?.displayName}</Heading>
-				<p className="flex text-foreground-secondary mb-2">
+				<p className="flex text-foreground-secondary my-2">
 					<span className="font-semibold mr-1">
 						{channelData?.followers?.[0]?.follower}
 					</span>
 					followers
 				</p>
-				<p className="hidden md:flex text-foreground-secondary mb-2">
+				<p className="hidden md:flex text-foreground-secondary mb-3">
 					{channelData?.description}
 				</p>
+
 				<hr></hr>
+
 				<div className="mt-4">
-					<ul className="flex flex-wrap p-0">
-						{Object.entries(socialLinks).map(([platform, url], index) => (
-							<li key={index} className="flex items-center mr-1 lg:mr-4">
-								<Link
-									to={url}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="hover:bg-background-base rounded"
-								>
-									{getIcon(platform)}
-								</Link>
-							</li>
-						))}
+					<ul className="flex flex-wrap gap-3">
+						{socialLinks.length > 0 &&
+							socialLinks.map((i, index) => {
+								return (
+									<li key={index} className="flex items-center">
+										<Link
+											to={i.link}
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											<div className="flex justify-center items-center text-foreground-secondary text-sm">
+												{getIconForUrl(i.link)}
+												{i.title}
+											</div>
+										</Link>
+									</li>
+								);
+							})}
 					</ul>
 				</div>
 			</div>

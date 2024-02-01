@@ -91,7 +91,13 @@
 		"stream_chat": "Live Chat",
 		"chat": "Chat",
 		"rb": "Recent broadcasts",
-		"rc": "Recent Categories"
+		"rc": "Recent Categories",
+		"sl": "Social Links",
+		"ltt": "Link Title",
+		"lu": "Link URL",
+		"add": "Add",
+		"edit": "Edit",
+		"remove": "Remove"
 	},
 	"title": {
 		"part1": "Title One",
