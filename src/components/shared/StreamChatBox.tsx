@@ -19,6 +19,7 @@ import { useLocation } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
 import { FaArrowDown } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
+import { MdOutlineTagFaces } from "react-icons/md";
 
 interface StreamChatBoxProps {
 	liveID?: any; // Replace 'any' with a more specific type if possible
@@ -282,7 +283,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 							ref={inputRef}
 							endContent={
 								<Button type="button" className="bg-transparent">
-									<img src="/src/assets/images/emote.svg" />
+									<MdOutlineTagFaces className="text-xl" />
 								</Button>
 							}
 						/>

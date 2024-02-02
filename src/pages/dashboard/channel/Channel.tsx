@@ -273,7 +273,7 @@ const Channel: React.FC = () => {
 						</div>
 
 						<div className="flex w-full justify-end mt-4">
-							<Button className="py-5" color="primary" type="submit">
+							<Button color="primary" type="submit">
 								{loading ? "Loading..." : t("pages.sc")}
 							</Button>
 						</div>

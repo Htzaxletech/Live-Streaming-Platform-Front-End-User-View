@@ -1,6 +1,6 @@
 import { RootState } from "@store/index";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import store from "store2";
 
 const UserProfile: React.FC = () => {
@@ -22,13 +22,15 @@ const UserProfile: React.FC = () => {
 
 	return (
 		<div className="flex items-center">
-			<div className="w-[40px] border rounded-full overflow-hidden">
-				<img
-					className="w-full h-full object-cover"
-					src={img}
-					alt="Profile Avatar"
-				/>
-			</div>
+			<Link to="/dashboard/channel">
+				<div className="w-[40px] border rounded-full overflow-hidden">
+					<img
+						className="w-full h-full object-cover"
+						src={img}
+						alt="Profile Avatar"
+					/>
+				</div>
+			</Link>
 			<div className="ml-2 flex flex-col">
 				<span className="font-semibold">
 					{isAuthenticated ? store.get("username") : "Unknown User"}

@@ -91,8 +91,6 @@ const StreamManager = () => {
 		categoryImage: channelData?.s3categoryImage || "",
 	});
 
-	
-
 	useEffect(() => {
 		const abortController = new AbortController();
 		const signal = abortController.signal;
@@ -159,7 +157,6 @@ const StreamManager = () => {
 					// 	setStreamKey(data?.streamKey);
 					// 	setIsStartLive(data.live_status);
 					// }
-					
 				}
 			} catch (error) {
 				// Check if the error is due to the request being aborted
@@ -171,7 +168,7 @@ const StreamManager = () => {
 
 		fetchData();
 
-		const interval = setInterval(fetchData, 20000); 
+		const interval = setInterval(fetchData, 30000);
 
 		return () => {
 			clearInterval(interval); // Clear interval when the component unmounts
@@ -200,7 +197,7 @@ const StreamManager = () => {
 		} catch (error) {
 			setLoading(false);
 		}
-	}
+	};
 
 	const onAdd = useCallback(
 		(newTag: Tag) => {
@@ -264,7 +261,6 @@ const StreamManager = () => {
 					(category) => category.ID === selectedCategory[0].ID
 				);
 
-
 				setChanelData((prevData) => ({
 					...prevData,
 					title,
@@ -321,19 +317,25 @@ const StreamManager = () => {
 					<div className="h-50 xl:h-[550px] flex justify-center">
 						{/* {state?.liveStreamData?.streamKey ||
 							(channelData?.streamKey && ( */}
-						<MediaPlayer
-							// src={generateStreamUrl(
-							// 	state?.liveStreamData?.streamKey ||
-							// 		channelData?.streamKey
-							// )}
-							src={generateStreamUrl(channelData?.streamKey)}
-							autoplay
-							className="h-full rounded-none"
-						>
-							<MediaProvider></MediaProvider>
-							<DefaultAudioLayout icons={defaultLayoutIcons} />
-							<DefaultVideoLayout icons={defaultLayoutIcons} />
-						</MediaPlayer>
+						{channelData?.streamKey ? (
+							<MediaPlayer
+								// src={generateStreamUrl(
+								// 	state?.liveStreamData?.streamKey ||
+								// 		channelData?.streamKey
+								// )}
+								src={generateStreamUrl(channelData?.streamKey)}
+								autoplay
+								className="h-full rounded-none"
+							>
+								<MediaProvider></MediaProvider>
+								<DefaultAudioLayout icons={defaultLayoutIcons} />
+								<DefaultVideoLayout icons={defaultLayoutIcons} />
+							</MediaPlayer>
+						) : (
+							<div className="bg-black text-gray-400 w-full flex items-center justify-center">
+								<p className="uppercase tracking-wide">offline</p>
+							</div>
+						)}
 						{/* ))} */}
 					</div>
 

@@ -5,7 +5,6 @@ import Input from "@components/ui/Input";
 import * as Label from "@radix-ui/react-label";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { makeRequest } from "@services/utils";
 import { CiLink } from "react-icons/ci";
 import {
 	FaFacebook,
@@ -96,6 +95,22 @@ const SocialLink: React.FC = () => {
 		}, 3000);
 	};
 
+	const toggleEdit = (index: number) => {
+		setSocialList((prevList) => {
+			const newList = [...prevList];
+			newList[index].editStatus = !newList[index].editStatus;
+			return newList;
+		});
+	};
+
+	const handleEditInputChange = (index: number, field: string, value: any) => {
+		setSocialList((prevList) => {
+			const newList = [...prevList];
+			newList[index][field] = value;
+			return newList;
+		});
+	};
+
 	return (
 		<div className="mb-7">
 			<Heading size="sm">{t("pages.sl")}</Heading>
@@ -126,26 +141,17 @@ const SocialLink: React.FC = () => {
 				</div>
 
 				<div className="flex w-full justify-end mt-4">
-					{!loading &&
-					socialData.title !== "" &&
-					socialData.link !== "" ? (
-						<Button
-							className="py-5"
-							color="primary"
-							onClick={handleAdd}
-							disabled={
-								loading ||
-								socialData.title === "" ||
-								socialData.link === ""
-							}
-						>
-							{loading ? "Loading..." : t("pages.add")}
-						</Button>
-					) : (
-						<Button className="py-5" color="default" disabled>
-							{loading ? "Loading..." : t("pages.add")}
-						</Button>
-					)}
+					<Button
+						color="primary"
+						onClick={handleAdd}
+						disabled={
+							loading ||
+							socialData.title === "" ||
+							socialData.link === ""
+						}
+					>
+						{loading ? "Loading..." : t("pages.add")}
+					</Button>
 				</div>
 
 				{socialList.length > 0 && (
@@ -153,51 +159,111 @@ const SocialLink: React.FC = () => {
 						<hr className="mt-6" />
 
 						<ul className="mt-6 flex flex-col gap-2">
-							{socialList.map((item, index) => (
-								<li
-									key={index}
-									className="flex justify-between items-center py-5 pl-4 lg:pl-7 pr-4 bg-background-body rounded-lg"
-								>
-									<div className="flex items-center">
-										<div className="mr-4 md:mr-6">
-											{getIconForUrl(item.link)}
-										</div>
-										<div>
-											<div className="font-semibold">
-												{item.title}
-											</div>
-											<div className="text-xs">{item.link}</div>
-										</div>
-									</div>
-									<div className="flex">
-										<a
-											data-tooltip-id="my-tooltip"
-											data-tooltip-content={t("pages.edit")}
-											className="z-50"
-										>
-											<Button
-												className="bg-transparent p-0"
-												// onClick={() => handleEdit(index)}
-											>
-												<LuPencil className="md:text-lg" />
-											</Button>
-										</a>
+							{socialList.map((item, index) => {
+								if (!("editStatus" in item)) {
+									item.editStatus = false;
+								}
 
-										<a
-											data-tooltip-id="my-tooltip"
-											data-tooltip-content={t("pages.remove")}
-											className="z-50"
-										>
-											<Button
-												className="bg-transparent p-0"
-												// onClick={() => handleDelete(index)}
+								return (
+									<li
+										key={index}
+										className="flex justify-between items-center gap-3 py-5 pl-4 lg:pl-7 pr-4 bg-background-body rounded-lg"
+									>
+										<div className="flex items-center w-full">
+											{!item.editStatus && (
+												<div className="mr-4 md:mr-6">
+													{getIconForUrl(item.link)}
+												</div>
+											)}
+											<div className="w-full flex flex-col gap-1">
+												{!item.editStatus ? (
+													<div className="font-semibold">
+														{item.title}
+													</div>
+												) : (
+													<Input
+														size="sm"
+														className="w-full"
+														value={item.title}
+														onChange={(e) =>
+															handleEditInputChange(
+																index,
+																"title",
+																e.target.value
+															)
+														}
+													/>
+												)}
+
+												{!item.editStatus ? (
+													<div className="text-xs">
+														{item.link}
+													</div>
+												) : (
+													<Input
+														startContent={getIconForUrl(
+															item.link
+														)}
+														size="sm"
+														className="w-full"
+														value={item.link}
+														onChange={(e) =>
+															handleEditInputChange(
+																index,
+																"link",
+																e.target.value
+															)
+														}
+													/>
+												)}
+											</div>
+										</div>
+										<div className="flex gap-1">
+											{item.editStatus ? (
+												<div className="flex gap-2">
+													<Button
+														color="primary"
+														onClick={() => toggleEdit(index)}
+														disabled={loading}
+													>
+														{loading
+															? "Loading..."
+															: t("pages.save")}
+													</Button>
+													<Button
+														onClick={() => toggleEdit(index)}
+													>
+														{t("pages.cancel")}
+													</Button>
+												</div>
+											) : (
+												<a
+													data-tooltip-id="my-tooltip"
+													data-tooltip-content={t("pages.edit")}
+													className="z-50"
+												>
+													<Button
+														className="bg-transparent p-0"
+														onClick={() => toggleEdit(index)}
+													>
+														<LuPencil className="md:text-lg" />
+													</Button>
+												</a>
+											)}
+
+											<a
+												data-tooltip-id="my-tooltip"
+												data-tooltip-content={t("pages.remove")}
+												className="z-50"
 											>
-												<FaRegTrashAlt className="md:text-lg" />
-											</Button>
-										</a>
-									</div>
-								</li>
-							))}
+												<Button className="bg-transparent p-0">
+													<FaRegTrashAlt className="md:text-lg" />
+												</Button>
+											</a>
+										</div>
+									</li>
+								);
+							})}
 						</ul>
 					</>
 				)}
