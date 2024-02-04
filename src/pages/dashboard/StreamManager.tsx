@@ -12,10 +12,10 @@ import {
 } from "@vidstack/react/player/layouts/default";
 import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
-// import Button from "@components/ui/Button";
-// import Modal from "@pages/authentication/Modal";
-// import Heading from "@components/ui/Heading";
-// import StreamChatBox from "@components/shared/StreamChatBox";
+import Button from "@components/ui/Button";
+import Modal from "@pages/authentication/Modal";
+import Heading from "@components/ui/Heading";
+import StreamChatBox from "@components/shared/StreamChatBox";
 import { MdOutlineEdit } from "react-icons/md";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { SetStateAction, lazy, useCallback, useEffect, useState } from "react";
@@ -29,11 +29,13 @@ import { useLocation } from "react-router-dom";
 import "@styles/tags.css";
 import { useTranslation } from "react-i18next";
 import { socket } from "@socket/index";
+import { HiOutlineStatusOffline } from "react-icons/hi";
+import Offline from "@components/shared/Offline";
 
-const Button = lazy(() => import("@components/ui/Button"));
-const Modal = lazy(() => import("@pages/authentication/Modal"));
-const Heading = lazy(() => import("@components/ui/Heading"));
-const StreamChatBox = lazy(() => import("@components/shared/StreamChatBox"));
+// const Button = lazy(() => import("@components/ui/Button"));
+// const Modal = lazy(() => import("@pages/authentication/Modal"));
+// const Heading = lazy(() => import("@components/ui/Heading"));
+// const StreamChatBox = lazy(() => import("@components/shared/StreamChatBox"));
 
 const StreamManager = () => {
 	const { state } = useLocation();
@@ -168,7 +170,7 @@ const StreamManager = () => {
 
 		fetchData();
 
-		const interval = setInterval(fetchData, 30000);
+		const interval = setInterval(fetchData, 20000);
 
 		return () => {
 			clearInterval(interval); // Clear interval when the component unmounts
@@ -332,39 +334,41 @@ const StreamManager = () => {
 								<DefaultVideoLayout icons={defaultLayoutIcons} />
 							</MediaPlayer>
 						) : (
-							<div className="bg-black text-gray-400 w-full flex items-center justify-center">
-								<p className="uppercase tracking-wide">offline</p>
-							</div>
+							<Offline />
 						)}
 						{/* ))} */}
 					</div>
 
 					<div className="container">
-						<div className="py-5 rounded-md mt-2 flex flex-col md:flex-row gap-6 w-full">
-							<div className="w-full lg:w-[200px]">
-								<img
-									src={channelData?.s3categoryImage}
-									alt="Category Image"
-									className="w-[150px] h-[100px] md:h-[150px] object-cover border border-black"
-									loading="lazy"
-								/>
-							</div>
-							<div className="w-full flex lg:flex-row items center justify-between">
-								<div className="mt-2">{channelData?.title}</div>
-								<div>
-									<Button
-										color={isStartLive ? "danger" : "primary"}
-										disabled={loading}
-										onClick={handleLive}
-									>
-										{isStartLive
-											? t("pages.end_live")
-											: t("pages.start_live")}
-									</Button>
+						{channelData && (
+							<div className="mt-4 rounded-md flex flex-col md:flex-row gap-6 w-full">
+								<div className="w-full lg:w-[200px]">
+									<img
+										src={channelData?.s3categoryImage}
+										alt="Category Image"
+										className="w-[150px] h-[100px] md:h-[150px] object-cover border border-black"
+										loading="lazy"
+									/>
+								</div>
+								<div className="w-full flex lg:flex-row items center justify-between">
+									<div className="mt-2">{channelData?.title}</div>
+
+									<div>
+										<Button
+											color={isStartLive ? "danger" : "primary"}
+											disabled={loading}
+											onClick={handleLive}
+										>
+											{isStartLive
+												? t("pages.end_live")
+												: t("pages.start_live")}
+										</Button>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div>
+						)}
+
+						<div className="mt-3">
 							<Button
 								color="primary"
 								size="lg"

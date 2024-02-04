@@ -117,7 +117,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 			socket.off("disconnect", onDisconnect);
 			socket.off("chat_list_message", onMessageEvent);
 		};
-	}, [streamID]);
+	}, [streamID, liveFlag]);
 
 	const onConnect = () => {
 		socket.timeout(3000).emit(

@@ -23,12 +23,15 @@ import { toast } from "react-toastify";
 import { generateStreamUrl } from "@utils/helpers";
 import store from "store2";
 import useStreamingDuration from "@hooks/useStreamingDuration";
+import Offline from "@components/shared/Offline";
+import { socket } from "@socket/index";
 
 const LiveStreamPage = () => {
 	const navigate = useNavigate();
 	const { state } = useLocation();
 	const isChatOpen = useSelector((state: RootState) => state.chat.isChatOpen);
 	const [channelData, setChannelData] = useState<[]>([]);
+	const [socialData, setSocialData] = useState<[]>([]);
 	const [followStatus, setFollowStatus] = useState<number>(0);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [viewCount, setViewCount] = useState<number>(0);
@@ -37,6 +40,10 @@ const LiveStreamPage = () => {
 	const duration = useStreamingDuration(startTime);
 
 	useEffect(() => {
+		// socket.on("added_live_emitter", (value) => {
+		// 	console.log("live_emitter", value);
+		// });
+
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
@@ -59,6 +66,17 @@ const LiveStreamPage = () => {
 					setFollowStatus(response?.data[0]?.follow_status);
 					setStartTime(response?.data[0]?.live_start);
 					setChannelData(response?.data[0]);
+
+					const socialResponse = await makeRequest(
+						"get",
+						endpoints.getSocial,
+						{
+							channelID: state?.liveStreamData?.channelID
+						},
+						{ signal }
+					);
+
+					setSocialData(socialResponse?.data);
 				} catch (error) {
 					toast.error(error);
 				}
@@ -73,12 +91,15 @@ const LiveStreamPage = () => {
 	useEffect(() => {
 		if (channelData.channelID) {
 			fetchViewerCount();
+			fetchLiveData();
 		}
 
 		const interval = setInterval(fetchViewerCount, 10000);
+		const interval2 = setInterval(fetchLiveData, 10000);
 
 		return () => {
 			clearInterval(interval);
+			clearInterval(interval2);
 		};
 	}, [channelData.channelID]);
 
@@ -94,8 +115,6 @@ const LiveStreamPage = () => {
 				reqData
 			);
 
-			console.log("fetchViewerCount", response);
-
 			if (response?.success) {
 				const data = response?.data;
 				setViewCount(data);
@@ -107,6 +126,21 @@ const LiveStreamPage = () => {
 			setLoading(false);
 		}
 	};
+
+	const fetchLiveData = async () => {
+		try {
+			const response = await makeRequest("get", endpoints.channelData, {
+				channelID: channelData?.channelID,
+				userID: store.get("id"),
+			});
+
+			setFollowStatus(response?.data[0]?.follow_status);
+			setStartTime(response?.data[0]?.live_start);
+			setChannelData(response?.data[0]);
+		} catch (error) {
+			toast.error(error);
+		}
+	}
 
 	const handleFollow = async () => {
 		setLoading(true);
@@ -134,7 +168,7 @@ const LiveStreamPage = () => {
 			<div className="flex-1 flex flex-col pt-4">
 				<div className={`${isChatOpen ? "md:mr-60 lg:mr-72" : "mr-0"}`}>
 					<div className="h-50 xl:h-[550px] flex justify-center">
-						{channelData?.streamKey && (
+						{channelData?.live_status ? (
 							<MediaPlayer
 								src={generateStreamUrl(channelData?.streamKey)}
 								autoplay
@@ -144,6 +178,8 @@ const LiveStreamPage = () => {
 								<DefaultAudioLayout icons={defaultLayoutIcons} />
 								<DefaultVideoLayout icons={defaultLayoutIcons} />
 							</MediaPlayer>
+						) : (
+							<Offline />
 						)}
 					</div>
 
@@ -158,7 +194,7 @@ const LiveStreamPage = () => {
 						handleFollow={handleFollow}
 						followStatus={followStatus}
 						loading={loading}
-						isLive={channelData?.live_status === 1 ? true : true}
+						isLive={channelData?.live_status === 1 ? true : false}
 					/>
 
 					<ProfileDescription
@@ -170,25 +206,7 @@ const LiveStreamPage = () => {
 						// 	instagram: "www.instagram.com/username",
 						// 	youtube: "www.youtube.com/username",
 						// }}
-						socialLinks={[
-							{
-								id: 1,
-								title: "Facebook",
-								link: "https://www.facebook.com/",
-							},
-							{ id: 2, title: "Skype", link: "https://web.skype.com/" },
-							{ id: 3, title: "Twitch", link: "https://www.twitch.tv/" },
-							{
-								id: 4,
-								title: "Instagram",
-								link: "https://www.instagram.com/",
-							},
-							{
-								id: 5,
-								title: "Axle Tech",
-								link: "https://axletechmm.com/",
-							},
-						]}
+						socialLinks={socialData}
 					/>
 				</div>
 			</div>

@@ -5,9 +5,9 @@
 // import Button from "@components/ui/Button";
 // import Heading from "@components/ui/Heading";
 // import Input from "@components/ui/Input";
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
 import * as Label from "@radix-ui/react-label";
-import { endpoints as ep } from "@services/endpoints";
+import { endpoints, endpoints as ep } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
 import { convertToBase64 } from "@utils/helpers";
 import { useRef, useState } from "react";
@@ -32,6 +32,7 @@ const Channel: React.FC = () => {
 	const { t } = useTranslation();
 	const profileRef = useRef<HTMLInputElement>(null);
 	const bannerRef = useRef<HTMLInputElement>(null);
+	const [channelData, setChannelData] = useState<>({});
 
 	const [loading, setLoading] = useState<boolean>(false);
 
@@ -40,8 +41,8 @@ const Channel: React.FC = () => {
 	const [bannerImageBase64Url, setBannerImageBase64Url] = useState<string>("");
 	const [imageName, setImageName] = useState({
 		profile: "",
-		banner: ""
-	})
+		banner: "",
+	});
 
 	const initialForm = {
 		selectedImageUrl: "https://i.stack.imgur.com/l60Hf.png",
@@ -52,7 +53,75 @@ const Channel: React.FC = () => {
 		bio: "",
 	};
 
-	const [profileSettings, setProfileSettings] = useState<ProfileSettings>(initialForm);
+	const [profileSettings, setProfileSettings] =
+		useState<ProfileSettings>(initialForm);
+
+	useEffect(() => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
+		(async () => {
+			try {
+				const reqData = {
+					userID: store.get("id"),
+				};
+
+				const { success, message, data } = await makeRequest(
+					"get",
+					endpoints.profileData,
+					reqData,
+					{
+						signal,
+					}
+				);
+
+				if (success) {
+					const { channelID } = data[0];
+					setChannelData(data[0]);
+
+					await getProfile(channelID);
+				} else {
+					toast.error(message);
+				}
+				setLoading(false);
+			} catch (error) {
+				setLoading(false);
+			}
+		})();
+
+		return () => {
+			abortController.abort();
+		};
+	}, []);
+
+	const getProfile = async (channelID: number) => {
+		const reqData = {
+			userID: store.get("id"),
+			channelID,
+		};
+
+		const response = await makeRequest("get", endpoints.getProfile, reqData);
+
+		if (response?.success) {
+			const {
+				username,
+				displayName,
+				bio,
+				s3channelprofile,
+				s3channelbanner,
+			} = response.data[0];
+			const initForm = {
+				selectedImageUrl: s3channelprofile,
+				selectedBannerUrl: s3channelbanner,
+				userName: username,
+				displayName,
+				bio,
+			};
+			setProfileSettings(initForm);
+		} else {
+			toast.error(response?.message);
+		}
+	};
 
 	const handleProfileClick = () => {
 		if (profileRef.current) {
@@ -133,7 +202,7 @@ const Channel: React.FC = () => {
 				profileImage: profileImageBase64Url,
 				bannerImage: bannerImageBase64Url,
 				profileName: imageName.profile,
-				bannerName: imageName.banner
+				bannerName: imageName.banner,
 			};
 
 			const { success, message } = await makeRequest(
@@ -144,7 +213,8 @@ const Channel: React.FC = () => {
 
 			if (success) {
 				toast.success(message);
-				setProfileSettings(initialForm);
+				await getProfile(channelData?.channelID);
+				// setProfileSettings(initialForm);
 			} else {
 				toast.error(message);
 			}
@@ -280,7 +350,7 @@ const Channel: React.FC = () => {
 					</form>
 				</div>
 			</div>
-			<SocialLink />
+			<SocialLink channelID={channelData?.channelID} />
 		</div>
 	);
 };

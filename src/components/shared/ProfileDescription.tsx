@@ -76,12 +76,12 @@ const ProfileDescription: React.FC<ProfileDescriptionProps> = ({
 								return (
 									<li key={index} className="flex items-center">
 										<Link
-											to={i.link}
+											to={i.links}
 											target="_blank"
 											rel="noopener noreferrer"
 										>
-											<div className="flex justify-center items-center text-foreground-secondary text-sm py-2 border-b-2 border-transparent hover:border-white">
-												{getIconForUrl(i.link)}
+											<div className="flex justify-center items-center text-foreground-secondary text-sm py-2">
+												{getIconForUrl(i.links)}
 												{i.title}
 											</div>
 										</Link>

@@ -17,8 +17,14 @@ import {
 	FaYoutube,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { makeRequest } from "@services/utils";
+import { toast } from "react-toastify";
+import { endpoints } from "@services/endpoints";
 
 const About = ({ channelData }) => {
+	const [socialData, setSocialData] = useState<[]>([]);
+
 	const iconMapping: { [key: string]: React.ElementType } = {
 		facebook: FaFacebook,
 		skype: FaSkype,
@@ -31,6 +37,40 @@ const About = ({ channelData }) => {
 		discord: FaDiscord,
 		twitter: FaTwitter,
 	};
+
+	useEffect(() => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
+		(async () => {
+			try {
+				const reqData = {
+					channelID: channelData?.channelID,
+				};
+
+				const { success, message, data } = await makeRequest(
+					"get",
+					endpoints.getSocial,
+					reqData,
+					{
+						signal,
+					}
+				);
+
+				if (success) {
+					setSocialData(data);
+				} else {
+					toast.error(message);
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		})();
+
+		return () => {
+			abortController.abort();
+		};
+	}, [channelData]);
 
 	const getIconForUrl = (url: string) => {
 		try {
@@ -47,26 +87,6 @@ const About = ({ channelData }) => {
 		}
 	};
 
-	const socialLinks = [
-		{
-			id: 1,
-			title: "Facebook",
-			link: "https://www.facebook.com/",
-		},
-		{ id: 2, title: "Skype", link: "https://web.skype.com/" },
-		{ id: 3, title: "Twitch", link: "https://www.twitch.tv/" },
-		{
-			id: 4,
-			title: "Instagram",
-			link: "https://www.instagram.com/",
-		},
-		{
-			id: 5,
-			title: "Axle Tech",
-			link: "https://axletechmm.com/",
-		},
-	];
-
 	return (
 		<>
 			<div className="bg-background-base rounded-xl px-8 py-6 mx-28">
@@ -81,29 +101,31 @@ const About = ({ channelData }) => {
 					{channelData?.description}
 				</p>
 
-				<hr></hr>
-
-				<div className="mt-4">
-					<ul className="flex flex-wrap gap-3">
-						{socialLinks.length > 0 &&
-							socialLinks.map((i, index) => {
-								return (
-									<li key={index} className="flex items-center">
-										<Link
-											to={i.link}
-											target="_blank"
-											rel="noopener noreferrer"
-										>
-											<div className="flex justify-center items-center text-foreground-secondary text-sm">
-												{getIconForUrl(i.link)}
-												{i.title}
-											</div>
-										</Link>
-									</li>
-								);
-							})}
-					</ul>
-				</div>
+				{socialData?.length > 0 && (
+					<>
+						<hr></hr>
+						<div className="mt-4">
+							<ul className="flex flex-wrap gap-3">
+								{socialData?.map((i, index) => {
+									return (
+										<li key={index} className="flex items-center">
+											<Link
+												to={i.links}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<div className="flex justify-center items-center text-foreground-secondary text-sm">
+													{getIconForUrl(i.links)}
+													{i.title}
+												</div>
+											</Link>
+										</li>
+									);
+								})}
+							</ul>
+						</div>
+					</>
+				)}
 			</div>
 		</>
 	);
