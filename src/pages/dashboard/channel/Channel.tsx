@@ -32,7 +32,7 @@ const Channel: React.FC = () => {
 	const { t } = useTranslation();
 	const profileRef = useRef<HTMLInputElement>(null);
 	const bannerRef = useRef<HTMLInputElement>(null);
-	const [channelData, setChannelData] = useState<>({});
+	const [channelData, setChannelData] = useState({});
 
 	const [loading, setLoading] = useState<boolean>(false);
 
