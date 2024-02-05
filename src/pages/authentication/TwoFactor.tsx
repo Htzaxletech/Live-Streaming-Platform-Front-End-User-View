@@ -36,6 +36,7 @@ const TwoFactor: React.FC = () => {
 			const response = await makeRequest("post", ep.qrConfirm, {
 				username,
 				code,
+				secret_code: store.get("secretCode"),
 			});
 
 			if(response?.success){
