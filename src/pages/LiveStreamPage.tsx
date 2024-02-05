@@ -168,7 +168,7 @@ const LiveStreamPage = () => {
 			<div className="flex-1 flex flex-col pt-4">
 				<div className={`${isChatOpen ? "md:mr-60 lg:mr-72" : "mr-0"}`}>
 					<div className="h-50 xl:h-[550px] flex justify-center">
-						{channelData?.live_status ? (
+						{channelData?.live_status && channelData?.streamKey ? (
 							<MediaPlayer
 								src={generateStreamUrl(channelData?.streamKey)}
 								autoplay

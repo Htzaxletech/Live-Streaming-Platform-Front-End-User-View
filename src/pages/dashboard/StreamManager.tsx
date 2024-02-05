@@ -51,29 +51,7 @@ const StreamManager = () => {
 	const [suggestionsCategory, setSuggesstionsCategory] = useState<Tag[]>([]);
 	const [viewCount, setViewCount] = useState<number>(0);
 
-	const [channelData, setChanelData] = useState({
-		isStart: 0,
-		liveID: 22,
-		ID: 1,
-		userID: 10,
-		streamKey: "3bef6fba",
-		categoryID: 1,
-		title: null,
-		showpast: 1,
-		created_at: null,
-		updated_at: null,
-		deleted_at: null,
-		streaminfoID: 10,
-		mainCategoryID: 1,
-		categoryName: "Basketball",
-		parentID: 0,
-		description: "Hello it is testing",
-		image: "088f29.png",
-		tags: [],
-		s3categoryImage:
-			"https://axletechs3bucket.s3.ap-southeast-1.amazonaws.com/Live_Streaming/088f29.png",
-		live_status: 0,
-	});
+	const [channelData, setChannelData] = useState({});
 	const [isStartLive, setIsStartLive] = useState(0);
 	const [streamKey, setStreamKey] = useState<string>("");
 
@@ -155,7 +133,7 @@ const StreamManager = () => {
 					// if (channel?.success) {
 					// 	const data = channel?.data[0];
 
-					// 	setChanelData(data);
+					// 	setChannelData(data);
 					// 	setStreamKey(data?.streamKey);
 					// 	setIsStartLive(data.live_status);
 					// }
@@ -189,7 +167,7 @@ const StreamManager = () => {
 			if (response?.success) {
 				const data = response?.data[0];
 
-				setChanelData(data);
+				setChannelData(data);
 				setStreamKey(data?.streamKey);
 				setIsStartLive(data.live_status);
 			} else {
@@ -263,7 +241,7 @@ const StreamManager = () => {
 					(category) => category.ID === selectedCategory[0].ID
 				);
 
-				setChanelData((prevData) => ({
+				setChannelData((prevData) => ({
 					...prevData,
 					title,
 					s3categoryImage: isSelectedExist

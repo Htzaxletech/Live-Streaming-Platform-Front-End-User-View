@@ -196,7 +196,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 
 		const message = inputRef.current.value;
 
-		if (message){
+		if (message) {
 			socket.emit(
 				"add_chat_message",
 				{ userID: store.get("id"), liveID: liveId, message },
@@ -273,31 +273,35 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 				</div>
 
 				{/* Chat Footer */}
-				<div className="pt-4 px-4 h-1/6">
-					<form onSubmit={handleSubmit}>
-						<Input
-							className="w-full"
-							placeholder={t("placeholder.sm")}
-							// value={message}
-							// onChange={handleInputChange}
-							ref={inputRef}
-							endContent={
-								<Button type="button" className="bg-transparent">
-									<MdOutlineTagFaces className="text-xl" />
+				{liveStatus ? (
+					<div className="pt-4 px-4 h-1/6">
+						<form onSubmit={handleSubmit}>
+							<Input
+								className="w-full"
+								placeholder={t("placeholder.sm")}
+								// value={message}
+								// onChange={handleInputChange}
+								ref={inputRef}
+								endContent={
+									<Button type="button" className="bg-transparent">
+										<MdOutlineTagFaces className="text-xl" />
+									</Button>
+								}
+							/>
+							<div className="flex justify-end mt-3">
+								<Button
+									color="primary"
+									className="text-white"
+									type="submit"
+								>
+									{t("pages.chat")}
 								</Button>
-							}
-						/>
-						<div className="flex justify-end mt-3">
-							<Button
-								color="primary"
-								className="text-white"
-								type="submit"
-							>
-								{t("pages.chat")}
-							</Button>
-						</div>
-					</form>
-				</div>
+							</div>
+						</form>
+					</div>
+				) : (
+					<></>
+				)}
 			</div>
 
 			{!isChatOpen && (

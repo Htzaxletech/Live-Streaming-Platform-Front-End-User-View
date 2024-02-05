@@ -168,7 +168,7 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 									</a>
 								)}
 
-								{isLive && (
+								{isLive && !location.pathname.includes("profile") && (
 									<div className="hidden md:flex justify-end items-center">
 										<div className="flex justify-start items-center font-bold me-3">
 											<Icon
