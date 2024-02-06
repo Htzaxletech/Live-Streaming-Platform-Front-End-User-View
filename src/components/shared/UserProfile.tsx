@@ -22,7 +22,7 @@ const UserProfile: React.FC = () => {
 
 	return (
 		<div className="flex items-center">
-			<Link to={`/profile/${store.get("id")}`}>
+			<Link to={`/dashboard/channel`}>
 				<div className="w-[40px] h-[40px] border rounded-full overflow-hidden">
 					<img
 						className="w-full h-full object-cover"
@@ -33,7 +33,7 @@ const UserProfile: React.FC = () => {
 			</Link>
 			<div className="ml-2 flex flex-col">
 				<span className="font-semibold">
-					<Link to={`/profile/${store.get("id")}`}>
+					<Link to={`/dashboard/channel`}>
 						{isAuthenticated ? store.get("username") : "Unknown User"}
 					</Link>
 				</span>
