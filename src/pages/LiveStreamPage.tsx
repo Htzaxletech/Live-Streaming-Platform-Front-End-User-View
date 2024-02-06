@@ -67,6 +67,8 @@ const LiveStreamPage = () => {
 					setStartTime(response?.data[0]?.live_start);
 					setChannelData(response?.data[0]);
 
+					const data = response?.data[0];
+
 					const socialResponse = await makeRequest(
 						"get",
 						endpoints.getSocial,
@@ -77,6 +79,17 @@ const LiveStreamPage = () => {
 					);
 
 					setSocialData(socialResponse?.data);
+
+					// const chatResponse = await makeRequest(
+					// 	"get",
+					// 	endpoints.chatData,
+					// 	{
+					// 		liveID: data.liveID,
+					// 	},
+					// 	{ signal }
+					// );
+
+					// console.log("chatResponse", chatResponse);
 				} catch (error) {
 					toast.error(error);
 				}
@@ -166,7 +179,7 @@ const LiveStreamPage = () => {
 	return (
 		<div>
 			<div className="flex-1 flex flex-col pt-4">
-				<div className={`${isChatOpen ? "md:mr-60 lg:mr-72" : "mr-0"}`}>
+				<div className={`${isChatOpen ? "md:mr-72 lg:mr-80" : "mr-0"}`}>
 					<div className="h-50 xl:h-[550px] flex justify-center">
 						{channelData?.live_status && channelData?.streamKey ? (
 							<MediaPlayer

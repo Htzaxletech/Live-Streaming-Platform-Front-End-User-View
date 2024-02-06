@@ -56,6 +56,19 @@ export const getRandomColor = (): string => {
 	return "#" + Math.floor(Math.random() * 16777215).toString(16);
 };
 
+/**
+ * Formats the given time string to display only hour and minute.
+ *
+ * @param {string} timeString - The time string to format.
+ * @returns {string} - The formatted hour and minute string (HH:mm).
+ */
+export const formatHourAndMinute = (timeString: string): string => {
+	const time = new Date(timeString);
+	const hour = time.getHours();
+	const minute = time.getMinutes();
+	return `${hour}:${minute < 10 ? "0" + minute : minute}`;
+};
+
 export const videoSliderData = [
 	{
 		coverImage:

@@ -44,6 +44,9 @@ const Channel: React.FC = () => {
 		banner: "",
 	});
 
+	const [profile] = useState<string>("https://i.stack.imgur.com/l60Hf.png");
+	const [banner] = useState<string>("https://www.hkiod.com/wp-content/plugins/tutor/assets/images/placeholder.svg");
+
 	const initialForm = {
 		selectedImageUrl: "https://i.stack.imgur.com/l60Hf.png",
 		selectedBannerUrl:
@@ -112,8 +115,8 @@ const Channel: React.FC = () => {
 			} = response.data[0];
 
 			const initForm = {
-				selectedImageUrl: s3channelprofile,
-				selectedBannerUrl: s3channelbanner,
+				selectedImageUrl: s3channelprofile || profile,
+				selectedBannerUrl: s3channelbanner || banner,
 				userName: username,
 				displayName,
 				bio,

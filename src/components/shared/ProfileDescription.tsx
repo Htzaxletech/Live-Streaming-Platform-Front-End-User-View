@@ -61,7 +61,7 @@ const ProfileDescription: React.FC<ProfileDescriptionProps> = ({
 					<div>
 						<b className="mr-1">{followerCount}</b>
 						<span className="text-foreground-secondary font-light">
-							followers
+							{followerCount > 1 ? "followers" : "follower"}
 						</span>
 					</div>
 					<p className="text-foreground-secondary font-light">

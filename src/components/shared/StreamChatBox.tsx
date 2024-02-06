@@ -20,6 +20,10 @@ import { Virtuoso } from "react-virtuoso";
 import { FaArrowDown } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { MdOutlineTagFaces } from "react-icons/md";
+import { makeRequest } from "@services/utils";
+import { toast } from "react-toastify";
+import { endpoints } from "@services/endpoints";
+import { formatHourAndMinute } from "@utils/helpers";
 
 interface StreamChatBoxProps {
 	liveID?: any; // Replace 'any' with a more specific type if possible
@@ -75,6 +79,15 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	const channelId = channelID || state?.liveStreamData?.channelID;
 
 	useEffect(() => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
+		if (liveId){
+			(async () => {
+				await getChatList(signal);
+			})();
+		}
+
 		if (streamID && liveId && liveFlag) {
 			socket.disconnect();
 			socket.connect();
@@ -116,8 +129,31 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
 			socket.off("chat_list_message", onMessageEvent);
+
+			abortController.abort();
 		};
 	}, [streamID, liveFlag]);
+
+	const getChatList = async (signal: AbortSignal) => {
+		try {
+			const response = await makeRequest(
+				"get",
+				endpoints.chatData,
+				{
+					liveID: liveId,
+				},
+				{ signal }
+			);
+
+			if(response?.success){
+				setChatMessages(response?.data);
+			}
+
+			console.log("GGresponse", response);
+		} catch (error) {
+			toast.error(error);
+		}
+	};
 
 	const onConnect = () => {
 		socket.timeout(3000).emit(
@@ -184,6 +220,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	};
 
 	const onMessageEvent = (value: any) => {
+		console.log("value", value);
 		setChatMessages((previous) => [...previous, ...value]);
 	};
 
@@ -206,16 +243,14 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 			);
 
 			inputRef.current.value = "";
+			scrollToBottom();
 		}
 	};
 
 	const chatContent = (_, chat: any) => (
 		<div className="text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 px-2 py-1">
-			{/* <span style={{ backgroundColor: getRandomColor() }}>
-				{chat?.userID}
-			</span> */}
-			<span style={{ color: "#234234D" }}>{chat?.username}</span>
-			<span>:&nbsp;</span>
+			<span className="mr-1">{formatHourAndMinute(chat?.send_time)}</span>
+			<span className="mr-2" style={{ color: chat?.colorcode }}>{chat?.username}</span>
 			<span className="leading-normal">{chat?.message}</span>
 		</div>
 	);
@@ -231,7 +266,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	return (
 		<>
 			<div
-				className={`invisible md:visible bg-background-base md:w-60 lg:w-72 overflow-y-auto h-full flex flex-col justify-between fixed top-0 right-0 transform ${
+				className={`invisible md:visible bg-background-base md:w-72 lg:w-80 overflow-y-auto h-full flex flex-col justify-between fixed top-0 right-0 transform ${
 					isChatOpen ? "translate-x-0" : "translate-x-full"
 				} ease-in-out z-20`}
 			>

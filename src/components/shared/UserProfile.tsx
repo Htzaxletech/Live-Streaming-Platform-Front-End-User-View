@@ -15,7 +15,6 @@ const UserProfile: React.FC = () => {
 		(state: RootState) => state.auth.isAuthenticated
 	);
 
-
 	const img =
 		store.get("profile") ||
 		store.get("userData")?.image ||
@@ -23,7 +22,7 @@ const UserProfile: React.FC = () => {
 
 	return (
 		<div className="flex items-center">
-			<Link to="/dashboard/channel">
+			<Link to={`/profile/${store.get("id")}`}>
 				<div className="w-[40px] h-[40px] border rounded-full overflow-hidden">
 					<img
 						className="w-full h-full object-cover"
@@ -34,7 +33,9 @@ const UserProfile: React.FC = () => {
 			</Link>
 			<div className="ml-2 flex flex-col">
 				<span className="font-semibold">
-					{isAuthenticated ? store.get("username") : "Unknown User"}
+					<Link to={`/profile/${store.get("id")}`}>
+						{isAuthenticated ? store.get("username") : "Unknown User"}
+					</Link>
 				</span>
 				{isDashboardRoute() && <span>Creator</span>}
 			</div>

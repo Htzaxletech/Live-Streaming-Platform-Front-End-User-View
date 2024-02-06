@@ -293,7 +293,7 @@ const StreamManager = () => {
 	return (
 		<div>
 			<div className="flex-1 flex flex-col pt-4">
-				<div className={`${isChatOpen ? "md:mr-60 lg:mr-72" : "mr-0"}`}>
+				<div className={`${isChatOpen ? "md:mr-72 lg:mr-80" : "mr-0"}`}>
 					<div className="h-50 xl:h-[550px] flex justify-center">
 						{/* {state?.liveStreamData?.streamKey ||
 							(channelData?.streamKey && ( */}

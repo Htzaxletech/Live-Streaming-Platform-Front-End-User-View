@@ -48,5 +48,6 @@ export const endpoints = {
 	deleteSocial: "/profile/delete_social",
 	getSocial: "/profile/get_social",
 	getProfile: "/profile/get_userprofile",
+	chatData: "/chat/chatdata_live",
 	// Add more endpoints as needed
 };
