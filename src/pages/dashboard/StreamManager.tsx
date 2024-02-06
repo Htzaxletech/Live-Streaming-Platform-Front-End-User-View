@@ -148,7 +148,7 @@ const StreamManager = () => {
 
 		fetchData();
 
-		const interval = setInterval(fetchData, 20000);
+		const interval = setInterval(fetchData, 10000);
 
 		return () => {
 			clearInterval(interval); // Clear interval when the component unmounts
