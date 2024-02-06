@@ -106,7 +106,7 @@ const SearchByCategoryTag: React.FC = () => {
 										{data?.categoryName}
 									</Link>
 								</Heading>
-								<div className="mt-3 flex gap-1">
+								<div className="mt-3 flex gap-1 flex-wrap">
 									{data?.secondCategory?.map((i, index) => {
 										return (
 											<Tag

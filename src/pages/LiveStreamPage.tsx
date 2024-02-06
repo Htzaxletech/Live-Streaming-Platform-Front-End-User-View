@@ -184,7 +184,7 @@ const LiveStreamPage = () => {
 					</div>
 
 					<ProfileHeading
-						channelID={channelData?.channelID}
+						channelID={channelData?.userID}
 						streamerName={channelData?.displayName}
 						streamTitle={channelData?.title}
 						gameTags={channelData?.tags}

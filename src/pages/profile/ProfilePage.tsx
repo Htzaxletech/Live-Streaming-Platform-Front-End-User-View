@@ -8,11 +8,12 @@ import { makeRequest } from "@services/utils";
 import Tab from "@components/ui/Tab";
 import { toast } from "react-toastify";
 import { endpoints } from "@services/endpoints";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import store from "store2";
 import ProfileHomePage from "./Home";
 import ProfileStreamInfo from "@components/shared/ProfileStreamInfo";
 import Videos from "./Videos";
+import { convertToLowerCase } from "@utils/helpers";
 
 const About = lazy(() => import("./About"));
 
@@ -22,6 +23,7 @@ const ProfilePage: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const { channelId } = useParams();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -77,6 +79,14 @@ const ProfilePage: React.FC = () => {
 		}
 	};
 
+	const handleOnClick = () => {
+		navigate(`/${convertToLowerCase(channelData?.displayName)}`, {
+			state: {
+				liveStreamData: channelData,
+			},
+		});
+	};
+
 	return (
 		<>
 			{/* <div className="w-full h-[250px] md:h-[400px] border">
@@ -105,13 +115,15 @@ const ProfilePage: React.FC = () => {
 					}}
 				></div>
 
-				<div className="hidden md:inline md:absolute md:top-28 md:left-10">
-					<ProfileStreamInfo
-						isLive={channelData?.live_status}
-						message={"Streamer is currently offline"}
-						viewer={channelData?.followers?.[0]?.follower}
-					/>
-				</div>
+				{!channelData?.live_status && (
+					<div className="hidden md:inline md:absolute md:top-28 md:left-10">
+						<ProfileStreamInfo
+							isLive={channelData?.live_status}
+							message={"Streamer is currently offline"}
+							viewer={channelData?.followers?.[0]?.follower}
+						/>
+					</div>
+				)}
 			</div>
 
 			<div className="container mt-4">
@@ -131,6 +143,8 @@ const ProfilePage: React.FC = () => {
 					loading={loading}
 					isLive={channelData?.live_status === 1 ? true : false}
 					followers={channelData?.followers?.[0]?.follower}
+					streamTitle={channelData?.title}
+					handleOnClick={handleOnClick}
 				/>
 
 				<Tab

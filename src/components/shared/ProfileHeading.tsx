@@ -25,6 +25,7 @@ interface ProfileHeadingProps {
 	isLive?: boolean;
 	followers?: number;
 	channelID?: number;
+	handleOnClick?: any;
 }
 
 const ProfileHeading: React.FC<ProfileHeadingProps> = ({
@@ -40,6 +41,7 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 	isLive,
 	followers,
 	channelID,
+	handleOnClick,
 }) => {
 	const [isHoveredFollow, setIsHoveredFollow] = useState(false);
 	const [isHoveredUnfollow, setIsHoveredUnFollow] = useState(false);
@@ -97,10 +99,13 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 										{streamTitle}
 									</p>
 								)}
-								{followers && (
+								{followers ? (
 									<p className="hidden md:flex text-foreground-secondary mb-2">
-										<span className="mr-1">{followers}</span>followers
+										<span className="mr-1">{followers}</span>
+										{followers > 1 ? "followers" : "follower"}
 									</p>
+								) : (
+									<></>
 								)}
 
 								{gameTags && gameTags.length > 0 && (
@@ -130,6 +135,12 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 						</div>
 						<div className="flex-none">
 							<div className="flex flex-col justify-center items-end space-y-3">
+								{location.pathname.includes("profile") && isLive && (
+									<Button color="primary" onClick={handleOnClick}>
+										Watch now
+									</Button>
+								)}
+
 								{!followStatus ? (
 									<Button
 										color="primary"

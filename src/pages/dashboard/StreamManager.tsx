@@ -318,43 +318,48 @@ const StreamManager = () => {
 					</div>
 
 					<div className="container">
-						{channelData && (
-							<div className="mt-4 rounded-md flex flex-col md:flex-row gap-6 w-full">
-								<div className="w-full lg:w-[200px]">
-									<img
-										src={channelData?.s3categoryImage}
-										alt="Category Image"
-										className="w-[150px] h-[100px] md:h-[150px] object-cover border border-black"
-										loading="lazy"
-									/>
-								</div>
-								<div className="w-full flex lg:flex-row items center justify-between">
-									<div className="mt-2">{channelData?.title}</div>
+						{channelData &&
+							channelData?.title &&
+							channelData?.categoryID &&
+							channelData?.tags?.length > 0 && (
+								<div className="mt-4 rounded-md flex flex-col md:flex-row gap-6 w-full">
+									<div className="w-full lg:w-[200px]">
+										<img
+											src={channelData?.s3categoryImage}
+											alt="Category Image"
+											className="w-[150px] h-[100px] md:h-[150px] object-cover border border-black"
+											loading="lazy"
+										/>
+									</div>
+									<div className="w-full flex lg:flex-row items center justify-between">
+										<div className="mt-2">{channelData?.title}</div>
 
-									<div>
-										<Button
-											color={isStartLive ? "danger" : "primary"}
-											disabled={loading}
-											onClick={handleLive}
-										>
-											{isStartLive
-												? t("pages.end_live")
-												: t("pages.start_live")}
-										</Button>
+										<div>
+											<Button
+												color={isStartLive ? "danger" : "primary"}
+												disabled={loading}
+												onClick={handleLive}
+											>
+												{isStartLive
+													? t("pages.end_live")
+													: t("pages.start_live")}
+											</Button>
+										</div>
 									</div>
 								</div>
+							)}
+
+						{channelData && (
+							<div className="mt-3">
+								<Button
+									color="primary"
+									size="lg"
+									onClick={handleStreamInfo}
+								>
+									<MdOutlineEdit className="text-xl" />
+								</Button>
 							</div>
 						)}
-
-						<div className="mt-3">
-							<Button
-								color="primary"
-								size="lg"
-								onClick={handleStreamInfo}
-							>
-								<MdOutlineEdit className="text-xl" />
-							</Button>
-						</div>
 					</div>
 				</div>
 			</div>

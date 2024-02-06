@@ -122,7 +122,7 @@ const SearchByLive: React.FC = () => {
 								<p className="text-sm mt-1">
 									{data?.followers[0]?.follower} Followers
 								</p>
-								<div className="mt-3 flex gap-1">
+								<div className="mt-3 flex gap-1 flex-wrap">
 									{data?.tags?.map((i, index) => {
 										return (
 											<Tag

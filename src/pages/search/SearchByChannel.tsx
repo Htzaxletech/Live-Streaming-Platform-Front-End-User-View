@@ -94,7 +94,7 @@ const SearchByChannel: React.FC = () => {
 								<div className="rounded-full overflow-hidden border">
 									<div className="relative bg-transparent max-h-full w-32 h-32">
 										<img
-											className="block rounded-full w-full"
+											className="block rounded-full h-full w-full"
 											alt="pubhaxyisv"
 											src={data?.s3channel || angela}
 										/>
@@ -110,7 +110,7 @@ const SearchByChannel: React.FC = () => {
 								<p className="text-sm mt-1">
 									{data?.followers[0]?.follower} Followers
 								</p>
-								<div className="mt-3 flex gap-1">
+								<div className="mt-3 flex gap-1 flex-wrap">
 									{data?.tags?.map((i: any, index: number) => {
 										return (
 											<Tag key={index} to={""}>

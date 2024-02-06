@@ -110,6 +110,7 @@ const Channel: React.FC = () => {
 				s3channelprofile,
 				s3channelbanner,
 			} = response.data[0];
+
 			const initForm = {
 				selectedImageUrl: s3channelprofile,
 				selectedBannerUrl: s3channelbanner,
@@ -118,6 +119,7 @@ const Channel: React.FC = () => {
 				bio,
 			};
 			setProfileSettings(initForm);
+			store.set("profile", s3channelprofile);
 		} else {
 			toast.error(response?.message);
 		}

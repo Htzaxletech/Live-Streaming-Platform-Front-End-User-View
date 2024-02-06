@@ -71,7 +71,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 	} = card();
 
 	const handleOnClick = () => {
-		console.log("data", data);
 		navigate(`/${convertToLowerCase(data?.channelName)}`, {
 			state: {
 				liveStreamData: data,
