@@ -46,6 +46,28 @@
 		"ant": "Add new tag",
 		"sm": "Send a message"
 	},
+	"validations": {
+		"capital": {
+			"true": "Contains at least one capital letter",
+			"false": "Must contain at least one capital letter"
+		},
+		"small": {
+			"true": "Contains at least one small letter",
+			"false": "Must contain at least one small letter"
+		},
+		"special": {
+			"true": "Contains at least one special character",
+			"false": "Must contain at least one special character"
+		},
+		"number": {
+			"true": "Contains at least one number",
+			"false": "Must contain at least one number"
+		},
+		"length": {
+			"true": "Is at least 8 characters long",
+			"false": "Must be at least 8 characters long"
+		}
+	},
 	"pages": {
 		"overview": "Overview",
 		"live": "Live",

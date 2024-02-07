@@ -95,10 +95,12 @@ const About = ({ channelData }) => {
 					<span className="font-semibold mr-1">
 						{channelData?.followers?.[0]?.follower}
 					</span>
-					followers
+					{channelData?.followers?.[0]?.follower > 1
+						? "followers"
+						: "follower"}
 				</p>
 				<p className="hidden md:flex text-foreground-secondary mb-3">
-					{channelData?.description}
+					{channelData?.bio}
 				</p>
 
 				{socialData?.length > 0 && (
