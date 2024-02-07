@@ -17,7 +17,7 @@ const UserProfile: React.FC = () => {
 
 	const img =
 		store.get("profile") ||
-		store.get("userData")?.image ||
+		store.get("channelImage") ||
 		"https://static.vecteezy.com/system/resources/previews/015/409/989/non_2x/elegant-man-in-business-suit-with-badge-man-business-avatar-profile-picture-illustration-isolated-vector.jpg";
 
 	return (
