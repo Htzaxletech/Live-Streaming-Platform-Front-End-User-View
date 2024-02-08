@@ -32,7 +32,6 @@ const Channel: React.FC = () => {
 	const { t } = useTranslation();
 	const profileRef = useRef<HTMLInputElement>(null);
 	const bannerRef = useRef<HTMLInputElement>(null);
-	const [channelData, setChannelData] = useState({});
 
 	const [loading, setLoading] = useState<boolean>(false);
 
@@ -64,32 +63,7 @@ const Channel: React.FC = () => {
 		const signal = abortController.signal;
 
 		(async () => {
-			try {
-				const reqData = {
-					userID: store.get("id"),
-				};
-
-				const { success, message, data } = await makeRequest(
-					"get",
-					endpoints.profileData,
-					reqData,
-					{
-						signal,
-					}
-				);
-
-				if (success) {
-					const { channelID } = data[0];
-					setChannelData(data[0]);
-
-					await getProfile(channelID);
-				} else {
-					toast.error(message);
-				}
-				setLoading(false);
-			} catch (error) {
-				setLoading(false);
-			}
+			await getProfile(signal)
 		})();
 
 		return () => {
@@ -97,13 +71,15 @@ const Channel: React.FC = () => {
 		};
 	}, []);
 
-	const getProfile = async (channelID: number) => {
+	const getProfile = async (signal: any) => {
 		const reqData = {
 			userID: store.get("id"),
-			channelID,
+			channelID: store.get("channelData").ID,
 		};
 
-		const response = await makeRequest("get", endpoints.getProfile, reqData);
+		const response = await makeRequest("get", endpoints.getProfile, reqData, {
+			signal,
+		});
 
 		if (response?.success) {
 			const {
@@ -119,7 +95,7 @@ const Channel: React.FC = () => {
 				selectedBannerUrl: s3channelbanner || banner,
 				userName: username,
 				displayName,
-				bio,
+				bio: bio || "",
 			};
 			setProfileSettings(initForm);
 			store.set("profile", s3channelprofile);
@@ -218,7 +194,7 @@ const Channel: React.FC = () => {
 
 			if (success) {
 				toast.success(message);
-				await getProfile(channelData?.channelID);
+				await getProfile(null);
 				// setProfileSettings(initialForm);
 			} else {
 				toast.error(message);
@@ -301,6 +277,7 @@ const Channel: React.FC = () => {
 							</Label.Root>
 							<div className="w-full">
 								<Input
+									required
 									id="userName"
 									className="flex-shrink w-full"
 									placeholder="johndoe23"
@@ -319,6 +296,7 @@ const Channel: React.FC = () => {
 							</Label.Root>
 							<div className="w-full">
 								<Input
+									required
 									id="displayName"
 									className="flex-shrink w-full"
 									placeholder="John Doe"
@@ -355,7 +333,7 @@ const Channel: React.FC = () => {
 					</form>
 				</div>
 			</div>
-			<SocialLink channelID={channelData?.channelID} />
+			<SocialLink channelID={store.get("channelData").ID} />
 		</div>
 	);
 };

@@ -29,7 +29,6 @@ const SignUp: React.FC = () => {
 	const [validations, setValidations] = useState({
 		capital: false,
 		small: false,
-		specialCharacter: false,
 		number: false,
 		length: false,
 	});
@@ -78,20 +77,17 @@ const SignUp: React.FC = () => {
 	const validatePassword = (value: string) => {
 		const capitalRegex = /[A-Z]/;
 		const smallRegex = /[a-z]/;
-		const specialCharRegex = /[^A-Za-z0-9]/;
 		const numberRegex = /[0-9]/;
 
 		const isValid =
 			capitalRegex.test(value) &&
 			smallRegex.test(value) &&
-			specialCharRegex.test(value) &&
 			numberRegex.test(value) &&
 			value.length >= 8;
 
 		setValidations({
 			capital: capitalRegex.test(value),
 			small: smallRegex.test(value),
-			specialCharacter: specialCharRegex.test(value),
 			number: numberRegex.test(value),
 			length: value.length >= 8,
 		});
@@ -161,12 +157,6 @@ const SignUp: React.FC = () => {
 										{validations.small
 											? t("validations.small.true")
 											: t("validations.small.false")}
-									</li>
-									<li>
-										{validations.specialCharacter ? "✅" : "❌"}
-										{validations.specialCharacter
-											? t("validations.special.true")
-											: t("validations.special.false")}
 									</li>
 									<li>
 										{validations.number ? "✅" : "❌"}

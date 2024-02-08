@@ -107,7 +107,7 @@ const ProfilePage: React.FC = () => {
 				</div>
 			</div> */}
 
-			<div className="w-full h-[250px] md:h-[400px] border relative">
+			<div className="w-full h-[250px] md:h-[400px] relative">
 				<div
 					className="w-full h-full bg-cover bg-no-repeat"
 					style={{

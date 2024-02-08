@@ -52,6 +52,8 @@ const TwoFactor: React.FC = () => {
 				store.remove("firstTime");
 				store.remove("password");
 				store.remove("email");
+				store.remove("qrCode");
+				store.remove("secretCode");
 
 				dispatch(login(response?.accessToken));
 				dispatch(setOpenTwoFactor(false));

@@ -110,12 +110,12 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 
 								{gameTags && gameTags.length > 0 && (
 									<div className="flex justify-start items-center">
-										<div className="hidden md:flex space-x-2 ">
+										<div className="hidden md:flex gap-2 flex-wrap ">
 											{gameTags &&
 												gameTags.length > 0 &&
 												gameTags.map((tag, index) => (
 													<Tag
-														key={index}
+														key={tag.tagName+index}
 														to={"/directory"}
 														state={{
 															directory: {
