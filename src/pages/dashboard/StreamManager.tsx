@@ -75,10 +75,10 @@ const StreamManager = () => {
 
 	useEffect(() => {
 		socket.on("added_live_emitter", (value) => {
-			console.log("streamManager", value);
 			setStreamKey(value?.streamKey);
 			if (value) {
 				setChannelData(value);
+				setIsStartLive(value.live_status);
 			}
 		});
 
