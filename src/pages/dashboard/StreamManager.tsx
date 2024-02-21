@@ -75,10 +75,10 @@ const StreamManager = () => {
 
 	useEffect(() => {
 		socket.on("added_live_emitter", (value) => {
-			console.log("streamManager", value);
 			setStreamKey(value?.streamKey);
 			if (value) {
 				setChannelData(value);
+				setIsStartLive(value.live_status);
 			}
 		});
 
@@ -323,7 +323,10 @@ const StreamManager = () => {
 								autoplay
 								muted
 								className="h-full rounded-none"
-								onHlsError={() => setStreamKey("")}
+								onHlsError={() => {
+									setStreamKey("");
+									setChannelData({});
+								}}
 								streamType="ll-live"
 								load="eager"
 								aspectRatio="16/9"
