@@ -9,7 +9,7 @@ interface ProfileDescriptionProps {
 	streamerName: string;
 	followerCount: string;
 	description: string;
-	socialLinks: []
+	socialLinks?: []
 }
 
 const ProfileDescription: React.FC<ProfileDescriptionProps> = ({
