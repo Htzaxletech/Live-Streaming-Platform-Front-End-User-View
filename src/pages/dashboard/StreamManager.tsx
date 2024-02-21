@@ -31,6 +31,8 @@ import { useTranslation } from "react-i18next";
 import { socket } from "@socket/index";
 import { HiOutlineStatusOffline } from "react-icons/hi";
 import Offline from "@components/shared/Offline";
+import axios from "axios";
+import ReactPlayer from "react-player";
 
 // const Button = lazy(() => import("@components/ui/Button"));
 // const Modal = lazy(() => import("@pages/authentication/Modal"));
@@ -72,6 +74,14 @@ const StreamManager = () => {
 	});
 
 	useEffect(() => {
+		socket.on("added_live_emitter", (value) => {
+			console.log("streamManager", value);
+			setStreamKey(value?.streamKey);
+			if (value) {
+				setChannelData(value);
+			}
+		});
+
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
@@ -100,7 +110,7 @@ const StreamManager = () => {
 				if (responses !== null) {
 					const tags = responses[0];
 					const category = responses[1];
-					const channel = responses[2];
+					// const channel = responses[2];
 
 					if (tags?.success) {
 						const data = tags?.data;
@@ -146,38 +156,38 @@ const StreamManager = () => {
 			}
 		})();
 
-		fetchData();
+		// fetchData();
 
-		const interval = setInterval(fetchData, 10000);
+		// const interval = setInterval(fetchData, 15000);
 
 		return () => {
-			clearInterval(interval); // Clear interval when the component unmounts
+			// clearInterval(interval); // Clear interval when the component unmounts
 			abortController.abort();
 		};
 	}, []);
 
-	const fetchData = async () => {
-		try {
-			const data = {
-				userID: store.get("id"),
-			};
+	// const fetchData = async () => {
+	// 	try {
+	// 		const data = {
+	// 			userID: store.get("id"),
+	// 		};
 
-			const response = await makeRequest("get", ep.liveByUserID, data);
+	// 		const response = await makeRequest("get", ep.liveByUserID, data);
 
-			if (response?.success) {
-				const data = response?.data[0];
+	// 		if (response?.success) {
+	// 			const data = response?.data[0];
 
-				setChannelData(data);
-				setStreamKey(data?.streamKey);
-				setIsStartLive(data.live_status);
-			} else {
-				toast.error(response?.message);
-			}
-			setLoading(false);
-		} catch (error) {
-			setLoading(false);
-		}
-	};
+	// 			setChannelData(data);
+	// 			setStreamKey(data?.streamKey);
+	// 			setIsStartLive(data.live_status);
+	// 		} else {
+	// 			toast.error(response?.message);
+	// 		}
+	// 		setLoading(false);
+	// 	} catch (error) {
+	// 		setLoading(false);
+	// 	}
+	// };
 
 	const onAdd = useCallback(
 		(newTag: Tag) => {
@@ -272,8 +282,7 @@ const StreamManager = () => {
 		try {
 			const data = {
 				isStart: isStartLive ? 0 : 1,
-				streamKey:
-					channelData?.streamKey || state?.liveStreamData?.streamKey,
+				streamKey: store.get("channelData")?.streamKey,
 			};
 
 			const response = await makeRequest("post", ep.startLive, data);
@@ -295,17 +304,29 @@ const StreamManager = () => {
 			<div className="flex-1 flex flex-col pt-4">
 				<div className={`${isChatOpen ? "md:mr-72 lg:mr-80" : "mr-0"}`}>
 					<div className="h-50 xl:h-[550px] flex justify-center">
-						{/* {state?.liveStreamData?.streamKey ||
-							(channelData?.streamKey && ( */}
-						{channelData?.streamKey ? (
+						{/* <ReactPlayer
+							url={generateStreamUrl(streamKey)}
+							controls
+							playing={streamKey ? true : false}
+							config={{
+								file: {
+									hlsOptions: {
+										lowLatencyMode: true,
+										backBufferLength: 0,
+									},
+								},
+							}}
+						/> */}
+						{streamKey ? (
 							<MediaPlayer
-								// src={generateStreamUrl(
-								// 	state?.liveStreamData?.streamKey ||
-								// 		channelData?.streamKey
-								// )}
-								src={generateStreamUrl(channelData?.streamKey)}
+								src={generateStreamUrl(streamKey)}
 								autoplay
+								muted
 								className="h-full rounded-none"
+								onHlsError={() => setStreamKey("")}
+								streamType="ll-live"
+								load="eager"
+								aspectRatio="16/9"
 							>
 								<MediaProvider></MediaProvider>
 								<DefaultAudioLayout icons={defaultLayoutIcons} />
@@ -314,7 +335,6 @@ const StreamManager = () => {
 						) : (
 							<Offline />
 						)}
-						{/* ))} */}
 					</div>
 
 					<div className="container">
@@ -349,23 +369,21 @@ const StreamManager = () => {
 								</div>
 							)}
 
-						{channelData && (
-							<div className="mt-3">
-								<Button
-									color="primary"
-									size="lg"
-									onClick={handleStreamInfo}
-								>
-									<MdOutlineEdit className="text-xl" />
-								</Button>
-							</div>
-						)}
+						<div className="mt-3">
+							<Button
+								color="primary"
+								size="lg"
+								onClick={handleStreamInfo}
+							>
+								<MdOutlineEdit className="text-xl" />
+							</Button>
+						</div>
 					</div>
 				</div>
 			</div>
 
 			<StreamChatBox
-				streamKey={channelData?.streamKey}
+				streamKey={store.get("channelData")?.streamKey}
 				liveID={channelData?.liveID}
 				liveStatus={channelData?.live_status}
 				setViewCount={setViewCount}

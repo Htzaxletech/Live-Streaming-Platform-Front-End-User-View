@@ -174,6 +174,7 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 						<MediaPlayer
 							src={video || ""}
 							autoplay
+							muted
 							className="flex h-full rounded-none"
 						>
 							<MediaProvider>

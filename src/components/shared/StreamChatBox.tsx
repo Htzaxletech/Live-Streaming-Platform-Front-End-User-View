@@ -82,46 +82,54 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
-		if (liveId){
+		console.log("hello");
+		if (liveId) {
+			console.log("liveId");
+
 			(async () => {
 				await getChatList(signal);
 			})();
 		}
 
-		if (streamID && liveId && liveFlag) {
-			socket.disconnect();
-			socket.connect();
+		socket.disconnect();
+		socket.connect();
 
-			socket.on("connect", onConnect);
-			socket.on("disconnect", onDisconnect);
-			socket.on("chat_list_message", onMessageEvent);
-			socket.on("add_user_count", onViewCountEvent);
-			socket.on("reduce_user_count", onViewCountEvent);
-		}
+		socket.on("connect", onConnect);
+		socket.on("disconnect", onDisconnect);
+		socket.on("chat_list_message", onMessageEvent);
+		socket.on("add_user_count", onViewCountEvent);
+		socket.on("reduce_user_count", onViewCountEvent);
 
 		return () => {
-			socket.emit("reduce_user_count", { channelID: channelId });
-			socket.emit(
-				"livestream_disconnect",
-				{
-					userID,
-					streamKey: streamID,
-				},
-				() => {
-					console.log("livestream_disconnect");
-				}
-			);
+			if (channelId) {
+				socket.emit("reduce_user_count", { channelID: channelId });
+			}
 
-			socket.emit(
-				"chat_disconnect",
-				{
-					userID,
-					liveID: liveId,
-				},
-				() => {
-					console.log("chat_disconnect");
-				}
-			);
+			if (streamID) {
+				socket.emit(
+					"livestream_disconnect",
+					{
+						userID,
+						streamKey: streamID,
+					},
+					() => {
+						console.log("livestream_disconnect");
+					}
+				);
+			}
+
+			if (liveId) {
+				socket.emit(
+					"chat_disconnect",
+					{
+						userID,
+						liveID: liveId,
+					},
+					() => {
+						console.log("chat_disconnect");
+					}
+				);
+			}
 
 			store.set("isConnectedUserCount", false);
 			socket.off("add_user_count", onViewCountEvent);
@@ -145,7 +153,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 				{ signal }
 			);
 
-			if(response?.success){
+			if (response?.success) {
 				setChatMessages(response?.data);
 			}
 
@@ -156,63 +164,73 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	};
 
 	const onConnect = () => {
-		socket.timeout(3000).emit(
-			"livestream_connect",
-			{
-				userID,
-				streamKey: streamID,
-			},
-			() => {
-				console.log("livestream_connect");
-			}
-		);
+		if (streamID) {
+			socket.timeout(3000).emit(
+				"livestream_connect",
+				{
+					userID,
+					streamKey: streamID,
+				},
+				() => {
+					console.log("livestream_connect");
+				}
+			);
+		}
 
-		socket.timeout(3000).emit(
-			"chat_connect",
-			{
-				userID,
-				liveID: liveId,
-			},
-			() => {
-				console.log("chat_connect");
-			}
-		);
+		if (liveId) {
+			socket.timeout(3000).emit(
+				"chat_connect",
+				{
+					userID,
+					liveID: liveId,
+				},
+				() => {
+					console.log("chat_connect");
+				}
+			);
+		}
 
 		if (!store.get("isConnectedUserCount")) {
 			store.set("isConnectedUserCount", true);
 
-			socket
-				.timeout(3000)
-				.emit("add_user_count", { channelID: channelId }, () => {
-					console.log("add_user_count");
-				});
+			if (channelId) {
+				socket
+					.timeout(3000)
+					.emit("add_user_count", { channelID: channelId }, () => {
+						console.log("add_user_count");
+					});
+			}
 		} else {
 			console.log("already connected add_user_count");
 		}
 	};
 
 	const onDisconnect = () => {
-		socket.emit(
-			"livestream_disconnect",
-			{
-				userID,
-				streamKey: streamID,
-			},
-			() => {
-				console.log("livestream_disconnect");
-			}
-		);
+		if (streamID) {
+			socket.emit(
+				"livestream_disconnect",
+				{
+					userID,
+					streamKey: streamID,
+				},
+				() => {
+					console.log("livestream_disconnect");
+				}
+			);
+		}
 
-		socket.emit(
-			"chat_disconnect",
-			{
-				userID,
-				liveID: liveId,
-			},
-			() => {
-				console.log("chat_disconnect");
-			}
-		);
+		if (liveId) {
+			socket.emit(
+				"chat_disconnect",
+				{
+					userID,
+					liveID: liveId,
+				},
+				() => {
+					console.log("chat_disconnect");
+				}
+			);
+		}
 	};
 
 	const onViewCountEvent = (value: any) => {
@@ -250,7 +268,9 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	const chatContent = (_, chat: any) => (
 		<div className="text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 px-2 py-1">
 			<span className="mr-1">{formatHourAndMinute(chat?.send_time)}</span>
-			<span className="mr-2" style={{ color: chat?.colorcode }}>{chat?.username}</span>
+			<span className="mr-2" style={{ color: chat?.colorcode }}>
+				{chat?.username}
+			</span>
 			<span className="leading-normal">{chat?.message}</span>
 		</div>
 	);

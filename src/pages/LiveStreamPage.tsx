@@ -185,6 +185,7 @@ const LiveStreamPage = () => {
 							<MediaPlayer
 								src={generateStreamUrl(channelData?.streamKey)}
 								autoplay
+								muted
 								className="rounded-none"
 							>
 								<MediaProvider></MediaProvider>

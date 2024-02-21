@@ -1,9 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// @ts-nocheck
+// /* eslint-disable @typescript-eslint/no-unused-vars */
+// /* eslint-disable @typescript-eslint/ban-ts-comment */
+// /* eslint-disable @typescript-eslint/no-explicit-any */
+// // @ts-nocheck
 import { GoPerson } from "react-icons/go";
-
+import { MediaPlayer, MediaProvider } from "@vidstack/react";
+import {
+	DefaultAudioLayout,
+	defaultLayoutIcons,
+	DefaultVideoLayout,
+} from "@vidstack/react/player/layouts/default";
+import "@vidstack/react/player/styles/default/theme.css";
+import "@vidstack/react/player/styles/default/layouts/video.css";
 import Button from "@components/ui/Button";
 import { CategoryLink } from "@components/ui/CategoryLink";
 import Tag from "@components/ui/Tag";
@@ -320,6 +327,21 @@ const TestingComponents = () => {
 
 	return (
 		<div className="py-10 pb-16 px-4">
+			<div className="h-50 xl:h-[550px] flex justify-center">
+				<MediaPlayer
+					src="https://www.youtube.com/watch?v=OC_CGzomLoY"
+					autoplay
+					muted
+					className="h-full w-full rounded-none"
+					streamType="live"
+					title="Hello"
+				>
+					<MediaProvider></MediaProvider>
+					<DefaultAudioLayout icons={defaultLayoutIcons} />
+					<DefaultVideoLayout icons={defaultLayoutIcons} />
+				</MediaPlayer>
+			</div>
+
 			<div className="flex items-start gap-12">
 				<table>
 					<caption className="my-1 font-semibold text-left">
