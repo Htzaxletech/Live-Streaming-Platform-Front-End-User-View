@@ -323,7 +323,10 @@ const StreamManager = () => {
 								autoplay
 								muted
 								className="h-full rounded-none"
-								onHlsError={() => setStreamKey("")}
+								onHlsError={() => {
+									setStreamKey("");
+									setChannelData({});
+								}}
 								streamType="ll-live"
 								load="eager"
 								aspectRatio="16/9"
