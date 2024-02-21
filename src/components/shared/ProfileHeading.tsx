@@ -25,6 +25,7 @@ interface ProfileHeadingProps {
 	isLive?: boolean;
 	followers?: number;
 	channelID?: number;
+	handleOnClick?: any;
 }
 
 const ProfileHeading: React.FC<ProfileHeadingProps> = ({
@@ -40,6 +41,7 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 	isLive,
 	followers,
 	channelID,
+	handleOnClick,
 }) => {
 	const [isHoveredFollow, setIsHoveredFollow] = useState(false);
 	const [isHoveredUnfollow, setIsHoveredUnFollow] = useState(false);
@@ -97,20 +99,23 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 										{streamTitle}
 									</p>
 								)}
-								{followers && (
+								{followers ? (
 									<p className="hidden md:flex text-foreground-secondary mb-2">
-										<span className="mr-1">{followers}</span>followers
+										<span className="mr-1">{followers}</span>
+										{followers > 1 ? "followers" : "follower"}
 									</p>
+								) : (
+									<></>
 								)}
 
 								{gameTags && gameTags.length > 0 && (
 									<div className="flex justify-start items-center">
-										<div className="hidden md:flex space-x-2 ">
+										<div className="hidden md:flex gap-2 flex-wrap ">
 											{gameTags &&
 												gameTags.length > 0 &&
 												gameTags.map((tag, index) => (
 													<Tag
-														key={index}
+														key={tag.tagName+index}
 														to={"/directory"}
 														state={{
 															directory: {
@@ -130,6 +135,12 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 						</div>
 						<div className="flex-none">
 							<div className="flex flex-col justify-center items-end space-y-3">
+								{location.pathname.includes("profile") && isLive && (
+									<Button color="primary" onClick={handleOnClick}>
+										Watch now
+									</Button>
+								)}
+
 								{!followStatus ? (
 									<Button
 										color="primary"
@@ -168,7 +179,7 @@ const ProfileHeading: React.FC<ProfileHeadingProps> = ({
 									</a>
 								)}
 
-								{isLive && (
+								{isLive && !location.pathname.includes("profile") && (
 									<div className="hidden md:flex justify-end items-center">
 										<div className="flex justify-start items-center font-bold me-3">
 											<Icon

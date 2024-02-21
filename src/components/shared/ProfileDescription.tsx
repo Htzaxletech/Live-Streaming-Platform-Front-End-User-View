@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import Heading from "@components/ui/Heading";
-import { FaCheck, FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa6";
+import { CiLink } from "react-icons/ci";
+import { FaCheck, FaDiscord, FaFacebook, FaInstagram, FaPinterest, FaSkype, FaTelegram, FaTiktok, FaTwitch, FaTwitter, FaYoutube } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
 interface ProfileDescriptionProps {
 	streamerName: string;
 	followerCount: string;
 	description: string;
-	socialLinks: { [platform: string]: string };
+	socialLinks: []
 }
 
 const ProfileDescription: React.FC<ProfileDescriptionProps> = ({
@@ -15,31 +18,34 @@ const ProfileDescription: React.FC<ProfileDescriptionProps> = ({
 	description,
 	socialLinks,
 }) => {
-	const getIcon = (platform: string) => {
-		switch (platform) {
-			case "youtube":
-				return (
-					<div className="flex justify-center items-center text-foreground-secondary text-sm">
-						<FaYoutube className="text-lg me-2" /> Youtube Channel{" "}
-					</div>
-				);
-			case "facebook":
-				return (
-					<div className="flex justify-center items-center text-foreground-secondary text-sm">
-						<FaFacebook className="text-lg me-2" /> Facebook{" "}
-					</div>
-				);
-			case "instagram":
-				return (
-					<div className="flex justify-center items-center text-foreground-secondary text-sm">
-						<FaInstagram className="text-lg me-2" /> Instagram{" "}
-					</div>
-				);
+	const iconMapping: { [key: string]: React.ElementType } = {
+		facebook: FaFacebook,
+		skype: FaSkype,
+		twitch: FaTwitch,
+		instagram: FaInstagram,
+		youtube: FaYoutube,
+		pinterest: FaPinterest,
+		tiktok: FaTiktok,
+		telegram: FaTelegram,
+		discord: FaDiscord,
+		twitter: FaTwitter,
+	};
 
-			default:
-				return null;
+	const getIconForUrl = (url: string) => {
+		try {
+			const domain = new URL(url).hostname;
+			const matchedDomain = Object.keys(iconMapping).find((key) =>
+				domain.includes(key)
+			);
+			const IconComponent = matchedDomain
+				? iconMapping[matchedDomain]
+				: CiLink;
+			return <IconComponent className="me-2" size={19} />;
+		} catch (error) {
+			return <CiLink className="me-2" />;
 		}
 	};
+	
 	return (
 		<div className="container bg-background-float">
 			<div className="flex flex-col p-5 pb-3 lg:p-10 lg:pb-8">
@@ -55,28 +61,33 @@ const ProfileDescription: React.FC<ProfileDescriptionProps> = ({
 					<div>
 						<b className="mr-1">{followerCount}</b>
 						<span className="text-foreground-secondary font-light">
-							followers
+							{followerCount > 1 ? "followers" : "follower"}
 						</span>
 					</div>
 					<p className="text-foreground-secondary font-light">
 						{description}
 					</p>
 				</div>
-				<hr className="opacity-25 mt-5 mb-3"></hr>
+				<div className="mt-5 mb-3 bg-background-base border-b-2"></div>
 				<div>
-					<ul className="flex flex-wrap">
-						{Object.entries(socialLinks).map(([platform, url], index) => (
-							<li key={index} className="flex items-center me-1 lg:me-4">
-								<Link
-									to={url}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="p-2 hover:bg-background-base rounded"
-								>
-									{getIcon(platform)}
-								</Link>
-							</li>
-						))}
+					<ul className="flex flex-wrap gap-3">
+						{socialLinks.length > 0 &&
+							socialLinks.map((i, index) => {
+								return (
+									<li key={index} className="flex items-center">
+										<Link
+											to={i.links}
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											<div className="flex justify-center items-center text-foreground-secondary text-sm py-2">
+												{getIconForUrl(i.links)}
+												{i.title}
+											</div>
+										</Link>
+									</li>
+								);
+							})}
 					</ul>
 				</div>
 			</div>

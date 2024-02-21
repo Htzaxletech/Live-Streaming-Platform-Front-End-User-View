@@ -7,7 +7,7 @@ import Input from "@components/ui/Input";
 import Button from "@components/ui/Button";
 import AuthHeader from "./AuthHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenOTP } from "@store/slices/modalSlice";
+import { setOpenOTP, setOpenSignUp } from "@store/slices/modalSlice";
 import { RootState } from "@store/index";
 import { handleRequestError, makeRequest } from "@services/utils";
 import { endpoints as ep } from "@services/endpoints";
@@ -15,6 +15,7 @@ import store from "store2";
 // import ErrorMessage from "@components/shared/ErrorMessage";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { FaArrowLeft } from "react-icons/fa";
 
 const OneTimePwd: React.FC = () => {
 	const { t } = useTranslation();
@@ -48,6 +49,7 @@ const OneTimePwd: React.FC = () => {
 				store.remove("password");
 				store.remove("email");
 				
+				toast.success(registerResp?.message);
 				dispatch(setOpenOTP(false));
 			} else {
 				toast.error(registerResp?.errors[0])
@@ -62,6 +64,11 @@ const OneTimePwd: React.FC = () => {
 
 	const handleOnClose = () => {
 		dispatch(setOpenOTP(false));
+	};
+
+	const handleBack = () => {
+		dispatch(setOpenOTP(false));
+		dispatch(setOpenSignUp(true));
 	};
 
 	const handleOtpResend = async () => {
@@ -88,6 +95,9 @@ const OneTimePwd: React.FC = () => {
 		<div>
 			<Modal isOpen={isOpenOTP} onClose={handleOnClose}>
 				<div>
+					<Button color="default" onClick={handleBack}>
+						<FaArrowLeft />
+					</Button>
 					<AuthHeader
 						title={t("auth.signup_title", { heading: t("auth.heading") })}
 					/>

@@ -71,7 +71,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 	} = card();
 
 	const handleOnClick = () => {
-		console.log("data", data);
 		navigate(`/${convertToLowerCase(data?.channelName)}`, {
 			state: {
 				liveStreamData: data,
@@ -98,7 +97,10 @@ const VideoCard: React.FC<VideoCardProps> = ({ data }) => {
 					{data?.live_status === 1 && (
 						<>
 							<div className={live()}>{t("pages.live")}</div>
-							<div className={view()}>{data?.viewCount} views</div>
+							<div className={view()}>
+								{data?.viewCount}&nbsp;
+								{data?.viewCount > 1 ? "views" : "view"}
+							</div>
 						</>
 					)}
 					{data?.live_status === 0 && (

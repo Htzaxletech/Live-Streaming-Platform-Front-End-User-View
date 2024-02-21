@@ -174,6 +174,7 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 						<MediaPlayer
 							src={video || ""}
 							autoplay
+							muted
 							className="flex h-full rounded-none"
 						>
 							<MediaProvider>
@@ -186,8 +187,8 @@ const Slide = React.memo(function (props: StackedCarouselSlideProps) {
 									alt="thumbnail"
 								/>
 							</MediaProvider>
-							<DefaultAudioLayout icons={defaultLayoutIcons} />
-							<DefaultVideoLayout icons={defaultLayoutIcons} />
+							<DefaultAudioLayout icons={defaultLayoutIcons} smallLayoutWhen={false} />
+							<DefaultVideoLayout icons={defaultLayoutIcons} smallLayoutWhen={false} />
 						</MediaPlayer>
 					</div>
 					<div className="description hidden md:flex">

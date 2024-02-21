@@ -19,6 +19,11 @@ import { useLocation } from "react-router-dom";
 import { Virtuoso } from "react-virtuoso";
 import { FaArrowDown } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
+import { MdOutlineTagFaces } from "react-icons/md";
+import { makeRequest } from "@services/utils";
+import { toast } from "react-toastify";
+import { endpoints } from "@services/endpoints";
+import { formatHourAndMinute } from "@utils/helpers";
 
 interface StreamChatBoxProps {
 	liveID?: any; // Replace 'any' with a more specific type if possible
@@ -74,19 +79,134 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	const channelId = channelID || state?.liveStreamData?.channelID;
 
 	useEffect(() => {
-		if (streamID && liveId && liveFlag) {
-			socket.disconnect();
-			socket.connect();
+		const abortController = new AbortController();
+		const signal = abortController.signal;
 
-			socket.on("connect", onConnect);
-			socket.on("disconnect", onDisconnect);
-			socket.on("chat_list_message", onMessageEvent);
-			socket.on("add_user_count", onViewCountEvent);
-			socket.on("reduce_user_count", onViewCountEvent);
+		console.log("hello");
+		if (liveId) {
+			console.log("liveId");
+
+			(async () => {
+				await getChatList(signal);
+			})();
 		}
 
+		socket.disconnect();
+		socket.connect();
+
+		socket.on("connect", onConnect);
+		socket.on("disconnect", onDisconnect);
+		socket.on("chat_list_message", onMessageEvent);
+		socket.on("add_user_count", onViewCountEvent);
+		socket.on("reduce_user_count", onViewCountEvent);
+
 		return () => {
-			socket.emit("reduce_user_count", { channelID: channelId });
+			if (channelId) {
+				socket.emit("reduce_user_count", { channelID: channelId });
+			}
+
+			if (streamID) {
+				socket.emit(
+					"livestream_disconnect",
+					{
+						userID,
+						streamKey: streamID,
+					},
+					() => {
+						console.log("livestream_disconnect");
+					}
+				);
+			}
+
+			if (liveId) {
+				socket.emit(
+					"chat_disconnect",
+					{
+						userID,
+						liveID: liveId,
+					},
+					() => {
+						console.log("chat_disconnect");
+					}
+				);
+			}
+
+			store.set("isConnectedUserCount", false);
+			socket.off("add_user_count", onViewCountEvent);
+			socket.off("reduce_user_count", onViewCountEvent);
+			socket.off("connect", onConnect);
+			socket.off("disconnect", onDisconnect);
+			socket.off("chat_list_message", onMessageEvent);
+
+			abortController.abort();
+		};
+	}, [streamID, liveFlag]);
+
+	const getChatList = async (signal: AbortSignal) => {
+		try {
+			const response = await makeRequest(
+				"get",
+				endpoints.chatData,
+				{
+					liveID: liveId,
+				},
+				{ signal }
+			);
+
+			if (response?.success) {
+				setChatMessages(response?.data);
+			}
+
+			console.log("GGresponse", response);
+		} catch (error) {
+			toast.error(error);
+		}
+	};
+
+	const onConnect = () => {
+		if (streamID) {
+			socket.timeout(3000).emit(
+				"livestream_connect",
+				{
+					userID,
+					streamKey: streamID,
+				},
+				() => {
+					console.log("livestream_connect");
+				}
+			);
+		}
+
+		if (liveId) {
+			socket.timeout(3000).emit(
+				"chat_connect",
+				{
+					userID,
+					liveID: liveId,
+				},
+				() => {
+					console.log("chat_connect");
+				}
+			);
+		}
+
+		if (!store.get("isConnectedUserCount")) {
+			store.set("isConnectedUserCount", true);
+
+			if (channelId) {
+				socket
+					.timeout(3000)
+					.emit("add_user_count", { channelID: channelId }, () => {
+						console.log("add_user_count");
+					});
+			}
+		} else {
+			console.log("already connected add_user_count");
+		}
+	};
+
+	const onDisconnect = () => {
+		if (streamID) {
 			socket.emit(
 				"livestream_disconnect",
 				{
@@ -97,7 +217,9 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 					console.log("livestream_disconnect");
 				}
 			);
+		}
 
+		if (liveId) {
 			socket.emit(
 				"chat_disconnect",
 				{
@@ -108,74 +230,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 					console.log("chat_disconnect");
 				}
 			);
-
-			store.set("isConnectedUserCount", false);
-			socket.off("add_user_count", onViewCountEvent);
-			socket.off("reduce_user_count", onViewCountEvent);
-			socket.off("connect", onConnect);
-			socket.off("disconnect", onDisconnect);
-			socket.off("chat_list_message", onMessageEvent);
-		};
-	}, [streamID]);
-
-	const onConnect = () => {
-		socket.timeout(3000).emit(
-			"livestream_connect",
-			{
-				userID,
-				streamKey: streamID,
-			},
-			() => {
-				console.log("livestream_connect");
-			}
-		);
-
-		socket.timeout(3000).emit(
-			"chat_connect",
-			{
-				userID,
-				liveID: liveId,
-			},
-			() => {
-				console.log("chat_connect");
-			}
-		);
-
-		if (!store.get("isConnectedUserCount")) {
-			store.set("isConnectedUserCount", true);
-
-			socket
-				.timeout(3000)
-				.emit("add_user_count", { channelID: channelId }, () => {
-					console.log("add_user_count");
-				});
-		} else {
-			console.log("already connected add_user_count");
 		}
-	};
-
-	const onDisconnect = () => {
-		socket.emit(
-			"livestream_disconnect",
-			{
-				userID,
-				streamKey: streamID,
-			},
-			() => {
-				console.log("livestream_disconnect");
-			}
-		);
-
-		socket.emit(
-			"chat_disconnect",
-			{
-				userID,
-				liveID: liveId,
-			},
-			() => {
-				console.log("chat_disconnect");
-			}
-		);
 	};
 
 	const onViewCountEvent = (value: any) => {
@@ -183,6 +238,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	};
 
 	const onMessageEvent = (value: any) => {
+		console.log("value", value);
 		setChatMessages((previous) => [...previous, ...value]);
 	};
 
@@ -195,7 +251,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 
 		const message = inputRef.current.value;
 
-		if (message){
+		if (message) {
 			socket.emit(
 				"add_chat_message",
 				{ userID: store.get("id"), liveID: liveId, message },
@@ -205,16 +261,16 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 			);
 
 			inputRef.current.value = "";
+			scrollToBottom();
 		}
 	};
 
 	const chatContent = (_, chat: any) => (
 		<div className="text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 px-2 py-1">
-			{/* <span style={{ backgroundColor: getRandomColor() }}>
-				{chat?.userID}
-			</span> */}
-			<span style={{ color: "#234234D" }}>{chat?.username}</span>
-			<span>:&nbsp;</span>
+			<span className="mr-1">{formatHourAndMinute(chat?.send_time)}</span>
+			<span className="mr-2" style={{ color: chat?.colorcode }}>
+				{chat?.username}
+			</span>
 			<span className="leading-normal">{chat?.message}</span>
 		</div>
 	);
@@ -230,7 +286,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	return (
 		<>
 			<div
-				className={`invisible md:visible bg-background-base md:w-60 lg:w-72 overflow-y-auto h-full flex flex-col justify-between fixed top-0 right-0 transform ${
+				className={`invisible md:visible bg-background-base md:w-72 lg:w-80 overflow-y-auto h-full flex flex-col justify-between fixed top-0 right-0 transform ${
 					isChatOpen ? "translate-x-0" : "translate-x-full"
 				} ease-in-out z-20`}
 			>
@@ -272,31 +328,35 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 				</div>
 
 				{/* Chat Footer */}
-				<div className="pt-4 px-4 h-1/6">
-					<form onSubmit={handleSubmit}>
-						<Input
-							className="w-full"
-							placeholder={t("placeholder.sm")}
-							// value={message}
-							// onChange={handleInputChange}
-							ref={inputRef}
-							endContent={
-								<Button type="button" className="bg-transparent">
-									<img src="/src/assets/images/emote.svg" />
+				{liveStatus ? (
+					<div className="pt-4 px-4 h-1/6">
+						<form onSubmit={handleSubmit}>
+							<Input
+								className="w-full"
+								placeholder={t("placeholder.sm")}
+								// value={message}
+								// onChange={handleInputChange}
+								ref={inputRef}
+								endContent={
+									<Button type="button" className="bg-transparent">
+										<MdOutlineTagFaces className="text-xl" />
+									</Button>
+								}
+							/>
+							<div className="flex justify-end mt-3">
+								<Button
+									color="primary"
+									className="text-white"
+									type="submit"
+								>
+									{t("pages.chat")}
 								</Button>
-							}
-						/>
-						<div className="flex justify-end mt-3">
-							<Button
-								color="primary"
-								className="text-white"
-								type="submit"
-							>
-								{t("pages.chat")}
-							</Button>
-						</div>
-					</form>
-				</div>
+							</div>
+						</form>
+					</div>
+				) : (
+					<></>
+				)}
 			</div>
 
 			{!isChatOpen && (

@@ -36,17 +36,24 @@ const TwoFactor: React.FC = () => {
 			const response = await makeRequest("post", ep.qrConfirm, {
 				username,
 				code,
+				secret_code: store.get("secretCode"),
 			});
+
 
 			if(response?.success){
 				store.set("accessToken", response?.accessToken);
 				store.set("id", response?.data?.dataValues?.ID);
 				store.set("userData", response?.data?.dataValues);
+				store.set("channelData", response?.channeldata?.[0]);
+				store.set(
+					"channelImage",
+					response?.channeldata?.[0]?.s3channelprofile
+				);
 				store.remove("firstTime");
 				store.remove("password");
 				store.remove("email");
-
-				console.log("lastToken", response?.accessToken);
+				store.remove("qrCode");
+				store.remove("secretCode");
 
 				dispatch(login(response?.accessToken));
 				dispatch(setOpenTwoFactor(false));

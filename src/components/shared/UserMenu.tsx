@@ -93,12 +93,12 @@ const UserMenu = () => {
 	const { t } = useTranslation();
 
 	const handleLogout = () => {
-		dispatch(logout());
 		const theme = store.get("theme");
 		const i18nextLng = store.get("i18nextLng");
 		store.clear();
 		store.set("theme", theme);
 		store.set("i18nextLng", i18nextLng);
+		dispatch(logout());
 	};
 
 	return (

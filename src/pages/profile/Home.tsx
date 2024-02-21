@@ -11,6 +11,7 @@ import { endpoints } from "@services/endpoints";
 import store from "store2";
 import CategoryCard from "@components/shared/CategoryCard";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 interface VideoDataType {}
 interface CategoryDataType {}
@@ -19,8 +20,10 @@ const HomePage: React.FC = () => {
 	const { t } = useTranslation();
 	const [videoData, setVideoData] = useState<VideoDataType[]>([]);
 	const [categoryData, setCategoryData] = useState<CategoryDataType[]>([]);
+	const { channelId } = useParams();
 
 	useEffect(() => {
+		console.log("channelId", channelId);
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
@@ -31,7 +34,7 @@ const HomePage: React.FC = () => {
 						method: "get",
 						url: endpoints.profileRecentVOD,
 						data: {
-							userID: store.get("id"),
+							userID: channelId,
 							page: 0,
 							pageSize: 5,
 						},
@@ -41,7 +44,7 @@ const HomePage: React.FC = () => {
 						method: "get",
 						url: endpoints.profileRecentCategory,
 						data: {
-							userID: store.get("id"),
+							userID: channelId,
 							page: 0,
 							pageSize: 5,
 						},
@@ -50,6 +53,7 @@ const HomePage: React.FC = () => {
 				];
 
 				const responses = await makeMultipleRequests(requests);
+				console.log("homeresponses", responses);
 
 				if (responses !== null) {
 					const recentVOD = responses?.[0];
@@ -63,7 +67,6 @@ const HomePage: React.FC = () => {
 					}
 				}
 
-				console.log("responses", responses);
 			} catch (error) {
 				toast.error(error);
 			}
@@ -74,7 +77,7 @@ const HomePage: React.FC = () => {
 			setCategoryData([]);
 			abortController.abort();
 		};
-	}, []);
+	}, [channelId]);
 
 	return (
 		<>

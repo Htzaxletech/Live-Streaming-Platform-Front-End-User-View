@@ -5,15 +5,16 @@
 // import Button from "@components/ui/Button";
 // import Heading from "@components/ui/Heading";
 // import Input from "@components/ui/Input";
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
 import * as Label from "@radix-ui/react-label";
-import { endpoints as ep } from "@services/endpoints";
+import { endpoints, endpoints as ep } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
 import { convertToBase64 } from "@utils/helpers";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 import store from "store2";
 import { useTranslation } from "react-i18next";
+import SocialLink from "./SocialLink";
 
 const Button = lazy(() => import("@components/ui/Button"));
 const Heading = lazy(() => import("@components/ui/Heading"));
@@ -39,19 +40,69 @@ const Channel: React.FC = () => {
 	const [bannerImageBase64Url, setBannerImageBase64Url] = useState<string>("");
 	const [imageName, setImageName] = useState({
 		profile: "",
-		banner: ""
-	})
+		banner: "",
+	});
+
+	const [profile] = useState<string>("https://i.stack.imgur.com/l60Hf.png");
+	const [banner] = useState<string>("https://www.hkiod.com/wp-content/plugins/tutor/assets/images/placeholder.svg");
 
 	const initialForm = {
 		selectedImageUrl: "https://i.stack.imgur.com/l60Hf.png",
 		selectedBannerUrl:
-			"https://img.freepik.com/free-vector/black-banner-with-yellow-geometric-shapes_1017-32327.jpg?size=338&ext=jpg&ga=GA1.1.632798143.1705881600&semt=ais",
+			"https://www.hkiod.com/wp-content/plugins/tutor/assets/images/placeholder.svg",
 		userName: "",
 		displayName: "",
 		bio: "",
 	};
 
-	const [profileSettings, setProfileSettings] = useState<ProfileSettings>(initialForm);
+	const [profileSettings, setProfileSettings] =
+		useState<ProfileSettings>(initialForm);
+
+	useEffect(() => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
+		(async () => {
+			await getProfile(signal)
+		})();
+
+		return () => {
+			abortController.abort();
+		};
+	}, []);
+
+	const getProfile = async (signal: any) => {
+		const reqData = {
+			userID: store.get("id"),
+			channelID: store.get("channelData").ID,
+		};
+
+		const response = await makeRequest("get", endpoints.getProfile, reqData, {
+			signal,
+		});
+
+		if (response?.success) {
+			const {
+				username,
+				displayName,
+				bio,
+				s3channelprofile,
+				s3channelbanner,
+			} = response.data[0];
+
+			const initForm = {
+				selectedImageUrl: s3channelprofile || profile,
+				selectedBannerUrl: s3channelbanner || banner,
+				userName: username,
+				displayName,
+				bio: bio || "",
+			};
+			setProfileSettings(initForm);
+			store.set("profile", s3channelprofile);
+		} else {
+			toast.error(response?.message);
+		}
+	};
 
 	const handleProfileClick = () => {
 		if (profileRef.current) {
@@ -132,7 +183,7 @@ const Channel: React.FC = () => {
 				profileImage: profileImageBase64Url,
 				bannerImage: bannerImageBase64Url,
 				profileName: imageName.profile,
-				bannerName: imageName.banner
+				bannerName: imageName.banner,
 			};
 
 			const { success, message } = await makeRequest(
@@ -143,7 +194,8 @@ const Channel: React.FC = () => {
 
 			if (success) {
 				toast.success(message);
-				setProfileSettings(initialForm);
+				await getProfile(null);
+				// setProfileSettings(initialForm);
 			} else {
 				toast.error(message);
 			}
@@ -218,13 +270,14 @@ const Channel: React.FC = () => {
 					<form onSubmit={handleSaveChanges}>
 						<div className="flex flex-col md:flex-row gap-2 w-full">
 							<Label.Root
-								className="md:w-[280px] left-0 w-full"
+								className="md:w-[280px] left-0 w-full font-semibold"
 								htmlFor="userName"
 							>
 								{t("auth.name")}
 							</Label.Root>
 							<div className="w-full">
 								<Input
+									required
 									id="userName"
 									className="flex-shrink w-full"
 									placeholder="johndoe23"
@@ -236,13 +289,14 @@ const Channel: React.FC = () => {
 
 						<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
 							<Label.Root
-								className="md:w-[280px] left-0 w-full"
+								className="md:w-[280px] left-0 w-full font-semibold"
 								htmlFor="displayName"
 							>
 								{t("pages.dname")}
 							</Label.Root>
 							<div className="w-full">
 								<Input
+									required
 									id="displayName"
 									className="flex-shrink w-full"
 									placeholder="John Doe"
@@ -254,7 +308,7 @@ const Channel: React.FC = () => {
 
 						<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
 							<Label.Root
-								className="md:w-[280px] left-0 w-full"
+								className="md:w-[280px] left-0 w-full font-semibold"
 								htmlFor="bio"
 							>
 								{t("pages.bio")}
@@ -272,13 +326,14 @@ const Channel: React.FC = () => {
 						</div>
 
 						<div className="flex w-full justify-end mt-4">
-							<Button className="py-5" color="primary" type="submit">
+							<Button color="primary" type="submit">
 								{loading ? "Loading..." : t("pages.sc")}
 							</Button>
 						</div>
 					</form>
 				</div>
 			</div>
+			<SocialLink channelID={store.get("channelData").ID} />
 		</div>
 	);
 };

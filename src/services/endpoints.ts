@@ -43,5 +43,11 @@ export const endpoints = {
 	profileRecentCategory: "/profile/recentCategorydataByuserID",
 	categoryDetail: "/browse/categoryDetail",
 	getViewCount: "/streams/get_viewcounts",
+	createSocial: "/profile/create_social",
+	updateSocial: "/profile/update_social",
+	deleteSocial: "/profile/delete_social",
+	getSocial: "/profile/get_social",
+	getProfile: "/profile/get_userprofile",
+	chatData: "/chat/chatdata_live",
 	// Add more endpoints as needed
 };

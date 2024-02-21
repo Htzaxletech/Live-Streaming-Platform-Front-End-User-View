@@ -121,7 +121,7 @@ const FollowedChannels: React.FC = () => {
 	};
 
 	return (
-		<div>
+		<div className="pb-[50px]">
 			<div className="flex">
 				{!collapsed && (
 					<div className="text-foreground/50 flex-nowrap text-md tracking-wide font-semibold absolute left-3 top-16 mx-auto">

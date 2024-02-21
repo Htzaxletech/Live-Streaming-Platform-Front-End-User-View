@@ -14,7 +14,7 @@ const DashboardSidebar: React.FC = () => {
 		{
 			title: t("pages.cp"),
 			icon: <PiTelevision />,
-			path: "/dashboard/setting/channel",
+			path: "/dashboard/channel",
 		},
 		{
 			title: t("pages.stm"),

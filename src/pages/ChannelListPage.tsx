@@ -64,7 +64,6 @@ const ChannelListPage: React.FC = () => {
 			if (success) {
 				console.log("Channel List Page Response", data);
 				if (data?.length > 0) {
-					console.log("CLP", data);
 					setChannelList((prevState) => [...prevState, ...data]);
 				} else {
 					setShowMoreButton(false);
@@ -130,7 +129,7 @@ const ChannelListPage: React.FC = () => {
 							List: StyledListAsComponent,
 						}}
 						itemContent={(index) => (
-							<Link to={`/profile/${channelList[index]?.ID}`}>
+							<Link to={`/profile/${channelList[index]?.userID}`}>
 								<StyledItem
 									key={index}
 									// backgroundImage="https://cdn.julieannesanjose.com/how_empty_was_blackpink_cocernt_world_tour.NcU5sNncLJ3BDj3eXVzpUy9R5ehxJFK9jZdhR-hVrnUFnPmbSmn3u_n2puXSxDfGeWlAPontAu_7dKsKXXeVXG51XxChaPeqpQ=w1200-h630-rj-pp-e365"

@@ -119,7 +119,7 @@ const SearchByVOD: React.FC = () => {
 										{data?.displayName}
 									</Link>
 								</Heading>
-								<div className="mt-3 flex gap-1">
+								<div className="mt-3 flex gap-1 flex-wrap">
 									{data?.tags?.map((i: any, index: number) => {
 										return (
 											<Tag

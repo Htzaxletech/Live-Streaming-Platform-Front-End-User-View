@@ -44,6 +44,7 @@ const Login: React.FC = () => {
 				if (loginResult?.data?.twofactors === 1) {
 					store.set("firstTime", loginResult?.data?.first_time);
 					store.set("qrCode", loginResult.qr_codes);
+					store.set("secretCode", loginResult?.secret_code);
 					dispatch(setOpenLogin(false));
 					dispatch(setOpenTwoFactor(true));
 				} else {
