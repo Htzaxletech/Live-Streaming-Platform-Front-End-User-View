@@ -14,7 +14,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
 			<DashboardNavbar />
 			<Sidebar status="dashboard" />
 			<main
-				className={`py-8 ${
+				className={`pt-8 ${
 					!isSidebarCollapsed ? "ml-[60px] md:ml-60" : "ml-[60px]"
 				}`}
 			>

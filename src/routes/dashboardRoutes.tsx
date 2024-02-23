@@ -11,6 +11,7 @@ const ErrorPage = lazy(() => import("@pages/ErrorPage"));
 const Channel = lazy(() => import("@pages/dashboard/channel/Channel"));
 const StreamPage = lazy(() => import("@pages/dashboard/stream/StreamPage"));
 const StreamManager = lazy(() => import("@pages/dashboard/StreamManager"));
+const Alerts = lazy(() => import("@pages/dashboard/alerts/Index"));
 
 const dashboardRoutes = {
 	path: "/dashboard",
@@ -31,6 +32,14 @@ const dashboardRoutes = {
 			element: (
 				<Suspense fallback={<LoadingIndicator />}>
 					<StreamManager />
+				</Suspense>
+			),
+		},
+		{
+			path: "/dashboard/alerts",
+			element: (
+				<Suspense fallback={<LoadingIndicator />}>
+					<Alerts />
 				</Suspense>
 			),
 		},

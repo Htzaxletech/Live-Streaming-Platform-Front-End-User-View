@@ -20,7 +20,7 @@ interface SidebarProps {
 
 const sidebar = tv({
 	base: [
-		"w-60 h-screen bg-background-base overflow-y-auto fixed top-[50px] left-0 z-40",
+		"w-60 h-screen bg-background-base overflow-y-auto fixed top-[50px] left-0 z-40 shadow-[0_1px_2px_rgba(0,0,0,0.16)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.8)]",
 	],
 	variants: {
 		collapsed: {
@@ -71,9 +71,7 @@ const Sidebar: FC<SidebarProps> = ({ status }) => {
 					</Button>
 				</div>
 				{status === "user" && isAuthenticated && <FollowedChannels />}
-				{status === "dashboard" && (
-					<DashboardSidebar />
-				)}
+				{status === "dashboard" && <DashboardSidebar />}
 			</div>
 		</div>
 	);

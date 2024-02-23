@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { CiStreamOn } from "react-icons/ci";
 import { MdOutlineSettings } from "react-icons/md";
 import { PiTelevision } from "react-icons/pi";
+import { TbSpeakerphone } from "react-icons/tb";
 import store from "store2";
 
 const DashboardSidebarItem = lazy(() => import("./DashboardSidebarItem"));
@@ -20,6 +21,11 @@ const DashboardSidebar: React.FC = () => {
 			title: t("pages.stm"),
 			icon: <CiStreamOn />,
 			path: `/dashboard/${store.get("id")}`,
+		},
+		{
+			title: t("pages.alerts"),
+			icon: <TbSpeakerphone />,
+			path: `/dashboard/alerts`,
 		},
 		{
 			title: t("pages.setting"),

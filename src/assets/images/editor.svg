@@ -1,0 +1,30 @@
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox="0 0 32 32"
+	width="32"
+	height="32"
+	opacity="0.05"
+>
+	<g>
+		<rect width="16" height="16" style="fill: rgb(24, 24, 27);" />
+		<rect
+			width="16"
+			height="16"
+			style="fill: rgb(24, 24, 27);"
+			x="16"
+			y="16"
+		/>
+		<rect
+			width="16"
+			height="16"
+			style="fill: rgb(255, 255, 255);"
+			x="16"
+		/>
+		<rect
+			width="16"
+			height="16"
+			style="fill: rgb(255, 255, 255);"
+			y="16"
+		/>
+	</g>
+</svg>

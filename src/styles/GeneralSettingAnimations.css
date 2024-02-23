@@ -1,0 +1,138 @@
+.animation-element {
+	opacity: 0;
+	transition: opacity 1s ease;
+}
+
+.animation-element.fade-in {
+	opacity: 1;
+}
+
+.animation-element.fade-out {
+	opacity: 0;
+}
+
+.animation-element.roll-in {
+	/* Define roll-in animation */
+	animation: rollInAnimation 1s forwards;
+}
+
+@keyframes rollInAnimation {
+	from {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+.animation-element.roll-out {
+	/* Define roll-out animation */
+	animation: rollOutAnimation 1s forwards;
+}
+
+@keyframes rollOutAnimation {
+	from {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	to {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+}
+
+.animation-element.slide-up {
+	animation: slideUpAnimation 1s forwards;
+}
+
+@keyframes slideUpAnimation {
+	from {
+		transform: translateY(0);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(-100%);
+		opacity: 1;
+	}
+}
+
+.animation-element.slide-down {
+	animation: slideDownAnimation 1s forwards;
+}
+
+@keyframes slideDownAnimation {
+	from {
+		transform: translateY(0);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(100%);
+		opacity: 1;
+	}
+}
+
+.animation-element.slide-left {
+	/* Define slide-left animation */
+	animation: slideLeftAnimation 1s forwards;
+}
+
+@keyframes slideLeftAnimation {
+	from {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+.animation-element.slide-right {
+	/* Define slide-right animation */
+	animation: slideRightAnimation 1s forwards;
+}
+
+@keyframes slideRightAnimation {
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+.animation-element.zoom-in {
+	/* Define zoom-in animation */
+	animation: zoomInAnimation 1s forwards;
+}
+
+@keyframes zoomInAnimation {
+	from {
+		transform: scale(0);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+.animation-element.zoom-out {
+	/* Define zoom-out animation */
+	animation: zoomOutAnimation 1s forwards;
+}
+
+@keyframes zoomOutAnimation {
+	from {
+		transform: scale(1);
+		opacity: 1;
+	}
+	to {
+		transform: scale(0);
+		opacity: 0;
+	}
+}
