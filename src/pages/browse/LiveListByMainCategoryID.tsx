@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // @ts-nocheck
 
+import LiveSkeleton from "@components/shared/LiveSkeleton";
 import VideoCard from "@components/shared/VideoCard";
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
@@ -91,6 +92,7 @@ const LiveListByMainCategoryID: React.FC = () => {
 						{liveData?.map((data, index) => (
 							<VideoCard key={index} data={data} />
 						))}
+						{loading && <LiveSkeleton />}
 					</div>
 
 					{showMoreButton && (

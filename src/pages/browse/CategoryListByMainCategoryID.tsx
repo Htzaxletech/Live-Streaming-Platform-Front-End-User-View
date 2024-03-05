@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // @ts-nocheck
 import CategoryCard from "@components/shared/CategoryCard";
+import CategorySkeleton from "@components/shared/CategorySkeleton";
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { endpoints } from "@services/endpoints";
@@ -86,6 +87,8 @@ const CategoryListByMainCategoryID: React.FC = () => {
 					categoryData?.map((data, index) => (
 						<CategoryCard key={index} data={data} />
 					))}
+
+				{loading && <CategorySkeleton />}
 			</div>
 
 			{showMoreButton && (

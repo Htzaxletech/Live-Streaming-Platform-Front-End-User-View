@@ -9,6 +9,7 @@ import ThemedTooltip from "@components/shared/ThemedTooltip";
 
 import "@styles/tailwind.css";
 import "react-toastify/dist/ReactToastify.css";
+import "react-loading-skeleton/dist/skeleton.css";
 import "./i18n";
 import App from "./App";
 

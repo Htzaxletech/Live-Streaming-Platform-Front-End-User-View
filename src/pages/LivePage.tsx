@@ -8,6 +8,8 @@ import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { makeRequest } from "@services/utils";
 import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import LiveSkeleton from "@components/shared/LiveSkeleton";
 
 interface LivePageProps {
 	url: string;
@@ -65,7 +67,6 @@ const LivePage: React.FC<LivePageProps> = ({ url, userID, title }) => {
 
 			if (success) {
 				const moreData = data;
-				console.log("Live Page response", data);
 
 				if (moreData.length > 0) {
 					setVideoData((prevState) => [...prevState, ...moreData]);
@@ -85,26 +86,24 @@ const LivePage: React.FC<LivePageProps> = ({ url, userID, title }) => {
 	};
 
 	return (
-		<>
-			{videoData && videoData.length > 0 && (
-				<div className="mt-8">
-					{title && <Heading size="sm">{title}</Heading>}
-					<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 mt-3 mb-4">
-						{videoData?.map((data, index) => (
-							<VideoCard key={index} data={data} />
-						))}
-					</div>
+		<div className="mt-8">
+			{title && <Heading size="sm">{title}</Heading>}
+			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 mt-3 mb-4">
+				{videoData.length > 0 &&
+					videoData?.map((data, index) => (
+						<VideoCard key={index} data={data} />
+					))}
+				{loading && <LiveSkeleton />}
+			</div>
 
-					{showMoreButton && (
-						<ShowMoreButton
-							title={""}
-							onClick={() => handleShowMore(null, true)}
-							loading={loading}
-						/>
-					)}
-				</div>
+			{showMoreButton && (
+				<ShowMoreButton
+					title={""}
+					onClick={() => handleShowMore(null, true)}
+					loading={loading}
+				/>
 			)}
-		</>
+		</div>
 	);
 };
 

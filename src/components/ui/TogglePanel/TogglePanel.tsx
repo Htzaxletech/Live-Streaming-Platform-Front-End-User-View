@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
 
 interface TogglePanelProps {
 	heading: string;
@@ -26,9 +26,14 @@ const TogglePanel: React.FC<TogglePanelProps> = ({
 			>
 				<div className="flex items-center gap-3">
 					{icon}
-					<h6 className="font-semibold uppercase">{heading}</h6>
+					<h6 className="font-semibold uppercase select-none">{heading}</h6>
 				</div>
-				{isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+				<IoIosArrowDown
+					size={18}
+					className={`${
+						isOpen ? "-rotate-180" : ""
+					} origin-center transition ease-in-out duration-150`}
+				/>
 			</div>
 			{isOpen && <>{children}</>}
 		</>

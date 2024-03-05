@@ -10,11 +10,12 @@ import { endpoints } from "@services/endpoints";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { convertToLowerCase } from "@utils/helpers";
+import Skeleton from "react-loading-skeleton";
 
 const DirectoryCategory: React.FC = () => {
 	interface CategoryDataType {}
 
-	const [loading, setLoading] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(true);
 	const [categories, setCategories] = useState<CategoryDataType[]>([]);
 	const navigate = useNavigate();
 
@@ -73,33 +74,40 @@ const DirectoryCategory: React.FC = () => {
 	// ];
 
 	return (
-		<>
-			{categories?.length > 0 && (
-				<div className="grid grid-flow-col auto-cols-max py-3 gap-2 overflow-auto">
-					{categories?.map((i, index) => {
-						return (
-							<div key={index} onClick={() => handleClick(i)}>
-								<CategoryLink
-									to=""
-									color="default"
-									size="md"
-									icon={
-										<img
-											src={i.s3path}
-											alt="icon"
-											className="h-full w-full"
-										/>
-									}
-									// icon={<img src={images[index]} alt="icon" className="h-full w-full" />}
-								>
-									{i.categoryName}
-								</CategoryLink>
-							</div>
-						);
-					})}
+		<div className="grid grid-flow-col auto-cols-max py-3 gap-2 overflow-auto">
+			{categories?.length > 0 &&
+				categories?.map((i, index) => {
+					return (
+						<div key={index} onClick={() => handleClick(i)}>
+							<CategoryLink
+								to=""
+								color="default"
+								size="md"
+								icon={
+									<img
+										src={i.s3path}
+										alt="icon"
+										className="h-full w-full"
+									/>
+								}
+								// icon={<img src={images[index]} alt="icon" className="h-full w-full" />}
+							>
+								{i.categoryName}
+							</CategoryLink>
+						</div>
+					);
+				})}
+
+			{loading && (
+				<div className="flex gap-2">
+					<Skeleton width={250} height={50} />
+					<Skeleton width={250} height={50} />
+					<Skeleton width={250} height={50} />
+					<Skeleton width={250} height={50} />
+					<Skeleton width={250} height={50} />
 				</div>
 			)}
-		</>
+		</div>
 	);
 };
 

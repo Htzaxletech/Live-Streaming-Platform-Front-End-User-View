@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // @ts-nocheck
+import LiveSkeleton from "@components/shared/LiveSkeleton";
 import VideoCard from "@components/shared/VideoCard";
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
@@ -82,32 +83,28 @@ const BrowseLiveList: React.FC<LiveProps> = ({ keyword }) => {
 	};
 
 	return (
-		<>
-			{liveData.length > 0 && (
-				<div className="mt-8">
-					<Heading
-						size="sm"
-						className="my-2 text-gray-900 dark:text-gray-100"
-					>
-						{t("pages.live")}
-					</Heading>
+		<div className="mt-8">
+			<Heading size="sm" className="my-2 text-gray-900 dark:text-gray-100">
+				{t("pages.live")}
+			</Heading>
 
-					<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 mt-3 mb-4">
-						{liveData?.map((data, index) => (
-							<VideoCard key={index} data={data} />
-						))}
-					</div>
+			<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 mt-3 mb-4">
+				{liveData.length > 0 &&
+					liveData?.map((data, index) => (
+						<VideoCard key={index} data={data} />
+					))}
 
-					{showMoreButton && (
-						<ShowMoreButton
-							title={""}
-							onClick={() => handleShowMore(null, true)}
-							loading={loading}
-						/>
-					)}
-				</div>
+				{loading && <LiveSkeleton />}
+			</div>
+
+			{showMoreButton && (
+				<ShowMoreButton
+					title={""}
+					onClick={() => handleShowMore(null, true)}
+					loading={loading}
+				/>
 			)}
-		</>
+		</div>
 	);
 };
 

@@ -1,0 +1,22 @@
+[
+	{
+		"type": "1",
+		"method": "flex-row"
+	},
+	{
+		"type": "2",
+		"method": "flex-row-reverse"
+	},
+	{
+		"type": "3",
+		"method": "flex-col"
+	},
+	{
+		"type": "4",
+		"method": "flex-col-reverse"
+	},
+	{
+		"type": "5",
+		"method": "overlay"
+	}
+]

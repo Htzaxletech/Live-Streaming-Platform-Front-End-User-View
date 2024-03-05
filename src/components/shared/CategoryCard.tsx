@@ -25,7 +25,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ data }) => {
 
 	const card = tv({
 		slots: {
-			cardContainer: "mx-auto duration-300 bg-primary cursor-pointer",
+			cardContainer: "mx-auto duration-300 bg-primary cursor-pointer w-full",
 			imageCover: "h-full bg-cover",
 			cardContent: "pt-2",
 			flexContainer: "flex items-center gap-3",

@@ -1,12 +1,11 @@
-import Input from "@components/ui/Input";
-import * as Label from "@radix-ui/react-label";
+import Alignment from "./Alignment";
 
 const Layout = () => {
 
 	return (
-		<>
-			Layout
-		</>
+		<div className="p-4">
+			<Alignment />
+		</div>
 	);
 };
 

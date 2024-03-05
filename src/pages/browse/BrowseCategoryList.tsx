@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // @ts-nocheck
 import CategoryCard from "@components/shared/CategoryCard";
+import CategorySkeleton from "@components/shared/CategorySkeleton";
 import Heading from "@components/ui/Heading";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { endpoints } from "@services/endpoints";
@@ -77,28 +78,26 @@ const BrowseCategoryList: React.FC<CategoryProps> = ({ keyword }) => {
 	};
 
 	return (
-		<>
-			{categories.length > 0 && (
-				<div className="mt-8">
-					<Heading size="sm">{t("pages.categories")}</Heading>
-					<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-8 gap-2 mt-3 mb-8">
-						{categories &&
-							categories.length > 0 &&
-							categories?.map((data, index) => (
-								<CategoryCard key={index} data={data} />
-							))}
-					</div>
+		<div className="mt-8">
+			<Heading size="sm">{t("pages.categories")}</Heading>
+			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-8 gap-2 mt-3 mb-8">
+				{categories &&
+					categories.length > 0 &&
+					categories?.map((data, index) => (
+						<CategoryCard key={index} data={data} />
+					))}
 
-					{showMoreButton && (
-						<ShowMoreButton
-							title={""}
-							onClick={() => handleShowMore(null, true)}
-							loading={loading}
-						/>
-					)}
-				</div>
+				{loading && <CategorySkeleton />}
+			</div>
+
+			{showMoreButton && (
+				<ShowMoreButton
+					title={""}
+					onClick={() => handleShowMore(null, true)}
+					loading={loading}
+				/>
 			)}
-		</>
+		</div>
 	);
 };
 

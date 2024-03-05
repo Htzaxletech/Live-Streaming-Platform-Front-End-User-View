@@ -69,6 +69,23 @@ export const formatHourAndMinute = (timeString: string): string => {
 	return `${hour}:${minute < 10 ? "0" + minute : minute}`;
 };
 
+/**
+ * Truncates the given file name to the specified maximum length.
+ *
+ * @param {string} fileName - The file name to truncate.
+ * @param {number} maxLength - The maximum length of the truncated file name.
+ * @returns {string} - The truncated file name.
+ */
+export const truncateFileName = (
+	fileName: string,
+	maxLength: number
+): string => {
+	if (fileName.length > maxLength) {
+		return fileName.slice(0, maxLength - 3) + "...";
+	}
+	return fileName;
+};
+
 export const videoSliderData = [
 	{
 		coverImage:
