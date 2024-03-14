@@ -74,7 +74,7 @@ const Channel: React.FC = () => {
 	const getProfile = async (signal: any) => {
 		const reqData = {
 			userID: store.get("id"),
-			channelID: store.get("channelData").ID,
+			channelID: store.get("channelData")?.ID,
 		};
 
 		const response = await makeRequest("get", endpoints.getProfile, reqData, {
@@ -333,7 +333,7 @@ const Channel: React.FC = () => {
 					</form>
 				</div>
 			</div>
-			<SocialLink channelID={store.get("channelData").ID} />
+			<SocialLink channelID={store.get("channelData")?.ID} />
 		</div>
 	);
 };

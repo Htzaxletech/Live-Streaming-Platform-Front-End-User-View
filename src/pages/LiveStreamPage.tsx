@@ -49,7 +49,7 @@ const LiveStreamPage = () => {
 
 		(async () => {
 			if (!state?.liveStreamData) {
-				navigate("/");
+				// navigate("/");
 			} else {
 				try {
 					const response = await makeRequest(
@@ -73,7 +73,7 @@ const LiveStreamPage = () => {
 						"get",
 						endpoints.getSocial,
 						{
-							channelID: state?.liveStreamData?.channelID
+							channelID: state?.liveStreamData?.channelID,
 						},
 						{ signal }
 					);
@@ -153,7 +153,7 @@ const LiveStreamPage = () => {
 		} catch (error) {
 			toast.error(error);
 		}
-	}
+	};
 
 	const handleFollow = async () => {
 		setLoading(true);
@@ -180,20 +180,24 @@ const LiveStreamPage = () => {
 		<div>
 			<div className="flex-1 flex flex-col pt-4">
 				<div className={`${isChatOpen ? "md:mr-72 lg:mr-80" : "mr-0"}`}>
-					<div className="h-50 xl:h-[550px] flex justify-center">
+					<div className="flex justify-center">
 						{channelData?.live_status && channelData?.streamKey ? (
-							<MediaPlayer
-								src={generateStreamUrl(channelData?.streamKey)}
-								autoplay
-								muted
-								className="rounded-none"
-							>
-								<MediaProvider></MediaProvider>
-								<DefaultAudioLayout icons={defaultLayoutIcons} />
-								<DefaultVideoLayout icons={defaultLayoutIcons} />
-							</MediaPlayer>
+							<div>
+								<MediaPlayer
+									src={generateStreamUrl(channelData?.streamKey)}
+									autoplay
+									muted
+									className="h-44 lg:h-52 xl:h-[550px] rounded-none"
+								>
+									<MediaProvider></MediaProvider>
+									<DefaultAudioLayout icons={defaultLayoutIcons} />
+									<DefaultVideoLayout icons={defaultLayoutIcons} />
+								</MediaPlayer>
+							</div>
 						) : (
-							<Offline />
+							<div className="flex w-full h-52 md:h-96 xl:h-[550px]">
+								<Offline />
+							</div>
 						)}
 					</div>
 

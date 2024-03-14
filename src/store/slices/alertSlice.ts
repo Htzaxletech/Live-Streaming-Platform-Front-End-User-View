@@ -1,20 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
+import ringtone from "@assets/ringtone.mp3";
 
 const alertSlice = createSlice({
 	name: "alert",
 	initialState: {
 		data: {
-			width: 500,
-			height: 500,
+			itemVariantsID: 0,
+			width: 1000,
+			height: 1000,
 			layout: "3",
-			inAnimationType: "fade-in",
-			inAnimation: "fade-in",
-			outAnimation: "fade-out",
-			outAnimationType: "fade-out",
+			inAnimationType: "slide-up",
+			inAnimation: "slide-in-from-bottom",
+			outAnimation: "slide-out-to-top",
+			outAnimationType: "slide-up",
 			inAnimationTime: "duration-1000",
 			outAnimationTime: "duration-1000",
 			duration: "1",
-			variantName: "New Follow",
+			variantName: "New Follower",
 			textColor: "#ffffff",
 			accentColor: "#00c798",
 			message: "{username} just followed",
@@ -22,11 +24,64 @@ const alertSlice = createSlice({
 			defaultAccentColor: "#00c798",
 			username: "Linnz",
 			isCheckedSayTextAlert: false,
-			mediaData: {
-				url: "",
-				type: "",
-				name: "",
+			alertImage: {
+				url: "https://static-cdn.jtvnw.net/default-alert-asset/v1/video/Follow.webm",
+				type: "video",
+				name: "Follow.webm",
+				scale: 50,
 			},
+			alertSound: {
+				url: ringtone,
+				type: "mp3",
+				name: "Sample Ringtong.mp3",
+			},
+			alertConditionID: 1,
+			alertCondition: [],
+			variantID: 1,
+		},
+		// data: {
+		// 	itemVariantsID: 0,
+		// 	width: 500,
+		// 	height: 500,
+		// 	layout: "",
+		// 	inAnimationType: "",
+		// 	inAnimation: "",
+		// 	outAnimation: "",
+		// 	outAnimationType: "",
+		// 	inAnimationTime: "",
+		// 	outAnimationTime: "",
+		// 	duration: "",
+		// 	variantName: "",
+		// 	textColor: "",
+		// 	accentColor: "",
+		// 	message: "",
+		// 	defaultTextColor: "",
+		// 	defaultAccentColor: "",
+		// 	username: "",
+		// 	isCheckedSayTextAlert: false,
+		// 	alertImage: {
+		// 		url: "",
+		// 		type: "",
+		// 		name: "",
+		// 		scale: 0,
+		// 	},
+		// 	alertSound: {
+		// 		url: "",
+		// 		type: "",
+		// 		name: "",
+		// 	},
+		// 	alertConditionID: 0,
+		// 	alertCondition: [],
+		// 	variantID: 0,
+		// },
+		variants: {
+			follow: [],
+			subscription: [],
+			donation: [],
+			isShowFollow: false,
+			isShowSubscribe: false,
+			isShowDonate: false,
+			isShowPanel: false
 		},
 	},
 	reducers: {
@@ -36,8 +91,14 @@ const alertSlice = createSlice({
 				...action.payload,
 			};
 		},
+		changeVariants(state, action) {
+			state.variants = {
+				...state.variants,
+				...action.payload,
+			};
+		},
 	},
 });
 
-export const { changeFormData } = alertSlice.actions;
+export const { changeFormData, changeVariants } = alertSlice.actions;
 export default alertSlice.reducer;

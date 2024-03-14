@@ -49,5 +49,13 @@ export const endpoints = {
 	getSocial: "/profile/get_social",
 	getProfile: "/profile/get_userprofile",
 	chatData: "/chat/chatdata_live",
+	getFollows: "/alert/get_followitemvariantbyuserID",
+	getSubscriptions: "/alert/get_subscribeitemvariantbyuserID",
+	getDonations: "/alert/get_donateitemvariantbyuserID",
+	getItemVariant: "/alert/get_itemvariant",
+	getAlertConditionDonation: "/alert/get_alert_condition_donation",
+	getAlertConditionSubscription: "/alert/get_alert_condition_subscribe",
+	getAlertConditionFollowing: "/alert/get_alert_condition_follow",
+	saveVariant: "/alert/add_new_itemvariant",
 	// Add more endpoints as needed
 };

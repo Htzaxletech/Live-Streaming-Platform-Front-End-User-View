@@ -6,8 +6,23 @@ import SettingAside from "./aside/SettingAside";
 import PreviewOptions from "./content/PreviewOptions";
 import PreviewContent from "./content/PreviewContent";
 import PreviewHeader from "./header/PreviewHeader";
+import store from "store2";
+import { toast } from "react-toastify";
 
 const Alerts = () => {
+	const handleCopyToClipboard = () => {
+		navigator.clipboard
+			.writeText(
+				`${window.location.href}/${store.get("channelData")?.streamKey}`
+			)
+			.then(() =>
+				toast.success("Browser Source URL copied to the clipboard")
+			)
+			.catch((error) =>
+				toast.error("Unable to copy text to clipboard", error)
+			);
+	};
+
 	return (
 		<div className="flex flex-col h-screen mt-[18px]">
 			{/* Top header */}
@@ -30,8 +45,16 @@ const Alerts = () => {
 				<div></div>
 				<div className="flex items-center gap-3">
 					<Label>Browser Source URL</Label>
-					<Input />
-					<Button color="primary" size="lg">
+					<Input
+						type="password"
+						value="******************************"
+						readOnly
+					/>
+					<Button
+						color="primary"
+						size="lg"
+						onClick={handleCopyToClipboard}
+					>
 						Copy
 					</Button>
 				</div>

@@ -11,6 +11,7 @@ import { endpoints } from "@services/endpoints";
 import store from "store2";
 import ShowMoreButton from "@components/ui/ShowMoreButton";
 import { useParams } from "react-router-dom";
+import LiveSkeleton from "@components/shared/LiveSkeleton";
 
 interface VideoDataType {}
 
@@ -75,15 +76,16 @@ const LiveByCategoryID: React.FC = () => {
 
 	return (
 		<>
-			{videoData && videoData.length > 0 && (
-				<div className="mt-8">
-					<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 mt-3 mb-4">
-						{videoData?.map((data, index) => (
+			<div className="mt-8">
+				<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 mt-3 mb-4">
+					{videoData.length > 0 &&
+						videoData?.map((data, index) => (
 							<VideoCard key={index} data={data} />
 						))}
-					</div>
+
+					{loading && <LiveSkeleton />}
 				</div>
-			)}
+			</div>
 
 			{showMoreButton && (
 				<ShowMoreButton

@@ -1,16 +1,80 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Input from "@components/ui/Input";
 import * as Label from "@radix-ui/react-label";
 import Animations from "./Animations";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@store/index";
 import { changeFormData } from "@store/slices/alertSlice";
+import { useEffect, useState } from "react";
+import { makeRequest } from "@services/utils";
+import { endpoints } from "@services/endpoints";
+import { toast } from "react-toastify";
+
+interface ResponseData {
+	success: boolean;
+	message: string;
+	data: any;
+}
 
 const GeneralSettings = () => {
 	const dispatch = useDispatch();
+	const [loading, setLoading] = useState(true);
 
-	const { duration, variantName } = useSelector(
+	const { duration, variantName, alertCondition, variantID } = useSelector(
 		(state: RootState) => state.alert.data
 	);
+
+	useEffect(() => {
+		const abortController = new AbortController();
+		const signal = abortController.signal;
+
+		if (variantID) {
+			(async () => {
+				setLoading(true);
+
+				try {
+					const reqData = {};
+
+					const endpoint: string =
+						variantID === 1
+							? endpoints.getAlertConditionFollowing
+							: variantID === 2
+							? endpoints.getAlertConditionDonation
+							: endpoints.getAlertConditionSubscription;
+
+					const response: ResponseData | null = await makeRequest(
+						"get",
+						endpoint,
+						reqData,
+						{
+							signal,
+						}
+					);
+
+					if (response !== null) {
+						const { success, message, data } = response;
+
+						if (success) {
+							dispatch(
+								changeFormData({
+									alertCondition: data || [],
+								})
+							);
+						} else {
+							toast.error(message);
+						}
+					}
+
+					setLoading(false);
+				} catch (error) {
+					setLoading(false);
+				}
+			})();
+		}
+		return () => {
+			abortController.abort();
+		};
+	}, [variantID]);
 
 	const handleVariantName = (e: React.ChangeEvent<HTMLInputElement>) => {
 		dispatch(changeFormData({ variantName: e.target.value }));
@@ -54,8 +118,15 @@ const GeneralSettings = () => {
 						value="1"
 						className="text-sm w-full h-full bg-background-base focus-within:ring-2 focus-within:ring-primary pl-3 rounded-md"
 						onChange={() => {}}
+						disabled={loading}
 					>
-						<option value="1">Any new follow to your channel</option>
+						{alertCondition?.map((i: any, index: number) => {
+							return (
+								<option value={i.ID} key={index}>
+									{i.conditionName}
+								</option>
+							);
+						})}
 					</select>
 				</div>
 			</div>

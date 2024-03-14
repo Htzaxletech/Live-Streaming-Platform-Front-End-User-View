@@ -14,22 +14,22 @@ const DashboardSidebar: React.FC = () => {
 	const items = [
 		{
 			title: t("pages.cp"),
-			icon: <PiTelevision />,
+			icon: <PiTelevision size={18} />,
 			path: "/dashboard/channel",
 		},
 		{
 			title: t("pages.stm"),
-			icon: <CiStreamOn />,
+			icon: <CiStreamOn size={18} />,
 			path: `/dashboard/${store.get("id")}`,
 		},
 		{
 			title: t("pages.alerts"),
-			icon: <TbSpeakerphone />,
+			icon: <TbSpeakerphone size={18} />,
 			path: `/dashboard/alerts`,
 		},
 		{
 			title: t("pages.setting"),
-			icon: <MdOutlineSettings />,
+			icon: <MdOutlineSettings size={18} />,
 			childrens: [
 				{
 					title: t("pages.stream"),

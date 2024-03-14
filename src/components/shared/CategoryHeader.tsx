@@ -7,12 +7,13 @@ import Tag from "@components/ui/Tag";
 import { endpoints } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
 import { useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const CategoryHeader: React.FC = () => {
 	const { categoryID } = useParams();
-
+	const [loading, setLoading] = useState<boolean>(true);
 	const [categoryData, setCategoryData] = useState<[]>([]);
 
 	useEffect(() => {
@@ -35,8 +36,10 @@ const CategoryHeader: React.FC = () => {
 				if (success) {
 					setCategoryData(data?.[0]);
 				}
+				setLoading(false);
 			} catch (error) {
 				toast.error(error);
+				setLoading(false);
 			}
 		})();
 
@@ -50,12 +53,16 @@ const CategoryHeader: React.FC = () => {
 			<div className="grid grid-cols-12 lg:grid-cols-5 lg:gap-4">
 				{/* Image Thumbnail Grid (20%) */}
 				<div className="col-span-12 lg:col-span-1">
-					<img
-						src={categoryData?.s3categoryImage || gaming}
-						alt={categoryData?.categoryName}
-						className="w-full h-full mb-4"
-						loading="lazy"
-					/>
+					{!loading ? (
+						<img
+							src={categoryData?.s3categoryImage}
+							alt={categoryData?.categoryName}
+							className="w-full h-full mb-4"
+							loading="lazy"
+						/>
+					) : (
+						<Skeleton height="100%" width="100%" />
+					)}
 				</div>
 
 				{/* Title and Content Grid (80%) */}
@@ -66,7 +73,6 @@ const CategoryHeader: React.FC = () => {
 						</h1>
 						{categoryData?.secondCat && (
 							<div className="flex items-center gap-3 mb-3">
-								{/* <div className="rounded-full w-1 h-1 bg-current"></div> */}
 								{categoryData?.secondCat.map((item, index) => (
 									<Tag
 										key={index}
@@ -79,10 +85,9 @@ const CategoryHeader: React.FC = () => {
 							</div>
 						)}
 
-						<p>
-							{categoryData?.description ||
-								"Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam, excepturi aliquam explicabo nihil eligendi repellat sit ea cupiditate. Pariatur mollitia eius a! Aspernatur est eius odit doloremque, asperiores maxime quos."}
-						</p>
+						<p>{categoryData?.description}</p>
+
+						{loading && <Skeleton count={3} />}
 					</div>
 				</div>
 			</div>

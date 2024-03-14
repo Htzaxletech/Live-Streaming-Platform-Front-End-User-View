@@ -5,6 +5,7 @@ import dashboardRoutes from "@routes/dashboardRoutes";
 import userRoutes from "@routes/userRoutes";
 import { useEffect } from "react";
 import { socket } from "./socket";
+import AlertsNoti from "@pages/dashboard/alerts-noti/Index";
 
 const App = () => {
 	// const [routes, setRoutes] = useState({});
@@ -25,16 +26,25 @@ const App = () => {
 
 	// 	loadRoutes();
 	// }, []);
-	
-	useEffect(()=>{
+
+	useEffect(() => {
 		socket.connect();
 
 		return () => {
 			socket.disconnect();
 		};
-	}, [])
+	}, []);
 
-	const appRouter = createBrowserRouter([userRoutes, dashboardRoutes]);
+	const alertNoti = {
+		path: "/dashboard/alerts/:streamKey",
+		element: <AlertsNoti />,
+	};
+
+	const appRouter = createBrowserRouter([
+		userRoutes,
+		dashboardRoutes,
+		alertNoti,
+	]);
 
 	return <RouterProvider router={appRouter} />;
 };

@@ -59,7 +59,7 @@ const SocialLink: React.FC<SocialProps> = ({ channelID }) => {
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
-		if(channelID){
+		if (channelID) {
 			(async () => {
 				try {
 					const reqData = {
@@ -151,24 +151,26 @@ const SocialLink: React.FC<SocialProps> = ({ channelID }) => {
 	};
 
 	const getSocialLinks = async () => {
-		try {
-			const reqData = {
-				channelID: channelID,
-			};
+		if (channelID) {
+			try {
+				const reqData = {
+					channelID: channelID,
+				};
 
-			const { success, message, data } = await makeRequest(
-				"get",
-				endpoints.getSocial,
-				reqData
-			);
+				const { success, message, data } = await makeRequest(
+					"get",
+					endpoints.getSocial,
+					reqData
+				);
 
-			if (success) {
-				setSocialList(data);
-			} else {
-				toast.error(message);
+				if (success) {
+					setSocialList(data);
+				} else {
+					toast.error(message);
+				}
+			} catch (error) {
+				console.error(error);
 			}
-		} catch (error) {
-			console.error(error);
 		}
 	};
 

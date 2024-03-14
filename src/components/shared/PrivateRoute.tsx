@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@store/index";
@@ -14,7 +14,12 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
 	);
 
 	const dispatch = useDispatch();
-	!isAuthenticated && dispatch(setOpenLogin(true));
+
+	useEffect(() => {
+		if (!isAuthenticated) {
+			dispatch(setOpenLogin(true));
+		}
+	}, [dispatch, isAuthenticated]);
 
 	return isAuthenticated ? (
 		element

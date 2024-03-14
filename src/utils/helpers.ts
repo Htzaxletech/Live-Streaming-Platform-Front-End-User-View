@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Converts a Blob file to a base64 encoded string.
  *
@@ -84,6 +85,42 @@ export const truncateFileName = (
 		return fileName.slice(0, maxLength - 3) + "...";
 	}
 	return fileName;
+};
+
+/**
+ * Converts an image from the provided URL to base64 format asynchronously.
+ *
+ * @param {string} imageUrl - The URL of the image to convert to base64.
+ * @returns {Promise<string>} - A Promise that resolves with the base64 representation of the image.
+ * @throws Will throw an error if there's an issue fetching or converting the image.
+ */
+export const convertImageUrlToBase64 = async (
+	imageUrl: string
+): Promise<string> => {
+	try {
+		const response = await fetch(imageUrl);
+		const blob = await response.blob();
+		const reader = new FileReader();
+
+		return new Promise<string>((resolve, reject) => {
+			reader.onload = () => {
+				const base64data = reader.result;
+				if (typeof base64data === "string") {
+					resolve(base64data);
+				} else {
+					reject(new Error("Base64 data is not a string"));
+				}
+			};
+
+			reader.onerror = (error) => {
+				reject(error);
+			};
+
+			reader.readAsDataURL(blob);
+		});
+	} catch (error: any) {
+		throw new Error("Error converting image to base64: " + error?.message);
+	}
 };
 
 export const videoSliderData = [

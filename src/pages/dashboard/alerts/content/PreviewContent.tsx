@@ -3,14 +3,19 @@ import Button from "@components/ui/Button";
 import editorSvg from "@assets/images/editor.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "@store/index";
-import { MediaPlayer, MediaProvider } from "@vidstack/react";
+import {
+	MediaPlayer,
+	MediaProvider,
+	type MediaPlayerInstance,
+} from "@vidstack/react";
 import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import React from "react";
 import { useSpeech } from "react-text-to-speech";
 
 const PreviewContent = () => {
+	const mediaPlayerRef = useRef<MediaPlayerInstance>(null);
 	const [isAnimating, setIsAnimating] = useState<boolean>(false);
 	const [animateClass, setAnimateClass] = useState<any>([]);
 	const [layoutList] = useState<any>([
@@ -50,9 +55,11 @@ const PreviewContent = () => {
 		textColor,
 		accentColor,
 		isCheckedSayTextAlert,
+		alertImage,
+		alertSound,
 	} = useSelector((state: RootState) => state.alert.data);
 
-	const { method } = layoutList.find(
+	const { method } = layout && layoutList.find(
 		(item: { type: string }) => item.type === layout
 	);
 
@@ -77,11 +84,15 @@ const PreviewContent = () => {
 
 	const { start } = useSpeech({
 		text: updatedMessage,
-		volume: 1 // 0 to 1
+		volume: 1, // 0 to 1
 	});
 
-	const handleFireAnimation = () => {
+	const handlePreviewAlert = () => {
 		if (isAnimating) return;
+
+		if (mediaPlayerRef.current) {
+			(mediaPlayerRef.current as any).play();
+		}
 
 		const inMatch = inAnimationTime.match(/duration-(\d+)/);
 		const outMatch = inAnimationTime.match(/duration-(\d+)/);
@@ -100,7 +111,7 @@ const PreviewContent = () => {
 
 			setTimeout(() => {
 				isCheckedSayTextAlert && start();
-				
+
 				if (outAnimation !== "none") {
 					const outClassesToAdd = [
 						"animate-out",
@@ -126,7 +137,7 @@ const PreviewContent = () => {
 					<div className="relative w-full flex items-center gap-3 p-4 bg-background-float">
 						<Button
 							color="default"
-							onClick={handleFireAnimation}
+							onClick={handlePreviewAlert}
 							disabled={isAnimating}
 						>
 							Preview Alert
@@ -134,6 +145,16 @@ const PreviewContent = () => {
 						<Button color="default">Send Test Alert</Button>
 					</div>
 					<div className="h-full flex items-center justify-center mt-0">
+						{alertSound?.url && (
+							<MediaPlayer
+								src={alertSound?.url}
+								ref={mediaPlayerRef}
+								className="hidden"
+							>
+								<MediaProvider></MediaProvider>
+							</MediaPlayer>
+						)}
+
 						<div
 							style={{
 								backgroundImage: `url(${editorSvg})`,
@@ -157,25 +178,35 @@ const PreviewContent = () => {
 											}`}
 										>
 											<div
+												style={{
+													transform: `scale(${
+														(alertImage?.scale / 100) * 2
+													})`,
+												}}
 												className={`flex grow w-1/2 self-center ${
 													method === "overlay" ? "relative" : ""
 												}`}
 											>
-												<MediaPlayer
-													src={
-														"https://static-cdn.jtvnw.net/default-alert-asset/v1/video/Follow.webm"
-													}
-													autoplay
-													// loop
-													className="w-full h-full"
-												>
-													<MediaProvider></MediaProvider>
-												</MediaPlayer>
+												{alertImage?.type === "video" && (
+													<div>
+														<MediaPlayer
+															src={alertImage?.url}
+															autoplay
+															// loop
+															className="w-full h-full"
+														>
+															<MediaProvider></MediaProvider>
+														</MediaPlayer>
+													</div>
+												)}
 
-												{/* <img
-													src="https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F8ed3d547-94ff-48e1-9f20-8c14a7030a02_2000x2000.jpeg"
-													alt="Apple logo"
-												/> */}
+												{alertImage?.type === "image" && (
+													<img
+														className="w-full h-full"
+														src={alertImage?.url}
+														alt="Alert image"
+													/>
+												)}
 											</div>
 											<div
 												className={`flex items-center justify-center w-full my-3 ${

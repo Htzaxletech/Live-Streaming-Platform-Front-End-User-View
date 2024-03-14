@@ -14,6 +14,7 @@ import ProfileHomePage from "./Home";
 import ProfileStreamInfo from "@components/shared/ProfileStreamInfo";
 import Videos from "./Videos";
 import { convertToLowerCase } from "@utils/helpers";
+import { socket } from "@socket/index";
 
 const About = lazy(() => import("./About"));
 
@@ -59,6 +60,10 @@ const ProfilePage: React.FC = () => {
 	}, [channelId]);
 
 	const handleFollow = async () => {
+		// console.log("socket.connected", socket.connected);
+		// socket.emit("follow", {
+		// 	streamKey: channelData?.streamKey
+		// })
 		setLoading(true);
 		const status: any = !followStatus;
 		try {

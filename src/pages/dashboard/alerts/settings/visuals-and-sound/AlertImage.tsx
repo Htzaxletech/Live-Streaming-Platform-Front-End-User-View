@@ -9,39 +9,105 @@ import "@vidstack/react/player/styles/default/layouts/video.css";
 import Button from "@components/ui/Button";
 import { RxCross1 } from "react-icons/rx";
 import { FaExclamationCircle } from "react-icons/fa";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import Input from "@components/ui/Input";
+import { RootState } from "@store/index";
+import { useDispatch, useSelector } from "react-redux";
+import { changeFormData } from "@store/slices/alertSlice";
+import { Tooltip } from "react-tooltip";
+import { toast } from "react-toastify";
 
 const AlertImage = () => {
-	const [mediaData, setMediaData] = useState<{
-		url: string;
-		type: string;
-		name: string;
-	}>({
-		url: "",
-		type: "",
-		name: "",
-	});
-
 	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	const { alertImage } = useSelector((state: RootState) => state.alert.data);
+	const dispatch = useDispatch();
+
+	// const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	// 	const file = event.target.files?.[0];
+	// 	if (file) {
+	// 		const reader = new FileReader();
+	// 		reader.onload = (e) => {
+	// 			if (e.target?.result) {
+	// 				const mediaUrl = e.target.result as string;
+	// 				dispatch(
+	// 					changeFormData({
+	// 						alertImage: {
+	// 							...alertImage,
+	// 							name: file.name,
+	// 							url: mediaUrl,
+	// 							type: file.type.split("/")[0],
+	// 						},
+	// 					})
+	// 				);
+	// 			}
+	// 		};
+	// 		reader.readAsDataURL(file);
+	// 	}
+	// };
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (file) {
+			// Check file format
+			const allowedFormatsImage = ["image/png", "image/jpeg", "image/webp"];
+			const allowedFormatsVideo = ["video/gif", "video/webm", "video/mp4"];
+
+			let allowedFormats;
+			let maxSize;
+
+			if (allowedFormatsImage.includes(file.type)) {
+				allowedFormats = allowedFormatsImage;
+				maxSize = 25 * 1024 * 1024; // 25mb for images
+			} else if (allowedFormatsVideo.includes(file.type)) {
+				allowedFormats = allowedFormatsVideo;
+				maxSize = 100 * 1024 * 1024; // 100mb for videos
+			} else {
+				toast.error("Please select a valid file format.");
+				return;
+			}
+
+			if (!allowedFormats.includes(file.type)) {
+				toast.error(
+					`Please select a valid file format (${allowedFormats.join(
+						", "
+					)}).`
+				);
+				return;
+			}
+
+			// Check file size
+			if (file.size > maxSize) {
+				toast.error(
+					`File size exceeds the maximum limit of ${
+						maxSize / (1024 * 1024)
+					}mb.`
+				);
+				return;
+			}
+
+			// File is valid, proceed with file reading
 			const reader = new FileReader();
 			reader.onload = (e) => {
 				if (e.target?.result) {
 					const mediaUrl = e.target.result as string;
-					setMediaData({
-						name: file.name,
-						url: mediaUrl,
-						type: file.type.split("/")[0],
-					});
+
+					dispatch(
+						changeFormData({
+							alertImage: {
+								...alertImage,
+								name: file.name,
+								url: mediaUrl,
+								type: file.type.split("/")[0],
+							},
+						})
+					);
 				}
 			};
 			reader.readAsDataURL(file);
 		}
 	};
+
 
 	const handleUploadButtonClick = () => {
 		if (fileInputRef.current) {
@@ -52,10 +118,27 @@ const AlertImage = () => {
 	return (
 		<>
 			<label className="uppercase font-semibold flex items-center gap-2 mt-2 mb-3">
-				Alert Image <FaExclamationCircle className="rotate-180" size={17} />
+				Alert Image
+				<FaExclamationCircle
+					className="rotate-180"
+					size={17}
+					id="alertImageTooltip"
+				/>
+				<Tooltip
+					anchorSelect="#alertImageTooltip"
+					place="bottom"
+					className="z-50"
+				>
+					<span>Supported Formats</span> <br />
+					<span>PNG, JPEG, WEBP -</span>&nbsp;
+					<span className="font-normal capitalize">Max Size: 25mb</span>
+					<br />
+					<span>GIF, WEBM, MP4 -</span>&nbsp;
+					<span className="font-normal capitalize">Max Size: 100mb</span>
+				</Tooltip>
 			</label>
 
-			<div className="border-dashed border-2 flex flex-col w-fullv min-h-40 rounded relative">
+			<div className="border-dashed border-2 flex flex-col w-full min-h-40 rounded relative">
 				<Input
 					ref={fileInputRef}
 					type="file"
@@ -65,13 +148,22 @@ const AlertImage = () => {
 					onChange={handleFileChange}
 				/>
 
-				{mediaData?.url && (
+				{alertImage?.url && (
 					<div className="flex justify-between items-center pl-2 pb-2 z-10">
-						<p>{mediaData?.name}</p>
+						<p>{alertImage?.name}</p>
 						<Button
 							iconOnly
 							onClick={() => {
-								setMediaData({ url: "", type: "", name: "" });
+								dispatch(
+									changeFormData({
+										alertImage: {
+											url: "",
+											type: "",
+											name: "",
+											scale: 50,
+										},
+									})
+								);
 							}}
 						>
 							<RxCross1 />
@@ -79,24 +171,26 @@ const AlertImage = () => {
 					</div>
 				)}
 
-				<div className="w-full min-h-20 max-h-40 flex-1 flex object-cover bg-cover">
-					{mediaData?.type === "video" && (
-						<MediaPlayer
-							src={mediaData?.url}
-							autoplay
-							muted
-							className="rounded-none m-0 p-0"
-						>
-							<MediaProvider></MediaProvider>
-							<DefaultVideoLayout icons={defaultLayoutIcons} />
-						</MediaPlayer>
+				<div className="w-full min-h-20 max-h-40 flex">
+					{alertImage?.type === "video" && (
+						<div>
+							<MediaPlayer
+								src={alertImage?.url}
+								autoplay
+								muted
+								className="rounded-none m-0 p-0"
+							>
+								<MediaProvider></MediaProvider>
+								<DefaultVideoLayout icons={defaultLayoutIcons} />
+							</MediaPlayer>
+						</div>
 					)}
 
-					{mediaData?.type === "image" && (
+					{alertImage?.type === "image" && (
 						<img
-							src={mediaData?.url}
+							src={alertImage?.url}
 							alt="Alert image"
-							className="w-full"
+							className="w-full object-contain"
 						/>
 					)}
 				</div>
@@ -109,14 +203,28 @@ const AlertImage = () => {
 				<label>Scale</label>
 				<input
 					type="range"
+					min={0}
+					max={100}
+					step={1}
 					className="appearance-none w-full h-1 rounded-full outline-none cursor-pointer"
 					style={{
 						backgroundImage:
 							"linear-gradient(to right, #00c798, #00c798)",
 					}}
+					value={alertImage?.scale}
+					onChange={(e) => {
+						const scale = e.target.value;
+						dispatch(
+							changeFormData({
+								alertImage: {
+									...alertImage,
+									scale: scale || 0,
+								},
+							})
+						);
+					}}
 				/>
-
-				<label>9%</label>
+				<label className="w-12">{alertImage?.scale}%</label>
 			</div>
 		</>
 	);

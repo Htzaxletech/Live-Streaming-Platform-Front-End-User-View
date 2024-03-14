@@ -76,6 +76,7 @@ const StreamManager = () => {
 	useEffect(() => {
 		socket.on("added_live_emitter", (value) => {
 			console.log("streamManager", value);
+			setIsStartLive(value?.live_status);
 			setStreamKey(value?.streamKey);
 			if (value) {
 				setChannelData(value);
@@ -303,7 +304,7 @@ const StreamManager = () => {
 		<div className="pb-8">
 			<div className="flex-1 flex flex-col pt-4">
 				<div className={`${isChatOpen ? "md:mr-72 lg:mr-80" : "mr-0"}`}>
-					<div className="h-50 xl:h-[550px] flex justify-center">
+					<div className="flex justify-center">
 						{/* <ReactPlayer
 							url={generateStreamUrl(streamKey)}
 							controls
@@ -318,22 +319,29 @@ const StreamManager = () => {
 							}}
 						/> */}
 						{streamKey ? (
-							<MediaPlayer
-								src={generateStreamUrl(streamKey)}
-								autoplay
-								muted
-								className="h-full rounded-none"
-								onHlsError={() => setStreamKey("")}
-								streamType="ll-live"
-								load="eager"
-								aspectRatio="16/9"
-							>
-								<MediaProvider></MediaProvider>
-								<DefaultAudioLayout icons={defaultLayoutIcons} />
-								<DefaultVideoLayout icons={defaultLayoutIcons} />
-							</MediaPlayer>
+							<div>
+								<MediaPlayer
+									src={generateStreamUrl(streamKey)}
+									autoplay
+									muted
+									className="h-44 lg:h-52 xl:h-[550px] rounded-none"
+									onHlsError={() => {
+										setStreamKey("");
+										setChannelData({});
+									}}
+									streamType="ll-live"
+									load="eager"
+									aspectRatio="16/9"
+								>
+									<MediaProvider></MediaProvider>
+									<DefaultAudioLayout icons={defaultLayoutIcons} />
+									<DefaultVideoLayout icons={defaultLayoutIcons} />
+								</MediaPlayer>
+							</div>
 						) : (
-							<Offline />
+							<div className="flex w-full h-52 md:h-96 xl:h-[550px]">
+								<Offline />
+							</div>
 						)}
 					</div>
 
@@ -347,7 +355,7 @@ const StreamManager = () => {
 										<img
 											src={channelData?.s3categoryImage}
 											alt="Category Image"
-											className="w-[150px] h-[100px] md:h-[150px] object-cover border border-black"
+											className="w-[150px] h-[100px] md:h-[150px] object-cover border border-black bg-primary"
 											loading="lazy"
 										/>
 									</div>
