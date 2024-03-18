@@ -1,21 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Button from "@components/ui/Button";
 import { endpoints } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
 import { RootState } from "@store/index";
+import { changeFormData, changeVariants } from "@store/slices/alertSlice";
 import { convertImageUrlToBase64 } from "@utils/helpers";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import store from "store2";
 
 interface ResponseData {
 	success: boolean;
 	message: string;
+	data: any;
 }
 
 const PreviewHeader = () => {
+	const dispatch = useDispatch();
 	const [loading, setLoading] = useState(false);
-
 	const alertData = useSelector((state: RootState) => state.alert.data);
 
 	const handleSave = async () => {
@@ -31,19 +34,18 @@ const PreviewHeader = () => {
 		);
 		const splittedSoundURL = b64AlertSound.split(",")[1];
 
-
 		try {
 			const reqData = {
 				userID: store.get("id"),
 				variantID: alertData.variantID,
-				alert_conditionID: alertData.alertCondition,
+				alert_conditionID: alertData.alertConditionID,
 				variantName: alertData.variantName,
 				duration: alertData.duration,
-				animationInID: 1,
-				animationOutID: 2,
+				inType: alertData.inAnimationType,
+				outType: alertData.outAnimationType,
 				inSecond: alertData.inAnimationTime,
 				outSecond: alertData.outAnimationTime,
-				layoutID: alertData.layout,
+				layoutID: parseInt(alertData.layout),
 				message: alertData.message,
 				textColor: alertData.textColor,
 				accentColor: alertData.accentColor,
@@ -54,10 +56,10 @@ const PreviewHeader = () => {
 				alertSoundName: alertData.alertSound.name,
 				is_new: 0,
 				item_variantID: alertData.itemVariantsID,
+				streamKey: store.get("channelData")?.streamKey,
 			};
 
 			console.log("reqData", reqData);
-			return false;
 
 			const response: ResponseData | null = await makeRequest(
 				"post",
@@ -65,19 +67,58 @@ const PreviewHeader = () => {
 				reqData
 			);
 
-			if (response !== null){
+			if (response !== null) {
 				const { success, message } = response;
 
 				if (success) {
 					toast.success(message);
+					await getVariant();
 				} else {
 					toast.error(message);
 				}
 			}
-				
+
 			setLoading(false);
 		} catch (error) {
 			setLoading(false);
+		}
+	};
+
+	const getVariant = async () => {
+		try {
+			const variantID = alertData.variantID;
+
+			const variantEndpoints: { [key: number]: string } = {
+				1: endpoints.getFollows,
+				2: endpoints.getDonations,
+				3: endpoints.getSubscriptions,
+			};
+
+			const response: ResponseData | null = await makeRequest(
+				"get",
+				variantEndpoints[alertData.variantID],
+				{
+					userID: store.get("id"),
+				}
+			);
+
+			if (response !== null) {
+				const { success, message, data } = response;
+
+				if (success) {
+					dispatch(
+						changeVariants({
+							...(variantID === 1 && { follow: data }),
+							...(variantID === 2 && { donation: data }),
+							...(variantID === 3 && { subscription: data }),
+						})
+					);
+				} else {
+					toast.error(message);
+				}
+			}
+		} catch (error: any) {
+			toast.error(error);
 		}
 	};
 

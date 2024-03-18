@@ -16,7 +16,7 @@ const VariantsAside = () => {
 	interface Variant {
 		variantTitle: string;
 	}
-	
+
 	interface ResponseData {
 		success: boolean;
 		message: string;
@@ -106,16 +106,10 @@ const VariantsAside = () => {
 					defaultOpen={isShowFollow}
 					className="bg-background-float"
 				>
-					<Variants hideNewVariant initialData={variants.follow} />
-				</TogglePanel>
-
-				<TogglePanel
-					heading="Subscriptions"
-					icon={<FaRegStar size={16} />}
-					defaultOpen={isShowSubscribe}
-					className="bg-background-float"
-				>
-					<Variants initialData={variants.subscription} />
+					<Variants
+						initialData={variants.follow}
+						variantID={1}
+					/>
 				</TogglePanel>
 
 				<TogglePanel
@@ -124,7 +118,16 @@ const VariantsAside = () => {
 					defaultOpen={isShowDonate}
 					className="bg-background-float"
 				>
-					<Variants initialData={variants.donation} />
+					<Variants initialData={variants.donation} variantID={2} />
+				</TogglePanel>
+
+				<TogglePanel
+					heading="Subscriptions"
+					icon={<FaRegStar size={16} />}
+					defaultOpen={isShowSubscribe}
+					className="bg-background-float"
+				>
+					<Variants initialData={variants.subscription} variantID={3} />
 				</TogglePanel>
 			</div>
 		</div>

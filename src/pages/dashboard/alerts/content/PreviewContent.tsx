@@ -96,6 +96,8 @@ const PreviewContent = () => {
 
 		const inMatch = inAnimationTime.match(/duration-(\d+)/);
 		const outMatch = inAnimationTime.match(/duration-(\d+)/);
+
+		console.log("inAnimation", inAnimation);
 		const durationMs = parseInt(duration) * 1000;
 
 		if (!inMatch || !outMatch) return;

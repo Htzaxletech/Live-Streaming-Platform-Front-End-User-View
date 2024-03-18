@@ -58,6 +58,7 @@ const GeneralSettings = () => {
 							dispatch(
 								changeFormData({
 									alertCondition: data || [],
+									alertConditionID: data?.[0]?.ID
 								})
 							);
 						} else {

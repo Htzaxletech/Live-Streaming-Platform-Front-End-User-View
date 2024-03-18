@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Button from "@components/ui/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { changeVariants } from "@store/slices/alertSlice";
+import { changeFormData, changeVariants } from "@store/slices/alertSlice";
 import { makeRequest } from "@services/utils";
 import { RootState } from "@store/index";
 import { endpoints } from "@services/endpoints";
 import store from "store2";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import { Oval } from "react-loader-spinner";
 
 interface Variant {
 	variantTitle: string;
@@ -20,45 +22,97 @@ interface ResponseData {
 const DangerZone = () => {
 
 	const dispatch = useDispatch();
-	const { variantID } = useSelector(
+	const [loading, setLoading] = useState<boolean>(false);
+	const { variantID, itemVariantsID } = useSelector(
 		(state: RootState) => state.alert.data
 	);
 
-	const variants = useSelector((state: RootState) => state.alert.variants);
+	const initState = {
+		itemVariantsID: 0,
+		width: 500,
+		height: 500,
+		layout: "",
+		inAnimationType: "",
+		inAnimation: "",
+		outAnimation: "",
+		outAnimationType: "",
+		inAnimationTime: "",
+		outAnimationTime: "",
+		duration: "",
+		variantName: "",
+		textColor: "",
+		accentColor: "",
+		message: "",
+		defaultTextColor: "",
+		defaultAccentColor: "",
+		username: "",
+		isCheckedSayTextAlert: false,
+		alertImage: {
+			url: "",
+			type: "",
+			name: "",
+			scale: 0,
+		},
+		alertSound: {
+			url: "",
+			type: "",
+			name: "",
+		},
+		alertConditionID: 0,
+		alertCondition: [],
+		variantID: 0,
+	};
 
 	const handleDeleteVariant = async () => {
-		dispatch(changeVariants({ ...variants, follow: [], isShowFollow: true }));
+		if (itemVariantsID){
+			setLoading(true);
 
-		const data = {
-			...(variantID === 1 && { follow: [], isShowFollow: true }),
-			...(variantID === 2 && { donation: [], isShowDonate: true }),
-			...(variantID === 3 && { subscription: [], isShowSubscribe: true }),
-		};
+			try {
+				const reqData = {
+					item_variantID: itemVariantsID,
+				};
 
-		dispatch(
-			changeVariants(data)
-		);
+				const response: ResponseData | null = await makeRequest(
+					"delete",
+					endpoints.deleteVariant,
+					reqData
+				);
 
-		// console.log("data", data);
-		// await getVariant();
+				if (response !== null) {
+					const { success, message } = response;
+
+					if (success) {
+						toast.success(message);
+						await getVariant();
+					} else {
+						toast.error(message);
+					}
+				}
+				setLoading(false);
+			} catch (error: any) {
+				toast.error(error);
+				setLoading(false);
+			}
+		}else{
+			toast.error("Please select the item variant you wish to delete");
+		}
 	}
 
 	const getVariant = async () => {
 		try {
 			const reqData = {
-				userID: 1 || store.get("id"),
+				userID: store.get("id"),
 			};
 
-			const endpoint: string =
-				variantID === 1
-					? endpoints.getFollows
-					: variantID === 2
-					? endpoints.getDonations
-					: endpoints.getSubscriptions;
+			const variantEndpoints: { [key: number]: string } = {
+				1: endpoints.getFollows,
+				2: endpoints.getDonations,
+				3: endpoints.getSubscriptions,
+			};
 
 			const response: ResponseData | null = await makeRequest(
 				"get",
-				endpoint,
+				variantEndpoints[variantID],
 				reqData
 			);
 
@@ -71,9 +125,10 @@ const DangerZone = () => {
 							...(variantID === 1 && { follow: data }),
 							...(variantID === 2 && { donation: data }),
 							...(variantID === 3 && { subscription: data }),
-						})
+						})						
 					);
 
+					dispatch(changeFormData(initState));
 				} else {
 					toast.error(message);
 				}
@@ -86,9 +141,27 @@ const DangerZone = () => {
 	return (
 		<div className="p-4">
 			<div className="flex w-full flex-col gap-2">
-				<p className="text-xs font-semibold">These actions can not be undone</p>
-				<Button color="danger" size="lg" className="w-full" onClick={handleDeleteVariant}>
+				<p className="text-xs font-semibold">
+					These actions can not be undone
+				</p>
+				<Button
+					color="danger"
+					size="lg"
+					className="w-full"
+					onClick={handleDeleteVariant}
+					disabled={loading || !itemVariantsID}
+				>
 					Delete Variant
+					{loading && (
+						<Oval
+							visible={loading}
+							height="22"
+							width="22"
+							color="#ffffff"
+							ariaLabel="oval-loading"
+							wrapperClass="ml-2"
+						/>
+					)}
 				</Button>
 			</div>
 		</div>

@@ -51,7 +51,7 @@ export const makeRequest = async <T>(
 		const response: AxiosResponse<T> = await api.request<T>({
 			method,
 			url,
-			...(method === "get" || method === "GET"
+			...(["get", "GET", "delete", "DELETE"].includes(method)
 				? { params: data }
 				: { data }),
 			...config,
