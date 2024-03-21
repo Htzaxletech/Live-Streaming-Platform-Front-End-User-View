@@ -3,9 +3,10 @@ import Button from "@components/ui/Button";
 import { endpoints } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
 import { RootState } from "@store/index";
-import { changeFormData, changeVariants } from "@store/slices/alertSlice";
-import { convertImageUrlToBase64 } from "@utils/helpers";
+import { changeVariants } from "@store/slices/alertSlice";
+import { convertImageUrlToBase64, isBase64URL } from "@utils/helpers";
 import { useState } from "react";
+import { Oval } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import store from "store2";
@@ -21,46 +22,68 @@ const PreviewHeader = () => {
 	const [loading, setLoading] = useState(false);
 	const alertData = useSelector((state: RootState) => state.alert.data);
 
-	const handleSave = async () => {
+	const handleSaveChanges = async () => {
 		setLoading(true);
 
-		const b64AlertImage = await convertImageUrlToBase64(
-			alertData.alertImage.url || ""
-		);
-		const splittedImageURL = b64AlertImage.split(",")[1];
+		let splittedImageURL;
+		let splittedSoundURL;
 
-		const b64AlertSound = await convertImageUrlToBase64(
-			alertData.alertSound.url || ""
-		);
-		const splittedSoundURL = b64AlertSound.split(",")[1];
+		if (isBase64URL(alertData.alertImage.url)) {
+			splittedImageURL = alertData.alertImage.url.split(",")[1];
+		} else {
+			const b64AlertImage = await convertImageUrlToBase64(
+				alertData.alertImage.url || ""
+			);
+			splittedImageURL = b64AlertImage.split(",")[1];
+		}
+
+		if (isBase64URL(alertData.alertSound.url)) {
+			splittedSoundURL = alertData.alertSound.url.split(",")[1];
+		} else {
+			const b64AlertSound = await convertImageUrlToBase64(
+				alertData.alertSound.url || ""
+			);
+			splittedSoundURL = b64AlertSound.split(",")[1];
+		}
+
+	
 
 		try {
 			const reqData = {
 				userID: store.get("id"),
-				variantID: alertData.variantID,
-				alert_conditionID: alertData.alertConditionID,
-				variantName: alertData.variantName,
-				duration: alertData.duration,
-				inType: alertData.inAnimationType,
-				outType: alertData.outAnimationType,
-				inSecond: alertData.inAnimationTime,
-				outSecond: alertData.outAnimationTime,
-				layoutID: parseInt(alertData.layout),
-				message: alertData.message,
-				textColor: alertData.textColor,
-				accentColor: alertData.accentColor,
+				variantID: alertData?.variantID,
+				alert_conditionID: alertData?.alertConditionID,
+				variantName: alertData?.variantName,
+				duration: alertData?.duration,
+				inAnimation: alertData?.inAnimation,
+				outAnimation: alertData?.outAnimation,
+				animationInType: alertData?.inAnimationType,
+				animationOutType: alertData?.outAnimationType,
+				inSecond: alertData?.inAnimationTime,
+				outSecond: alertData?.outAnimationTime,
+				layoutID: parseInt(alertData?.layout),
+				message: alertData?.message,
+				textColor: alertData?.textColor,
+				accentColor: alertData?.accentColor,
 				alertImage: splittedImageURL,
-				alertImageName: alertData.alertImage.name,
-				scale: alertData.alertImage.scale,
+				alertImageName: alertData?.alertImage.name,
+				alertImageType: alertData?.alertImage.type,
+				scale: alertData?.alertImage.scale,
 				alertSound: splittedSoundURL,
-				alertSoundName: alertData.alertSound.name,
+				alertSoundName: alertData?.alertSound.name,
+				alertSoundType: alertData?.alertSound.type,
 				is_new: 0,
-				item_variantID: alertData.itemVariantsID,
+				item_variantID: alertData?.itemVariantsID,
 				streamKey: store.get("channelData")?.streamKey,
+				width: alertData?.width,
+				height: alertData?.height,
+				voice_alert_status: alertData?.isCheckedSayTextAlert ? 1 : 0,
 			};
 
 			console.log("reqData", reqData);
-
+			// console.log("alertData?.inAnimationType", alertData?.inAnimationType);
+			// return false;
+			
 			const response: ResponseData | null = await makeRequest(
 				"post",
 				endpoints.saveVariant,
@@ -131,16 +154,31 @@ const PreviewHeader = () => {
 				<h6 className="font-semibold">Alert Box 2</h6>
 			</div>
 			<div className="flex items-center gap-2">
-				<Button color="default" size="lg">
+				<Button
+					color="default"
+					size="lg"
+					disabled={!alertData?.itemVariantsID}
+				>
 					Discard Changes
 				</Button>
 				<Button
 					color="primary"
 					size="lg"
-					onClick={handleSave}
-					disabled={loading}
+					onClick={handleSaveChanges}
+					disabled={loading || !alertData?.itemVariantsID}
 				>
 					Save Changes
+					{loading && (
+						<Oval
+							visible={loading}
+							height="20"
+							width="20"
+							color="#ffffff"
+							secondaryColor="#00c798"
+							ariaLabel="oval-loading"
+							wrapperClass="ml-2"
+						/>
+					)}
 				</Button>
 			</div>
 		</div>

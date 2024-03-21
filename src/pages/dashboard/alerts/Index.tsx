@@ -8,8 +8,23 @@ import PreviewContent from "./content/PreviewContent";
 import PreviewHeader from "./header/PreviewHeader";
 import store from "store2";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { changeFormData } from "@store/slices/alertSlice";
+import { RootState } from "@store/index";
 
 const Alerts = () => {
+	const dispatch = useDispatch();
+	const initState = useSelector(
+		(state: RootState) => state.alert.initialAlertState
+	);
+
+	useEffect(()=>{
+		return () => {
+			dispatch(changeFormData({ ...initState }));
+		}
+	}, [])
+
 	const handleCopyToClipboard = () => {
 		navigator.clipboard
 			.writeText(

@@ -20,51 +20,18 @@ interface ResponseData {
 }
 
 const DangerZone = () => {
-
 	const dispatch = useDispatch();
 	const [loading, setLoading] = useState<boolean>(false);
 	const { variantID, itemVariantsID } = useSelector(
 		(state: RootState) => state.alert.data
 	);
 
-	const initState = {
-		itemVariantsID: 0,
-		width: 500,
-		height: 500,
-		layout: "",
-		inAnimationType: "",
-		inAnimation: "",
-		outAnimation: "",
-		outAnimationType: "",
-		inAnimationTime: "",
-		outAnimationTime: "",
-		duration: "",
-		variantName: "",
-		textColor: "",
-		accentColor: "",
-		message: "",
-		defaultTextColor: "",
-		defaultAccentColor: "",
-		username: "",
-		isCheckedSayTextAlert: false,
-		alertImage: {
-			url: "",
-			type: "",
-			name: "",
-			scale: 0,
-		},
-		alertSound: {
-			url: "",
-			type: "",
-			name: "",
-		},
-		alertConditionID: 0,
-		alertCondition: [],
-		variantID: 0,
-	};
+	const initState = useSelector(
+		(state: RootState) => state.alert.initialAlertState
+	);
 
 	const handleDeleteVariant = async () => {
-		if (itemVariantsID){
+		if (itemVariantsID) {
 			setLoading(true);
 
 			try {
@@ -83,20 +50,21 @@ const DangerZone = () => {
 
 					if (success) {
 						toast.success(message);
-						await getVariant();
+						dispatch(changeFormData(initState));
 					} else {
 						toast.error(message);
 					}
+					await getVariant();
 				}
 				setLoading(false);
 			} catch (error: any) {
 				toast.error(error);
 				setLoading(false);
 			}
-		}else{
+		} else {
 			toast.error("Please select the item variant you wish to delete");
 		}
-	}
+	};
 
 	const getVariant = async () => {
 		try {
@@ -125,10 +93,8 @@ const DangerZone = () => {
 							...(variantID === 1 && { follow: data }),
 							...(variantID === 2 && { donation: data }),
 							...(variantID === 3 && { subscription: data }),
-						})						
+						})
 					);
-
-					dispatch(changeFormData(initState));
 				} else {
 					toast.error(message);
 				}
@@ -136,7 +102,7 @@ const DangerZone = () => {
 		} catch (error: any) {
 			toast.error(error);
 		}
-	}
+	};
 
 	return (
 		<div className="p-4">
@@ -158,6 +124,7 @@ const DangerZone = () => {
 							height="22"
 							width="22"
 							color="#ffffff"
+							secondaryColor="#ffffff"
 							ariaLabel="oval-loading"
 							wrapperClass="ml-2"
 						/>

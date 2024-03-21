@@ -58,5 +58,6 @@ export const endpoints = {
 	getAlertConditionFollowing: "/alert/get_alert_condition_follow",
 	saveVariant: "/alert/add_new_itemvariant",
 	deleteVariant: "/alert/delete_itemvariant",
+	changeVariantStatus: "/alert/set_onoff_variant",
 	// Add more endpoints as needed
 };

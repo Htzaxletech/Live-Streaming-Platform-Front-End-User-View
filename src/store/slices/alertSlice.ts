@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import ringtone from "@assets/ringtone.mp3";
+// import ringtone from "@assets/ringtone.mp3";
 
 const alertSlice = createSlice({
 	name: "alert",
@@ -78,11 +78,46 @@ const alertSlice = createSlice({
 			follow: [],
 			subscription: [],
 			donation: [],
-			isShowFollow: false,
+			isShowFollow: true,
 			isShowSubscribe: false,
 			isShowDonate: false,
 			isShowPanel: false
 		},
+		initialAlertState: {
+			itemVariantsID: 0,
+			width: 500,
+			height: 500,
+			layout: "",
+			inAnimationType: "",
+			inAnimation: "",
+			outAnimation: "",
+			outAnimationType: "",
+			inAnimationTime: "",
+			outAnimationTime: "",
+			duration: "",
+			variantName: "",
+			textColor: "",
+			accentColor: "",
+			message: "",
+			defaultTextColor: "",
+			defaultAccentColor: "",
+			username: "",
+			isCheckedSayTextAlert: false,
+			alertImage: {
+				url: "",
+				type: "",
+				name: "",
+				scale: 0,
+			},
+			alertSound: {
+				url: "",
+				type: "",
+				name: "",
+			},
+			alertConditionID: 0,
+			alertCondition: [],
+			variantID: 0,
+		}
 	},
 	reducers: {
 		changeFormData(state, action) {

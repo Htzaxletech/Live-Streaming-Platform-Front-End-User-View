@@ -74,14 +74,17 @@ const StreamManager = () => {
 	});
 
 	useEffect(() => {
-		socket.on("added_live_emitter", (value) => {
+		const handleAddedLiveEmitter = (value) => {
 			console.log("streamManager", value);
 			setIsStartLive(value?.live_status);
 			setStreamKey(value?.streamKey);
 			if (value) {
 				setChannelData(value);
 			}
-		});
+		};
+
+		// Add the socket listener
+		socket.on("added_live_emitter", handleAddedLiveEmitter);
 
 		const abortController = new AbortController();
 		const signal = abortController.signal;
@@ -96,14 +99,6 @@ const StreamManager = () => {
 						url: ep.secondCategoryList,
 						config: { signal },
 					},
-					// {
-					// 	method: "get",
-					// 	url: ep.liveByUserID,
-					// 	data: {
-					// 		userID: store.get("id"),
-					// 	},
-					// 	config: { signal },
-					// },
 				];
 
 				const responses = await makeMultipleRequests(requests);
@@ -111,7 +106,6 @@ const StreamManager = () => {
 				if (responses !== null) {
 					const tags = responses[0];
 					const category = responses[1];
-					// const channel = responses[2];
 
 					if (tags?.success) {
 						const data = tags?.data;
@@ -140,14 +134,6 @@ const StreamManager = () => {
 					} else {
 						toast.error(category?.message);
 					}
-
-					// if (channel?.success) {
-					// 	const data = channel?.data[0];
-
-					// 	setChannelData(data);
-					// 	setStreamKey(data?.streamKey);
-					// 	setIsStartLive(data.live_status);
-					// }
 				}
 			} catch (error) {
 				// Check if the error is due to the request being aborted
@@ -157,38 +143,11 @@ const StreamManager = () => {
 			}
 		})();
 
-		// fetchData();
-
-		// const interval = setInterval(fetchData, 15000);
-
 		return () => {
-			// clearInterval(interval); // Clear interval when the component unmounts
+			socket.off("added_live_emitter", handleAddedLiveEmitter);
 			abortController.abort();
 		};
 	}, []);
-
-	// const fetchData = async () => {
-	// 	try {
-	// 		const data = {
-	// 			userID: store.get("id"),
-	// 		};
-
-	// 		const response = await makeRequest("get", ep.liveByUserID, data);
-
-	// 		if (response?.success) {
-	// 			const data = response?.data[0];
-
-	// 			setChannelData(data);
-	// 			setStreamKey(data?.streamKey);
-	// 			setIsStartLive(data.live_status);
-	// 		} else {
-	// 			toast.error(response?.message);
-	// 		}
-	// 		setLoading(false);
-	// 	} catch (error) {
-	// 		setLoading(false);
-	// 	}
-	// };
 
 	const onAdd = useCallback(
 		(newTag: Tag) => {

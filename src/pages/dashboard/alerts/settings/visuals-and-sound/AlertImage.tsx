@@ -23,29 +23,6 @@ const AlertImage = () => {
 	const { alertImage } = useSelector((state: RootState) => state.alert.data);
 	const dispatch = useDispatch();
 
-	// const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-	// 	const file = event.target.files?.[0];
-	// 	if (file) {
-	// 		const reader = new FileReader();
-	// 		reader.onload = (e) => {
-	// 			if (e.target?.result) {
-	// 				const mediaUrl = e.target.result as string;
-	// 				dispatch(
-	// 					changeFormData({
-	// 						alertImage: {
-	// 							...alertImage,
-	// 							name: file.name,
-	// 							url: mediaUrl,
-	// 							type: file.type.split("/")[0],
-	// 						},
-	// 					})
-	// 				);
-	// 			}
-	// 		};
-	// 		reader.readAsDataURL(file);
-	// 	}
-	// };
-
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (file) {

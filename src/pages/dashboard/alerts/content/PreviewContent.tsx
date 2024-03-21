@@ -13,6 +13,8 @@ import "@vidstack/react/player/styles/default/layouts/video.css";
 import { useRef, useState } from "react";
 import React from "react";
 import { useSpeech } from "react-text-to-speech";
+import { socket } from "@socket/index";
+import store from "store2";
 
 const PreviewContent = () => {
 	const mediaPlayerRef = useRef<MediaPlayerInstance>(null);
@@ -57,6 +59,8 @@ const PreviewContent = () => {
 		isCheckedSayTextAlert,
 		alertImage,
 		alertSound,
+		variantID,
+		itemVariantsID
 	} = useSelector((state: RootState) => state.alert.data);
 
 	const { method } = layout && layoutList.find(
@@ -132,6 +136,18 @@ const PreviewContent = () => {
 		}
 	};
 
+	const handleSendTestAlert = () => {
+		console.log("handleSendTestAlert");
+		socket.emit(
+			"send_test_alert",
+			{
+				streamKey: store.get("channelData")?.streamKey,
+				variantID,
+				item_variantID: itemVariantsID,
+			}
+		);
+	}
+
 	return (
 		<div className="flex grow flex-col max-h-full h-full ml-0">
 			<div className="flex grow h-full max-h-full">
@@ -144,7 +160,7 @@ const PreviewContent = () => {
 						>
 							Preview Alert
 						</Button>
-						<Button color="default">Send Test Alert</Button>
+						<Button color="default" onClick={handleSendTestAlert}>Send Test Alert</Button>
 					</div>
 					<div className="h-full flex items-center justify-center mt-0">
 						{alertSound?.url && (
@@ -185,7 +201,7 @@ const PreviewContent = () => {
 														(alertImage?.scale / 100) * 2
 													})`,
 												}}
-												className={`flex grow w-1/2 self-center ${
+												className={`flex grow w-1/2 self-center justify-center ${
 													method === "overlay" ? "relative" : ""
 												}`}
 											>
@@ -195,6 +211,7 @@ const PreviewContent = () => {
 															src={alertImage?.url}
 															autoplay
 															// loop
+															muted
 															className="w-full h-full"
 														>
 															<MediaProvider></MediaProvider>

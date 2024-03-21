@@ -20,9 +20,13 @@ const GeneralSettings = () => {
 	const dispatch = useDispatch();
 	const [loading, setLoading] = useState(true);
 
-	const { duration, variantName, alertCondition, variantID } = useSelector(
-		(state: RootState) => state.alert.data
-	);
+	const {
+		duration,
+		variantName,
+		alertCondition,
+		variantID,
+		alertConditionID,
+	} = useSelector((state: RootState) => state.alert.data);
 
 	useEffect(() => {
 		const abortController = new AbortController();
@@ -34,17 +38,15 @@ const GeneralSettings = () => {
 
 				try {
 					const reqData = {};
-
-					const endpoint: string =
-						variantID === 1
-							? endpoints.getAlertConditionFollowing
-							: variantID === 2
-							? endpoints.getAlertConditionDonation
-							: endpoints.getAlertConditionSubscription;
+					const variantEndpoints: { [key: number]: string } = {
+						1: endpoints.getAlertConditionFollowing,
+						2: endpoints.getAlertConditionDonation,
+						3: endpoints.getAlertConditionSubscription,
+					};
 
 					const response: ResponseData | null = await makeRequest(
 						"get",
-						endpoint,
+						variantEndpoints[variantID],
 						reqData,
 						{
 							signal,
@@ -58,7 +60,7 @@ const GeneralSettings = () => {
 							dispatch(
 								changeFormData({
 									alertCondition: data || [],
-									alertConditionID: data?.[0]?.ID
+									alertConditionID: alertConditionID || data?.[0]?.ID,
 								})
 							);
 						} else {
@@ -96,6 +98,12 @@ const GeneralSettings = () => {
 		event.target.select();
 	};
 
+	const handleAlertCondition = (
+		event: React.ChangeEvent<HTMLSelectElement>
+	) => {
+		dispatch(changeFormData({ alertConditionID: event.target.value }));
+	};
+
 	return (
 		<div className="flex flex-col gap-2 w-full p-4">
 			<div className="mt-3 flex flex-col gap-2">
@@ -116,9 +124,9 @@ const GeneralSettings = () => {
 				<Label.Root className="font-semibold">Alert Conditions</Label.Root>
 				<div className="flex relative items-center h-[30px] w-full outline-none text-xl bg-background-base text-foreground-secondary border border-border rounded-md hover:ring-1 hover:ring-border focus-within:ring-2 focus-within:ring-primary">
 					<select
-						value="1"
+						value={alertConditionID}
 						className="text-sm w-full h-full bg-background-base focus-within:ring-2 focus-within:ring-primary pl-3 rounded-md"
-						onChange={() => {}}
+						onChange={handleAlertCondition}
 						disabled={loading}
 					>
 						{alertCondition?.map((i: any, index: number) => {

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Switch } from "@components/ui/Switch";
 
 const TextAndSpeech = () => {
+	const dispatch = useDispatch();
 	const {
 		textColor,
 		accentColor,
@@ -14,7 +15,6 @@ const TextAndSpeech = () => {
 		message,
 		isCheckedSayTextAlert,
 	} = useSelector((state: RootState) => state.alert.data);
-	const dispatch = useDispatch();
 
 	return (
 		<div className="p-4">

@@ -123,6 +123,20 @@ export const convertImageUrlToBase64 = async (
 	}
 };
 
+/**
+ * Checks if the given URL is a Base64-encoded image or not.
+ *
+ * @param {string} url - The URL to check.
+ * @returns {boolean} - True if the URL is a Base64-encoded image, false otherwise.
+ */
+export const isBase64URL = (url: string): boolean => {
+	if (url.startsWith("data:image/") || url.startsWith("data:application/")) {
+		const base64Regex = /^data:image\/([a-zA-Z]*);base64,([^\s]*)$/;
+		return base64Regex.test(url);
+	}
+	return false;
+};
+
 export const videoSliderData = [
 	{
 		coverImage:

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Button from "@components/ui/Button";
-import Input from "@components/ui/Input";
+// import Input from "@components/ui/Input";
 import { Switch } from "@components/ui/Switch";
 import { endpoints } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
@@ -32,11 +32,14 @@ const Variants: React.FC<VariantsProps> = ({
 	hideNewVariant,
 	variantID,
 }) => {
+	const dispatch = useDispatch();
 	const [loading, setLoading] = useState<boolean>(false);
 	const alertData = useSelector((state: RootState) => state.alert.data);
-	const dispatch = useDispatch();
+	const initState = useSelector(
+		(state: RootState) => state.alert.initialAlertState
+	);
 
-	const initFollowData = {
+	const initNewVariantData = {
 		userID: store.get("id"),
 		alert_conditionID: 1,
 		duration: 1,
@@ -57,9 +60,11 @@ const Variants: React.FC<VariantsProps> = ({
 		variantName: "",
 		item_variantID: "",
 		is_used: 1,
+		width: 500,
+		height: 500
 	};
 
-	const handleAddEntry = async () => {
+	const handleNewVariant = async () => {
 		setLoading(true);
 
 		const b64AlertImage = await convertImageUrlToBase64(
@@ -71,7 +76,7 @@ const Variants: React.FC<VariantsProps> = ({
 		const splittedSoundURL = b64AlertSound.split(",")[1];
 
 		let reqData = {
-			...initFollowData,
+			...initNewVariantData,
 			variantID: variantID,
 			alertImage: splittedImageURL,
 			alertImageName: "Follow.webm",
@@ -104,7 +109,6 @@ const Variants: React.FC<VariantsProps> = ({
 				break;
 		}
 
-		console.log("reqData", reqData);
 		const response: ResponseData | null = await makeRequest(
 			"post",
 			endpoints.saveVariant,
@@ -223,8 +227,14 @@ const Variants: React.FC<VariantsProps> = ({
 									username: resp?.username,
 									inAnimation: resp?.inAnimation,
 									outAnimation: resp?.outAnimation,
+									alertConditionID: resp?.alert_conditionID,
+									width: resp?.width,
+									height: resp?.height,
 								})
 							);
+						}else{
+							dispatch(changeFormData({ ...initState }));
+							await getVariants();
 						}
 					} else {
 						toast.error(message);
@@ -241,6 +251,33 @@ const Variants: React.FC<VariantsProps> = ({
 		};
 	};
 
+	const handleVariantSwitch = async (entry: any) => {
+		try {
+			const reqData = {
+				item_variantID: entry.item_variantID,
+				is_used: !entry.is_used,
+			};
+
+			const response: ResponseData | null = await makeRequest(
+				"post",
+				endpoints.changeVariantStatus,
+				reqData
+			);
+
+			if (response !== null) {
+				const { success, message } = response;
+
+				if (success) {
+					await getVariants();
+				} else {
+					toast.error(message);
+				}
+			}
+		} catch (error: any) {
+			toast.error(error);
+		}
+	};
+
 	return (
 		<div className="pb-2 bg-inherit">
 			<div className="bg-background-float">
@@ -253,7 +290,7 @@ const Variants: React.FC<VariantsProps> = ({
 					<Button
 						size="lg"
 						className="w-full flex gap-2 bg-transparent justify-start mb-3"
-						onClick={handleAddEntry}
+						onClick={handleNewVariant}
 						disabled={loading}
 					>
 						<FaPlus />
@@ -264,7 +301,9 @@ const Variants: React.FC<VariantsProps> = ({
 								height="20"
 								width="20"
 								ariaLabel="oval-loading"
-								wrapperClass="text-primary ml-1"
+								color="#00c798"
+								secondaryColor="#ffffff"
+								wrapperClass="ml-1"
 							/>
 						)}
 					</Button>
@@ -281,15 +320,15 @@ const Variants: React.FC<VariantsProps> = ({
 						onClick={() => !loading && handleItemVariant(entry)}
 					>
 						<div className="flex items-center gap-3">
-							<Input
+							{/* <Input
 								className="max-w-10 rounded-none"
 								size="sm"
 								readOnly
 								value={index + 1}
-							/>
-							{/* <div className="w-10 h-10 flex justify-center items-center border">
+							/> */}
+							<div className="size-8 flex justify-center items-center border bg-background-base">
 								<p>{index + 1}</p>
-							</div> */}
+							</div>
 							<div className="text-xs">
 								<p>
 									<b>{entry.variantName}</b>
@@ -297,10 +336,10 @@ const Variants: React.FC<VariantsProps> = ({
 								<p>{entry.conditionName}</p>
 							</div>
 						</div>
-						<div>
+						<div className="flex items-center bg-background-base rounded-full">
 							<Switch
 								id={`dark-theme-switch-${entry.variantID}`}
-								// onClick={toggleTheme}
+								onClick={() => handleVariantSwitch(entry)}
 								checked={entry.is_used}
 							/>
 						</div>

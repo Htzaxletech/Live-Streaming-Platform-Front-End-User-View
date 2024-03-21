@@ -15,20 +15,27 @@ const UserProfile: React.FC = () => {
 		(state: RootState) => state.auth.isAuthenticated
 	);
 
-	const img =
-		store.get("profile") ||
-		store.get("channelImage") ||
-		"https://static.vecteezy.com/system/resources/previews/015/409/989/non_2x/elegant-man-in-business-suit-with-badge-man-business-avatar-profile-picture-illustration-isolated-vector.jpg";
+	const imgURL = store.get("profile") || store.get("channelImage");
 
 	return (
 		<div className="flex items-center">
 			<Link to={`/dashboard/channel`}>
 				<div className="w-[40px] h-[40px] border rounded-full overflow-hidden">
-					<img
-						className="w-full h-full object-cover"
-						src={img}
-						alt="Profile Avatar"
-					/>
+					{imgURL && imgURL !== "undefined" ? (
+						<img
+							className="w-full h-full object-cover rounded-full"
+							src={imgURL}
+							alt="Profile Avatar"
+						/>
+					) : (
+						<img
+							className="w-full h-full object-cover"
+							src={
+								"https://static.vecteezy.com/system/resources/previews/015/409/989/non_2x/elegant-man-in-business-suit-with-badge-man-business-avatar-profile-picture-illustration-isolated-vector.jpg"
+							}
+							alt="Profile Avatar"
+						/>
+					)}
 				</div>
 			</Link>
 			<div className="ml-2 flex flex-col">

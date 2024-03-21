@@ -101,20 +101,18 @@ const UserMenu = () => {
 		dispatch(logout());
 	};
 
-	const img =
-		store.get("profile") ||
-		store.get("channelImage")
-		
+	const imgURL = store.get("profile") || store.get("channelImage");
+
 	return (
 		<Dropdown.Root modal={false}>
 			<Dropdown.Trigger asChild className="text-foreground outline-none">
 				<div>
 					{isAuthenticated ? (
 						<Button iconOnly color="primary" className="rounded-full">
-							{img ? (
+							{imgURL && imgURL !== "undefined" ? (
 								<img
 									className="w-full h-full object-cover rounded-full"
-									src={img}
+									src={imgURL}
 									alt="Profile Avatar"
 								/>
 							) : (
