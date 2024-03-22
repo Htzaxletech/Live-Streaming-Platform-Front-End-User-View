@@ -110,8 +110,11 @@ const AlertsNoti = () => {
 
 	useEffect(() => {
 		socket.on("send_test_alert", onSendTestAlert);
+		socket.on("follow", onSendTestAlert);
+		
 		return () => {
 			socket.off("send_test_alert", onSendTestAlert);
+			socket.off("follow", onSendTestAlert);
 		};
 	}, []);
 
@@ -120,12 +123,15 @@ const AlertsNoti = () => {
 	}, [alertQueue]);
 
 	const onSendTestAlert = (alertData: any) => {
-		const temp = { ...alertData[0] };
-		setAlertQueue((prevQueue) => [...prevQueue, temp]);
+		console.log("alertData", alertData);
+		if(alertData){
+			const temp = { ...alertData[0] };
+			setAlertQueue((prevQueue) => [...prevQueue, temp]);
+		}
 	};
 
 	const processNextAlert = () => {
-		if (alertQueue.length > 0 && !isProcessing) {
+		if (alertQueue?.length > 0 && !isProcessing) {
 			setIsProcessing(true);
 			const nextAlert = alertQueue[0];
 			showPreview(nextAlert);
@@ -257,16 +263,15 @@ const AlertsNoti = () => {
 	};
 
 	const playNotificationSound = () => {
-		// Play the audio using the MediaPlayer component
 		if (mediaPlayerRef.current) {
 			mediaPlayerRef.current.play();
 		}
 	};
 
 	const stopNotificationSound = () => {
-		// Stop the audio using the MediaPlayer component
 		if (mediaPlayerRef.current) {
 			mediaPlayerRef.current.pause();
+			mediaPlayerRef.current.currentTime = 0;
 		}
 	};
 

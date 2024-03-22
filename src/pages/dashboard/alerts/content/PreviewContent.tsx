@@ -130,6 +130,10 @@ const PreviewContent = () => {
 					setTimeout(() => {
 						setIsAnimating(false);
 						setAnimateClass([]);
+						if (mediaPlayerRef.current) {
+							mediaPlayerRef.current.pause();
+							mediaPlayerRef.current.currentTime = 0;
+						}
 					}, outDuration);
 				}
 			}, inDuration + durationMs);
