@@ -10,11 +10,11 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
 	);
 
 	return (
-		<div className="text-sm">
+		<div className="text-sm flex w-screen h-screen absolute flex-col overflow-hidden">
 			<DashboardNavbar />
 			<Sidebar status="dashboard" />
 			<main
-				className={`pt-8 ${
+				className={`${
 					!isSidebarCollapsed ? "ml-[60px] md:ml-60" : "ml-[60px]"
 				}`}
 			>

@@ -44,7 +44,9 @@ const Channel: React.FC = () => {
 	});
 
 	const [profile] = useState<string>("https://i.stack.imgur.com/l60Hf.png");
-	const [banner] = useState<string>("https://www.hkiod.com/wp-content/plugins/tutor/assets/images/placeholder.svg");
+	const [banner] = useState<string>(
+		"https://www.hkiod.com/wp-content/plugins/tutor/assets/images/placeholder.svg"
+	);
 
 	const initialForm = {
 		selectedImageUrl: "https://i.stack.imgur.com/l60Hf.png",
@@ -63,7 +65,7 @@ const Channel: React.FC = () => {
 		const signal = abortController.signal;
 
 		(async () => {
-			await getProfile(signal)
+			await getProfile(signal);
 		})();
 
 		return () => {
@@ -207,133 +209,140 @@ const Channel: React.FC = () => {
 	};
 
 	return (
-		<div className="container mx-auto mt-10">
-			<div className="mb-7">
-				<Heading size="sm">{t("pages.pp")}</Heading>
-				<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2 flex flex-col md:flex-row gap-2 w-full">
-					<div className="w-full flex justify-center md:w-2/6 lg:w-1/6">
-						<img
-							src={profileSettings.selectedImageUrl}
-							alt="Profile Picture"
-							className="w-[150px] h-[150px] object-cover rounded-full border border-base"
-							loading="lazy"
-							onClick={handleProfileClick}
-						/>
-					</div>
-					<div className="w-full md:w-4/6 lg:w-5/6">
-						<Button color="default" onClick={handleProfileClick}>
-							{t("pages.app")}
-						</Button>
-						<Input
-							type="file"
-							className="hidden"
-							ref={profileRef}
-							accept="image/jpeg"
-							onChange={handleProfileChange}
-						/>
-						<div className="mt-2">{t("pages.imgd")}</div>
-					</div>
-				</div>
-			</div>
-
-			<div className="mb-7">
-				<Heading size="sm">{t("pages.pb")}</Heading>
-				<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2 flex flex-col md:flex-row gap-6 w-full">
-					<div className="w-full lg:w-2/6">
-						<img
-							src={profileSettings.selectedBannerUrl}
-							alt="Profile Picture"
-							className="w-full h-auto md:h-[150px] object-cover border"
-							loading="lazy"
-							onClick={handleBannerClick}
-						/>
-					</div>
-					<div className="w-full lg:w-3/6">
-						<Button color="default" onClick={handleBannerClick}>
-							{t("pages.update")}
-						</Button>
-						<Input
-							type="file"
-							className="hidden"
-							ref={bannerRef}
-							accept="image/jpeg"
-							onChange={handleBannerChange}
-						/>
-						<div className="mt-2">{t("pages.imgd")}.</div>
-					</div>
-				</div>
-			</div>
-
-			<div className="mb-7">
-				<Heading size="sm">{t("pages.ps")}</Heading>
-				<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2">
-					<form onSubmit={handleSaveChanges}>
-						<div className="flex flex-col md:flex-row gap-2 w-full">
-							<Label.Root
-								className="md:w-[280px] left-0 w-full font-semibold"
-								htmlFor="userName"
-							>
-								{t("auth.name")}
-							</Label.Root>
-							<div className="w-full">
-								<Input
-									required
-									id="userName"
-									className="flex-shrink w-full"
-									placeholder="johndoe23"
-									value={profileSettings.userName}
-									onChange={handleUserName}
-								/>
-							</div>
+		<div
+			style={{
+				maxHeight: "calc(100vh - 3rem)",
+				overflowY: "auto",
+			}}
+		>
+			<div className="container mx-auto mt-10">
+				<div className="mb-7">
+					<Heading size="sm">{t("pages.pp")}</Heading>
+					<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2 flex flex-col md:flex-row gap-2 w-full">
+						<div className="w-full flex justify-center md:w-2/6 lg:w-1/6">
+							<img
+								src={profileSettings.selectedImageUrl}
+								alt="Profile Picture"
+								className="w-[150px] h-[150px] object-cover rounded-full border border-base"
+								loading="lazy"
+								onClick={handleProfileClick}
+							/>
 						</div>
-
-						<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
-							<Label.Root
-								className="md:w-[280px] left-0 w-full font-semibold"
-								htmlFor="displayName"
-							>
-								{t("pages.dname")}
-							</Label.Root>
-							<div className="w-full">
-								<Input
-									required
-									id="displayName"
-									className="flex-shrink w-full"
-									placeholder="John Doe"
-									value={profileSettings.displayName}
-									onChange={handleDisplayName}
-								/>
-							</div>
-						</div>
-
-						<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
-							<Label.Root
-								className="md:w-[280px] left-0 w-full font-semibold"
-								htmlFor="bio"
-							>
-								{t("pages.bio")}
-							</Label.Root>
-							<div className="w-full">
-								<textarea
-									id="bio"
-									className="flex-shrink resize-none w-full outline-none bg-background-base text-foreground-secondary border border-border rounded-md hover:ring-[1px] hover:ring-border focus-within:!ring-[2px] focus-within:!ring-primary px-[9px] py-2"
-									rows={3}
-									placeholder="I'm PUBG Streamer and mainly stream FPP"
-									value={profileSettings.bio}
-									onChange={handleBio}
-								/>
-							</div>
-						</div>
-
-						<div className="flex w-full justify-end mt-4">
-							<Button color="primary" type="submit">
-								{loading ? "Loading..." : t("pages.sc")}
+						<div className="w-full md:w-4/6 lg:w-5/6">
+							<Button color="default" onClick={handleProfileClick}>
+								{t("pages.app")}
 							</Button>
+							<Input
+								type="file"
+								className="hidden"
+								ref={profileRef}
+								accept="image/jpeg"
+								onChange={handleProfileChange}
+							/>
+							<div className="mt-2">{t("pages.imgd")}</div>
 						</div>
-					</form>
+					</div>
 				</div>
+
+				<div className="mb-7">
+					<Heading size="sm">{t("pages.pb")}</Heading>
+					<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2 flex flex-col md:flex-row gap-6 w-full">
+						<div className="w-full lg:w-2/6">
+							<img
+								src={profileSettings.selectedBannerUrl}
+								alt="Profile Picture"
+								className="w-full h-auto md:h-[150px] object-cover border"
+								loading="lazy"
+								onClick={handleBannerClick}
+							/>
+						</div>
+						<div className="w-full lg:w-3/6">
+							<Button color="default" onClick={handleBannerClick}>
+								{t("pages.update")}
+							</Button>
+							<Input
+								type="file"
+								className="hidden"
+								ref={bannerRef}
+								accept="image/jpeg"
+								onChange={handleBannerChange}
+							/>
+							<div className="mt-2">{t("pages.imgd")}.</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="mb-7">
+					<Heading size="sm">{t("pages.ps")}</Heading>
+					<div className="bg-background-base border dark:border-gray-700 p-5 rounded-md mt-2">
+						<form onSubmit={handleSaveChanges}>
+							<div className="flex flex-col md:flex-row gap-2 w-full">
+								<Label.Root
+									className="md:w-[280px] left-0 w-full font-semibold"
+									htmlFor="userName"
+								>
+									{t("auth.name")}
+								</Label.Root>
+								<div className="w-full">
+									<Input
+										required
+										id="userName"
+										className="flex-shrink w-full"
+										placeholder="johndoe23"
+										value={profileSettings.userName}
+										onChange={handleUserName}
+									/>
+								</div>
+							</div>
+
+							<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
+								<Label.Root
+									className="md:w-[280px] left-0 w-full font-semibold"
+									htmlFor="displayName"
+								>
+									{t("pages.dname")}
+								</Label.Root>
+								<div className="w-full">
+									<Input
+										required
+										id="displayName"
+										className="flex-shrink w-full"
+										placeholder="John Doe"
+										value={profileSettings.displayName}
+										onChange={handleDisplayName}
+									/>
+								</div>
+							</div>
+
+							<div className="flex flex-col md:flex-row gap-2 w-full mt-3">
+								<Label.Root
+									className="md:w-[280px] left-0 w-full font-semibold"
+									htmlFor="bio"
+								>
+									{t("pages.bio")}
+								</Label.Root>
+								<div className="w-full">
+									<textarea
+										id="bio"
+										className="flex-shrink resize-none w-full outline-none bg-background-base text-foreground-secondary border border-border rounded-md hover:ring-[1px] hover:ring-border focus-within:!ring-[2px] focus-within:!ring-primary px-[9px] py-2"
+										rows={3}
+										placeholder="I'm PUBG Streamer and mainly stream FPP"
+										value={profileSettings.bio}
+										onChange={handleBio}
+									/>
+								</div>
+							</div>
+
+							<div className="flex w-full justify-end mt-4">
+								<Button color="primary" type="submit">
+									{loading ? "Loading..." : t("pages.sc")}
+								</Button>
+							</div>
+						</form>
+					</div>
+				</div>
+				<SocialLink channelID={store.get("channelData")?.ID} />
 			</div>
-			<SocialLink channelID={store.get("channelData")?.ID} />
 		</div>
 	);
 };

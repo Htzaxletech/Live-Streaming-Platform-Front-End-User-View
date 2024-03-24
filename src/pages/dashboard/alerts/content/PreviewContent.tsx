@@ -101,7 +101,6 @@ const PreviewContent = () => {
 		const inMatch = inAnimationTime.match(/duration-(\d+)/);
 		const outMatch = inAnimationTime.match(/duration-(\d+)/);
 
-		console.log("inAnimation", inAnimation);
 		const durationMs = parseInt(duration) * 1000;
 
 		if (!inMatch || !outMatch) return;
@@ -116,7 +115,6 @@ const PreviewContent = () => {
 			setAnimateClass(classesToAdd);
 
 			setTimeout(() => {
-				isCheckedSayTextAlert && start();
 
 				if (outAnimation !== "none") {
 					const outClassesToAdd = [
@@ -134,6 +132,8 @@ const PreviewContent = () => {
 							mediaPlayerRef.current.pause();
 							mediaPlayerRef.current.currentTime = 0;
 						}
+
+						isCheckedSayTextAlert && start();
 					}, outDuration);
 				}
 			}, inDuration + durationMs);
@@ -164,9 +164,11 @@ const PreviewContent = () => {
 						>
 							Preview Alert
 						</Button>
-						<Button color="default" onClick={handleSendTestAlert}>Send Test Alert</Button>
+						<Button color="default" onClick={handleSendTestAlert}>
+							Send Test Alert
+						</Button>
 					</div>
-					<div className="h-full flex items-center justify-center mt-0">
+					<div className="h-full flex justify-center">
 						{alertSound?.url && (
 							<MediaPlayer
 								src={alertSound?.url}
@@ -182,7 +184,7 @@ const PreviewContent = () => {
 								backgroundImage: `url(${editorSvg})`,
 								width,
 								height,
-								maxHeight: "calc(100% - 20rem)",
+								maxHeight: "calc(100% - 18rem)",
 							}}
 							className="overflow-hidden absolute flex justify-center items-center"
 						>

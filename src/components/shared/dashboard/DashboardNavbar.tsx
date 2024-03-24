@@ -10,7 +10,7 @@ const classes = tv({
 			"h-navbar",
 			"flex",
 			"px-3 gap-5",
-			"fixed top-0 w-full z-40",
+			"w-full z-40",
 			"shadow-[0_1px_2px_rgba(0,0,0,0.16)]",
 			"dark:shadow-[0_1px_2px_rgba(0,0,0,0.8)]",
 			"bg-background-base dark:bg-background-float",

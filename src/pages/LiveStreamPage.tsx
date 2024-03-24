@@ -182,17 +182,22 @@ const LiveStreamPage = () => {
 				<div className={`${isChatOpen ? "md:mr-72 lg:mr-80" : "mr-0"}`}>
 					<div className="flex justify-center">
 						{channelData?.live_status && channelData?.streamKey ? (
-							<div>
-								<MediaPlayer
-									src={generateStreamUrl(channelData?.streamKey)}
-									autoplay
-									muted
-									className="h-44 lg:h-52 xl:h-[550px] rounded-none"
-								>
-									<MediaProvider></MediaProvider>
-									<DefaultAudioLayout icons={defaultLayoutIcons} />
-									<DefaultVideoLayout icons={defaultLayoutIcons} />
-								</MediaPlayer>
+							<div className="w-full bg-black flex justify-center items-center">
+								<div>
+									<MediaPlayer
+										src={generateStreamUrl(channelData?.streamKey)}
+										autoplay
+										muted
+										className="h-44 lg:h-52 xl:h-[550px] border-none"
+										onHlsError={() => {
+											setChannelData({});
+										}}
+									>
+										<MediaProvider></MediaProvider>
+										<DefaultAudioLayout icons={defaultLayoutIcons} />
+										<DefaultVideoLayout icons={defaultLayoutIcons} />
+									</MediaPlayer>
+								</div>
 							</div>
 						) : (
 							<div className="flex w-full h-52 md:h-96 xl:h-[550px]">

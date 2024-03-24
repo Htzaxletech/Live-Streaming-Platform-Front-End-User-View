@@ -12,8 +12,17 @@ import VisualsAndSound from "../settings/visuals-and-sound/Index";
 
 const SettingAside = () => {
 	return (
-		<div className="flex">
-			<div className="w-80 flex-grow-0 bg-background-base overflow-y-auto h-screen z-10">
+		<div
+			className="flex w-80 bg-background-base"
+			style={{
+				maxHeight: "calc(100vh - 9.6rem)",
+				position: "relative",
+				height: "100%",
+				overflowY: "auto",
+				overflowX: "hidden",
+			}}
+		>
+			<div className="w-full z-10">
 				<TogglePanel
 					heading="General Settings"
 					icon={<MdOutlineSettings size={18} />}

@@ -12,44 +12,51 @@ const PreviewOptions = () => {
 	);
 	
 	return (
-		<div className="sticky bottom-16 bg-background-base shadow z-10 flex justify-between items-center mx-3 rounded px-4 py-2 text-xs">
-			<Label className="font-semibold">Preview Options</Label>
-			<div className="flex gap-2 items-center">
-				<Label className="font-semibold">Width px</Label>
-				<Input
-					size="sm"
-					className="w-14"
-					onChange={(i) => {
-						if (i.target.value) {
-							dispatch(
-								changeFormData({ width: parseInt(i.target.value) })
-							);
-
-						} else {
-							dispatch(
-								changeFormData({ width: 0 })
-							);
-						}
-					}}
-					value={width}
-				/>
-				<Label className="font-semibold">Height px</Label>
-				<Input
-					size="sm"
-					className="w-14"
-					onChange={(i) => {
-						if (i.target.value) {
-							dispatch(
-								changeFormData({ height: parseInt(i.target.value) })
-							);
-						} else {
-							dispatch(
-								changeFormData({ height: 0 })
-							);
-						}
-					}}
-					value={height}
-				/>
+		<div className="mx-3 sticky bottom-16 bg-background-base shadow z-10 rounded px-4 py-2">
+			<div className="flex flex-col md:flex-row justify-between items-center text-xs w-full gap-2">
+				<Label className="font-semibold flex justify-start w-full">
+					Preview Options
+				</Label>
+				<div className="flex flex-col md:flex-row gap-2 items-center w-full">
+					<div className="flex items-center gap-2 justify-start w-full">
+						<Label className="font-semibold">Width px</Label>
+						<Input
+							size="sm"
+							className="w-14"
+							onChange={(i) => {
+								if (i.target.value) {
+									dispatch(
+										changeFormData({
+											width: parseInt(i.target.value),
+										})
+									);
+								} else {
+									dispatch(changeFormData({ width: 0 }));
+								}
+							}}
+							value={width}
+						/>
+					</div>
+					<div className="flex items-center gap-2 justify-start w-full">
+						<Label className="font-semibold">Height px</Label>
+						<Input
+							size="sm"
+							className="w-14"
+							onChange={(i) => {
+								if (i.target.value) {
+									dispatch(
+										changeFormData({
+											height: parseInt(i.target.value),
+										})
+									);
+								} else {
+									dispatch(changeFormData({ height: 0 }));
+								}
+							}}
+							value={height}
+						/>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

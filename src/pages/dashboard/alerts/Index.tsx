@@ -39,7 +39,7 @@ const Alerts = () => {
 	};
 
 	return (
-		<div className="flex flex-col h-screen mt-[18px]">
+		<div className="flex flex-col h-screen">
 			{/* Top header */}
 			<PreviewHeader />
 

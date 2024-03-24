@@ -260,8 +260,13 @@ const StreamManager = () => {
 	};
 
 	return (
-		<div className="pb-8">
-			<div className="flex-1 flex flex-col pt-4">
+		<div
+			style={{
+				maxHeight: "calc(100vh - 3rem)",
+				overflowY: "auto",
+			}}
+		>
+			<div className="flex-1 flex flex-col pb-8">
 				<div className={`${isChatOpen ? "md:mr-72 lg:mr-80" : "mr-0"}`}>
 					<div className="flex justify-center">
 						{/* <ReactPlayer
@@ -278,24 +283,26 @@ const StreamManager = () => {
 							}}
 						/> */}
 						{streamKey ? (
-							<div>
-								<MediaPlayer
-									src={generateStreamUrl(streamKey)}
-									autoplay
-									muted
-									className="h-44 lg:h-52 xl:h-[550px] rounded-none"
-									onHlsError={() => {
-										setStreamKey("");
-										setChannelData({});
-									}}
-									streamType="ll-live"
-									load="eager"
-									aspectRatio="16/9"
-								>
-									<MediaProvider></MediaProvider>
-									<DefaultAudioLayout icons={defaultLayoutIcons} />
-									<DefaultVideoLayout icons={defaultLayoutIcons} />
-								</MediaPlayer>
+							<div className="w-full bg-black flex justify-center items-center">
+								<div>
+									<MediaPlayer
+										src={generateStreamUrl(streamKey)}
+										autoplay
+										muted
+										className="h-44 lg:h-52 xl:h-[550px] border-none"
+										onHlsError={() => {
+											setStreamKey("");
+											setChannelData({});
+										}}
+										streamType="ll-live"
+										load="eager"
+										aspectRatio="16/9"
+									>
+										<MediaProvider></MediaProvider>
+										<DefaultAudioLayout icons={defaultLayoutIcons} />
+										<DefaultVideoLayout icons={defaultLayoutIcons} />
+									</MediaPlayer>
+								</div>
 							</div>
 						) : (
 							<div className="flex w-full h-52 md:h-96 xl:h-[550px]">

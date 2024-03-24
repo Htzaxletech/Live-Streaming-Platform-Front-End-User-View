@@ -146,7 +146,7 @@ const PreviewHeader = () => {
 	};
 
 	return (
-		<div className="sticky top-[50px] shadow z-20 bg-background-body flex justify-between items-center px-4 py-2">
+		<div className="shadow z-20 bg-background-body flex justify-between items-center px-4 py-2">
 			<div>
 				<Button>Back to Alerts Home</Button>
 			</div>

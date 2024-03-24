@@ -98,18 +98,24 @@ const VariantsAside = () => {
 	}, []);
 
 	return (
-		<div className="overflow-y-auto flex h-screen z-10">
-			<div className="w-80 flex-grow-0 bg-background-base">
+		<div
+			className="flex w-80 bg-background-base z-10"
+			style={{
+				maxHeight: "calc(100vh - 9.6rem)",
+				position: "relative",
+				height: "100%",
+				overflowY: "auto",
+				overflowX: "hidden",
+			}}
+		>
+			<div className="w-full">
 				<TogglePanel
 					icon={<FaRegHeart size={16} />}
 					heading={"Follows"}
 					defaultOpen={isShowFollow}
 					className="bg-background-float"
 				>
-					<Variants
-						initialData={variants.follow}
-						variantID={1}
-					/>
+					<Variants initialData={variants.follow} variantID={1} />
 				</TogglePanel>
 
 				<TogglePanel

@@ -5,6 +5,7 @@ import { endpoints as ep } from "@services/endpoints";
 import { lazy } from "react";
 import { useTranslation } from "react-i18next";
 import { socket } from "@socket/index";
+import { generateStreamUrl } from "@utils/helpers";
 
 const HomeCarousel = lazy(() => import("@components/shared/HomeCarousel"));
 
@@ -13,9 +14,16 @@ const HomePage = () => {
 
 	const handleDonate = () => {
 		console.log("handleDonate");
+
+		console.log(
+			"generateStreamUrl",
+			generateStreamUrl("4414661d-6cce-434f-812e-474ca947")
+		);
+
+		return;
 		
 		const reqData = {
-			streamKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzEwOTE5Mzk2LCJleHAiOjE3MTM1MTEzOTZ9.pxHvSkfWIr5K7Eb64lH8HhJ4iKFy7ZqHTqLdDFYsn1o",
+			streamKey: "4414661d-6cce-434f-812e-474ca947",
 			item_variantID: "",
 			bits: 250,
 			variantID: 2,
