@@ -5,7 +5,7 @@ import { Switch } from "@components/ui/Switch";
 import { endpoints } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
 import { RootState } from "@store/index";
-import { changeFormData, changeVariants } from "@store/slices/alertSlice";
+import { changeDiscardData, changeFormData, changeVariants } from "@store/slices/alertSlice";
 import { convertImageUrlToBase64 } from "@utils/helpers";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -164,7 +164,8 @@ const Variants: React.FC<VariantsProps> = ({
 		}
 	};
 
-	const handleItemVariant = (entry: any) => {
+	const handleItemVariant = (entry: any, index: number) => {
+
 		dispatch(
 			changeFormData({
 				...alertData,
@@ -197,41 +198,42 @@ const Variants: React.FC<VariantsProps> = ({
 						console.log("itemVariantData", resp);
 
 						if (resp) {
-							dispatch(
-								changeFormData({
-									...alertData,
-									variantID: resp?.variantID,
-									itemVariantsID: resp?.item_variantID,
-									variantName: resp?.variantName,
-									layout: resp?.layoutID.toString(),
-									inAnimationTime: resp?.inSecond,
-									outAnimationTime: resp?.outSecond,
-									duration: resp?.duration,
-									textColor: resp?.textColor,
-									accentColor: resp?.accentColor,
-									inAnimationType: resp?.animationInType,
-									outAnimationType: resp?.animationOutType,
-									message: resp?.message,
-									alertImage: {
-										url: resp?.s3alertImage,
-										type: resp?.alertImageType,
-										name: resp?.alertImageName,
-										scale: resp?.scale,
-									},
-									alertSound: {
-										url: resp?.s3alertSound,
-										type: resp?.alertImageType,
-										name: resp?.alertSoundName,
-									},
-									isCheckedSayTextAlert: resp?.voice_alert_status,
-									username: resp?.username,
-									inAnimation: resp?.inAnimation,
-									outAnimation: resp?.outAnimation,
-									alertConditionID: resp?.alert_conditionID,
-									width: resp?.width,
-									height: resp?.height,
-								})
-							);
+							const respObj = {
+								...alertData,
+								indexNumber: index + 1,
+								variantID: resp?.variantID,
+								itemVariantsID: resp?.item_variantID,
+								variantName: resp?.variantName,
+								layout: resp?.layoutID.toString(),
+								inAnimationTime: resp?.inSecond,
+								outAnimationTime: resp?.outSecond,
+								duration: resp?.duration,
+								textColor: resp?.textColor,
+								accentColor: resp?.accentColor,
+								inAnimationType: resp?.animationInType,
+								outAnimationType: resp?.animationOutType,
+								message: resp?.message,
+								alertImage: {
+									url: resp?.s3alertImage,
+									type: resp?.alertImageType,
+									name: resp?.alertImageName,
+									scale: resp?.scale,
+								},
+								alertSound: {
+									url: resp?.s3alertSound,
+									type: resp?.alertImageType,
+									name: resp?.alertSoundName,
+								},
+								isCheckedSayTextAlert: resp?.voice_alert_status,
+								username: resp?.username,
+								inAnimation: resp?.inAnimation,
+								outAnimation: resp?.outAnimation,
+								alertConditionID: resp?.alert_conditionID,
+								width: resp?.width,
+								height: resp?.height,
+							};
+							dispatch(changeFormData(respObj));
+							dispatch(changeDiscardData(respObj));
 						}else{
 							dispatch(changeFormData({ ...initState }));
 							await getVariants();
@@ -317,7 +319,7 @@ const Variants: React.FC<VariantsProps> = ({
 								? "bg-primary"
 								: "hover:bg-gray-200 dark:hover:bg-zinc-700"
 						}`}
-						onClick={() => !loading && handleItemVariant(entry)}
+						onClick={() => !loading && handleItemVariant(entry, index)}
 					>
 						<div className="flex items-center gap-3">
 							{/* <Input

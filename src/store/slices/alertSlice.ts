@@ -40,6 +40,7 @@ const alertSlice = createSlice({
 		// 	variantID: 1,
 		// },
 		data: {
+			indexNumber: 0,
 			itemVariantsID: 0,
 			width: 500,
 			height: 500,
@@ -74,6 +75,7 @@ const alertSlice = createSlice({
 			alertCondition: [],
 			variantID: 0,
 		},
+		discardData: {},
 		variants: {
 			follow: [],
 			subscription: [],
@@ -81,7 +83,7 @@ const alertSlice = createSlice({
 			isShowFollow: true,
 			isShowSubscribe: false,
 			isShowDonate: false,
-			isShowPanel: false
+			isShowPanel: false,
 		},
 		initialAlertState: {
 			itemVariantsID: 0,
@@ -117,9 +119,15 @@ const alertSlice = createSlice({
 			alertConditionID: 0,
 			alertCondition: [],
 			variantID: 0,
-		}
+		},
 	},
 	reducers: {
+		changeDiscardData(state, action) {
+			state.discardData = {
+				...state.discardData,
+				...action.payload,
+			};
+		},
 		changeFormData(state, action) {
 			state.data = {
 				...state.data,
@@ -135,5 +143,6 @@ const alertSlice = createSlice({
 	},
 });
 
-export const { changeFormData, changeVariants } = alertSlice.actions;
+export const { changeFormData, changeVariants, changeDiscardData } =
+	alertSlice.actions;
 export default alertSlice.reducer;

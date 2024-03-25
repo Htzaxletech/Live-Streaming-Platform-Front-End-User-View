@@ -4,7 +4,7 @@ import * as Label from "@radix-ui/react-label";
 import Animations from "./Animations";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@store/index";
-import { changeFormData } from "@store/slices/alertSlice";
+import { changeDiscardData, changeFormData } from "@store/slices/alertSlice";
 import { useEffect, useState } from "react";
 import { makeRequest } from "@services/utils";
 import { endpoints } from "@services/endpoints";
@@ -59,6 +59,12 @@ const GeneralSettings = () => {
 						if (success) {
 							dispatch(
 								changeFormData({
+									alertCondition: data || [],
+									alertConditionID: alertConditionID || data?.[0]?.ID,
+								})
+							);
+							dispatch(
+								changeDiscardData({
 									alertCondition: data || [],
 									alertConditionID: alertConditionID || data?.[0]?.ID,
 								})

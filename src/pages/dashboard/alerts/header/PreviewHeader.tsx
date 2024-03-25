@@ -3,7 +3,7 @@ import Button from "@components/ui/Button";
 import { endpoints } from "@services/endpoints";
 import { makeRequest } from "@services/utils";
 import { RootState } from "@store/index";
-import { changeVariants } from "@store/slices/alertSlice";
+import { changeFormData, changeVariants } from "@store/slices/alertSlice";
 import { convertImageUrlToBase64, isBase64URL } from "@utils/helpers";
 import { useState } from "react";
 import { Oval } from "react-loader-spinner";
@@ -21,6 +21,7 @@ const PreviewHeader = () => {
 	const dispatch = useDispatch();
 	const [loading, setLoading] = useState(false);
 	const alertData = useSelector((state: RootState) => state.alert.data);
+	const discardData = useSelector((state: RootState) => state.alert.discardData);
 
 	const handleSaveChanges = async () => {
 		setLoading(true);
@@ -45,8 +46,6 @@ const PreviewHeader = () => {
 			);
 			splittedSoundURL = b64AlertSound.split(",")[1];
 		}
-
-	
 
 		try {
 			const reqData = {
@@ -107,6 +106,10 @@ const PreviewHeader = () => {
 		}
 	};
 
+	const handleDiscardChanges = () => {
+		dispatch(changeFormData(discardData))
+	}
+
 	const getVariant = async () => {
 		try {
 			const variantID = alertData.variantID;
@@ -151,12 +154,13 @@ const PreviewHeader = () => {
 				<Button>Back to Alerts Home</Button>
 			</div>
 			<div>
-				<h6 className="font-semibold">Alert Box 2</h6>
+				<h6 className="font-semibold uppercase">Alerts Box {alertData?.indexNumber}</h6>
 			</div>
 			<div className="flex items-center gap-2">
 				<Button
 					color="default"
 					size="lg"
+					onClick={handleDiscardChanges}
 					disabled={!alertData?.itemVariantsID}
 				>
 					Discard Changes

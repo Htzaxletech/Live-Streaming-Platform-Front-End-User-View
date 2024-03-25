@@ -147,7 +147,7 @@ const AlertsNoti = () => {
 		const formDataUpdates = {
 			width: alertData?.width,
 			height: alertData?.height,
-			layout: alertData?.layoutID.toString(),
+			layout: alertData?.layoutID?.toString(),
 			message: alertData?.message,
 			username: alertData?.username,
 			inAnimation: alertData?.inAnimation,
@@ -234,8 +234,6 @@ const AlertsNoti = () => {
 			setAnimateClass(classesToAdd);
 
 			setTimeout(() => {
-				formData?.isCheckedSayTextAlert && start();
-
 				if (formData?.outAnimation !== "none") {
 					const outClassesToAdd = [
 						"animate-out",
@@ -251,6 +249,7 @@ const AlertsNoti = () => {
 						setTimeout(() => {
 							stopNotificationSound();
 							removeProcessedAlert();
+							formData?.isCheckedSayTextAlert && start();
 						}, 2000);
 					}, outDuration);
 				}
@@ -286,7 +285,7 @@ const AlertsNoti = () => {
 					src={formData?.alertSound?.url}
 					ref={mediaPlayerRef}
 					className="hidden"
-					load="eager"
+					// load="eager"
 				>
 					<MediaProvider onCanPlay={handleMediaReady}></MediaProvider>
 				</MediaPlayer>
@@ -325,7 +324,7 @@ const AlertsNoti = () => {
 								>
 									{formData?.alertImage?.type === "video" && (
 										<MediaPlayer
-											src={formData?.alertImage?.url}
+											src={formData?.alertImage?.url || ""}
 											autoplay
 											muted
 											className="w-full h-full"
@@ -337,7 +336,7 @@ const AlertsNoti = () => {
 									{formData?.alertImage?.type === "image" && (
 										<img
 											className="w-full h-full"
-											src={formData?.alertImage?.url}
+											src={formData?.alertImage?.url || ""}
 											alt="Alert image"
 										/>
 									)}

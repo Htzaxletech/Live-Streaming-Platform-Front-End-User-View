@@ -24,6 +24,7 @@ import { makeRequest } from "@services/utils";
 import { toast } from "react-toastify";
 import { endpoints } from "@services/endpoints";
 import { formatHourAndMinute } from "@utils/helpers";
+import { MdOutlineToken } from "react-icons/md";
 
 interface StreamChatBoxProps {
 	liveID?: any; // Replace 'any' with a more specific type if possible
@@ -82,10 +83,7 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 		const abortController = new AbortController();
 		const signal = abortController.signal;
 
-		console.log("hello");
 		if (liveId) {
-			console.log("liveId");
-
 			(async () => {
 				await getChatList(signal);
 			})();
@@ -157,7 +155,6 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 				setChatMessages(response?.data);
 			}
 
-			console.log("GGresponse", response);
 		} catch (error) {
 			toast.error(error);
 		}
@@ -238,13 +235,25 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	};
 
 	const onMessageEvent = (value: any) => {
-		console.log("value", value);
 		setChatMessages((previous) => [...previous, ...value]);
 	};
 
 	// const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 	// 	setMessage(e.target.value);
 	// };
+
+	const handleDonate = () => {
+		const bit = inputRef.current.value;
+
+		const reqData = {
+			streamKey: streamID,
+			item_variantID: "",
+			bits: bit,
+			variantID: 2,
+		};
+
+		socket.emit("follow", reqData);
+	};
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
@@ -338,9 +347,21 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 								// onChange={handleInputChange}
 								ref={inputRef}
 								endContent={
-									<Button type="button" className="bg-transparent">
-										<MdOutlineTagFaces className="text-xl" />
-									</Button>
+									<div className="flex">
+										{channelId !== parseInt(store.get("id")) && (
+											<Button
+												type="button"
+												className="bg-transparent"
+												onClick={handleDonate}
+											>
+												<MdOutlineToken size={20} />
+											</Button>
+										)}
+
+										<Button type="button" className="bg-transparent">
+											<MdOutlineTagFaces size={20} />
+										</Button>
+									</div>
 								}
 							/>
 							<div className="flex justify-end mt-3">

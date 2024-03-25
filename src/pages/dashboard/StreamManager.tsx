@@ -361,6 +361,7 @@ const StreamManager = () => {
 				liveID={channelData?.liveID}
 				liveStatus={channelData?.live_status}
 				setViewCount={setViewCount}
+				channelID={channelData?.ID}
 			/>
 
 			<Modal isOpen={isOpenStreamInfo} onClose={handleStreamInfo}>

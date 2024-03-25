@@ -214,7 +214,7 @@ const PreviewContent = () => {
 												{alertImage?.type === "video" && (
 													<div>
 														<MediaPlayer
-															src={alertImage?.url}
+															src={alertImage?.url || ""}
 															autoplay
 															// loop
 															muted
@@ -228,7 +228,7 @@ const PreviewContent = () => {
 												{alertImage?.type === "image" && (
 													<img
 														className="w-full h-full"
-														src={alertImage?.url}
+														src={alertImage?.url || ""}
 														alt="Alert image"
 													/>
 												)}

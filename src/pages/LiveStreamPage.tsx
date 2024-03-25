@@ -49,7 +49,7 @@ const LiveStreamPage = () => {
 
 		(async () => {
 			if (!state?.liveStreamData) {
-				// navigate("/");
+				navigate("/");
 			} else {
 				try {
 					const response = await makeRequest(
@@ -62,7 +62,6 @@ const LiveStreamPage = () => {
 						{ signal }
 					);
 
-					console.log("Live Stream Page Response", response);
 					setFollowStatus(response?.data[0]?.follow_status);
 					setStartTime(response?.data[0]?.live_start);
 					setChannelData(response?.data[0]);
@@ -79,17 +78,6 @@ const LiveStreamPage = () => {
 					);
 
 					setSocialData(socialResponse?.data);
-
-					// const chatResponse = await makeRequest(
-					// 	"get",
-					// 	endpoints.chatData,
-					// 	{
-					// 		liveID: data.liveID,
-					// 	},
-					// 	{ signal }
-					// );
-
-					// console.log("chatResponse", chatResponse);
 				} catch (error) {
 					toast.error(error);
 				}
@@ -102,11 +90,6 @@ const LiveStreamPage = () => {
 	}, [state?.liveStreamData?.channelID]);
 
 	useEffect(() => {
-		if (channelData.channelID) {
-			fetchViewerCount();
-			fetchLiveData();
-		}
-
 		const interval = setInterval(fetchViewerCount, 10000);
 		const interval2 = setInterval(fetchLiveData, 10000);
 
@@ -114,44 +97,48 @@ const LiveStreamPage = () => {
 			clearInterval(interval);
 			clearInterval(interval2);
 		};
-	}, [channelData.channelID]);
+	}, [state?.liveStreamData?.channelID]);
 
 	const fetchViewerCount = async () => {
-		try {
-			const reqData = {
-				channelID: channelData?.channelID,
-			};
+		if (state?.liveStreamData?.channelID) {
+			try {
+				const reqData = {
+					channelID: state?.liveStreamData?.channelID,
+				};
 
-			const response = await makeRequest(
-				"get",
-				endpoints.getViewCount,
-				reqData
-			);
+				const response = await makeRequest(
+					"get",
+					endpoints.getViewCount,
+					reqData
+				);
 
-			if (response?.success) {
-				const data = response?.data;
-				setViewCount(data);
-			} else {
-				toast.error(response?.message);
+				if (response?.success) {
+					const data = response?.data;
+					setViewCount(data);
+				} else {
+					toast.error(response?.message);
+				}
+				setLoading(false);
+			} catch (error) {
+				setLoading(false);
 			}
-			setLoading(false);
-		} catch (error) {
-			setLoading(false);
 		}
 	};
 
 	const fetchLiveData = async () => {
-		try {
-			const response = await makeRequest("get", endpoints.channelData, {
-				channelID: channelData?.channelID,
-				userID: store.get("id"),
-			});
+		if (state?.liveStreamData?.channelID) {
+			try {
+				const response = await makeRequest("get", endpoints.channelData, {
+					channelID: state?.liveStreamData?.channelID,
+					userID: store.get("id"),
+				});
 
-			setFollowStatus(response?.data[0]?.follow_status);
-			setStartTime(response?.data[0]?.live_start);
-			setChannelData(response?.data[0]);
-		} catch (error) {
-			toast.error(error);
+				setFollowStatus(response?.data[0]?.follow_status);
+				setStartTime(response?.data[0]?.live_start);
+				setChannelData(response?.data[0]);
+			} catch (error) {
+				toast.error(error);
+			}
 		}
 	};
 
@@ -166,14 +153,26 @@ const LiveStreamPage = () => {
 				isfollow: status,
 			});
 
-			console.log("Live Stream Page Follow Response", response);
 			setFollowStatus(status);
 			setChannelData(response?.data[0]);
 			setLoading(false);
+
+			handleFollowSocket();
 		} catch (error) {
 			toast.error(error);
 			setLoading(false);
 		}
+	};
+
+	const handleFollowSocket = () => {
+		const reqData = {
+			streamKey: channelData?.streamKey,
+			item_variantID: "75",
+			bits: "",
+			variantID: 1,
+		};
+
+		socket.emit("follow", reqData);
 	};
 
 	return (
