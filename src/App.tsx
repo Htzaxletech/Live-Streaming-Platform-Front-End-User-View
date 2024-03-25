@@ -6,7 +6,6 @@ import userRoutes from "@routes/userRoutes";
 import { useEffect } from "react";
 import { socket } from "./socket";
 import AlertsNoti from "@pages/dashboard/alerts-noti/Index";
-import LayoutTest from "@pages/dashboard/alerts-noti/LayoutTest";
 
 const App = () => {
 	// const [routes, setRoutes] = useState({});
@@ -41,16 +40,10 @@ const App = () => {
 		element: <AlertsNoti />,
 	};
 
-	const layoutTest = {
-		path: "/dashboard/alerts/layout",
-		element: <LayoutTest />,
-	};
-
 	const appRouter = createBrowserRouter([
 		userRoutes,
 		dashboardRoutes,
 		alertNoti,
-		layoutTest,
 	]);
 
 	return <RouterProvider router={appRouter} />;
