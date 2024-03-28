@@ -161,7 +161,7 @@ const PreviewHeader = () => {
 					color="default"
 					size="lg"
 					onClick={handleDiscardChanges}
-					disabled={!alertData?.itemVariantsID}
+					disabled={loading || !alertData?.itemVariantsID}
 				>
 					Discard Changes
 				</Button>

@@ -3,46 +3,31 @@ import Button from "@components/ui/Button";
 import editorSvg from "@assets/images/editor.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "@store/index";
-import {
-	MediaPlayer,
-	MediaProvider,
-	type MediaPlayerInstance,
-} from "@vidstack/react";
+import { MediaPlayer, MediaProvider } from "@vidstack/react";
 import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
-import { useRef, useState } from "react";
-import React from "react";
+import { useState } from "react";
 import { useSpeech } from "react-text-to-speech";
 import { socket } from "@socket/index";
 import store from "store2";
 
-const PreviewContent = () => {
-	const mediaPlayerRef = useRef<MediaPlayerInstance>(null);
-	const [isAnimating, setIsAnimating] = useState<boolean>(false);
-	const [animateClass, setAnimateClass] = useState<any>([]);
-	const [layoutList] = useState<any>([
-		{
-			type: "1",
-			method: "flex-row",
-		},
-		{
-			type: "2",
-			method: "flex-row-reverse",
-		},
-		{
-			type: "3",
-			method: "flex-col",
-		},
-		{
-			type: "4",
-			method: "flex-col-reverse",
-		},
-		{
-			type: "5",
-			method: "overlay",
-		},
-	]);
+interface LayoutItem {
+	type: string;
+	method: string;
+}
 
+const layoutList: LayoutItem[] = [
+	{ type: "1", method: "flex-row" },
+	{ type: "2", method: "flex-row-reverse" },
+	{ type: "3", method: "flex-col" },
+	{ type: "4", method: "flex-col-reverse" },
+	{ type: "5", method: "overlay" },
+];
+
+const PreviewContent = () => {
+	let audio: HTMLAudioElement;
+	const [isAnimating, setIsAnimating] = useState<boolean>(false);
+	const [animateClass, setAnimateClass] = useState<string[]>([]);
 	const {
 		width,
 		height,
@@ -60,43 +45,34 @@ const PreviewContent = () => {
 		alertImage,
 		alertSound,
 		variantID,
-		itemVariantsID
+		itemVariantsID,
+		bits,
 	} = useSelector((state: RootState) => state.alert.data);
 
-	const { method } = layout && layoutList.find(
-		(item: { type: string }) => item.type === layout
-	);
+	const method =
+		layout && layoutList.find((item) => item.type === layout)?.method;
 
-	const parts = message.split("{username}");
-	const updatedMessage = (
-		<p>
-			{parts.map((part, index) => (
-				<React.Fragment key={index}>
-					{part}
-					{index !== parts.length - 1 && (
-						<span
-							className="font-bold text-lg mr-1"
-							style={{ color: accentColor }}
-						>
-							{username}
-						</span>
-					)}
-				</React.Fragment>
-			))}
-		</p>
-	);
+	const updatedMessage =
+		variantID !== 2
+			? replaceUsername(message, username, accentColor)
+			: replaceAmountAndUsername(
+					message,
+					bits.toString(),
+					username,
+					accentColor
+					// eslint-disable-next-line no-mixed-spaces-and-tabs
+			  );
 
 	const { start } = useSpeech({
-		text: updatedMessage,
-		volume: 1, // 0 to 1
+		text: message
+			.replace("{username}", username)
+			.replace("{amount}", bits?.toString()),
+		volume: 1,
 	});
 
 	const handlePreviewAlert = () => {
 		if (isAnimating) return;
-
-		if (mediaPlayerRef.current) {
-			(mediaPlayerRef.current as any).play();
-		}
+		playNotificationSound(alertSound?.url);
 
 		const inMatch = inAnimationTime.match(/duration-(\d+)/);
 		const outMatch = inAnimationTime.match(/duration-(\d+)/);
@@ -111,11 +87,9 @@ const PreviewContent = () => {
 		if (inAnimation !== "none") {
 			setIsAnimating(true);
 			const classesToAdd = ["animate-in", inAnimation, inAnimationTime];
-
 			setAnimateClass(classesToAdd);
 
 			setTimeout(() => {
-
 				if (outAnimation !== "none") {
 					const outClassesToAdd = [
 						"animate-out",
@@ -128,11 +102,7 @@ const PreviewContent = () => {
 					setTimeout(() => {
 						setIsAnimating(false);
 						setAnimateClass([]);
-						if (mediaPlayerRef.current) {
-							mediaPlayerRef.current.pause();
-							mediaPlayerRef.current.currentTime = 0;
-						}
-
+						stopNotificationSound();
 						isCheckedSayTextAlert && start();
 					}, outDuration);
 				}
@@ -141,16 +111,29 @@ const PreviewContent = () => {
 	};
 
 	const handleSendTestAlert = () => {
+		const socketParam = {
+			streamKey: store.get("channelData")?.streamKey,
+			variantID,
+			item_variantID: itemVariantsID,
+		};
+
 		console.log("handleSendTestAlert");
-		socket.emit(
-			"send_test_alert",
-			{
-				streamKey: store.get("channelData")?.streamKey,
-				variantID,
-				item_variantID: itemVariantsID,
-			}
-		);
-	}
+		console.log("socketParam", socketParam);
+
+		socket.emit("send_test_alert", socketParam);
+	};
+
+	const playNotificationSound = (soundUrl: string | undefined) => {
+		audio = new Audio(soundUrl);
+		audio.play();
+	};
+
+	const stopNotificationSound = () => {
+		if (audio) {
+			audio.pause();
+			audio.currentTime = 0;
+		}
+	};
 
 	return (
 		<div className="flex grow flex-col max-h-full h-full ml-0">
@@ -169,16 +152,6 @@ const PreviewContent = () => {
 						</Button>
 					</div>
 					<div className="h-full flex justify-center">
-						{alertSound?.url && (
-							<MediaPlayer
-								src={alertSound?.url}
-								ref={mediaPlayerRef}
-								className="hidden"
-							>
-								<MediaProvider></MediaProvider>
-							</MediaPlayer>
-						)}
-
 						<div
 							style={{
 								backgroundImage: `url(${editorSvg})`,
@@ -192,7 +165,6 @@ const PreviewContent = () => {
 								className={`absolute w-full h-full flex justify-center ${animateClass.join(
 									" "
 								)}`}
-								// onAnimationEnd={() => setIsAnimating(false)}
 							>
 								<div className="w-full h-full flex items-center visible">
 									<div className="w-full flex justify-center relative p-4">
@@ -244,7 +216,11 @@ const PreviewContent = () => {
 													className="font-bold text-lg mr-1"
 													style={{ color: textColor }}
 												>
-													{updatedMessage}
+													<p
+														dangerouslySetInnerHTML={{
+															__html: updatedMessage,
+														}}
+													/>
 												</div>
 											</div>
 										</div>
@@ -257,6 +233,36 @@ const PreviewContent = () => {
 			</div>
 		</div>
 	);
+};
+
+const replaceUsername = (
+	message: string,
+	username: string,
+	accentColor: string
+): string => {
+	const usernameSpan = createUserSpan(username, accentColor);
+	return message.replace("{username}", usernameSpan);
+};
+
+const replaceAmountAndUsername = (
+	message: string,
+	bits: string,
+	username: string,
+	accentColor: string
+): string => {
+	const amountSpan = createAmountSpan(bits, accentColor);
+	const usernameSpan = createUserSpan(username, accentColor);
+	return message
+		.replace("{amount}", amountSpan)
+		.replace("{username}", usernameSpan);
+};
+
+const createUserSpan = (username: string, accentColor: string): string => {
+	return `<span className='font-bold text-lg mr-1' style='color:${accentColor}'>${username}</span>`;
+};
+
+const createAmountSpan = (bits: string, accentColor: string): string => {
+	return `<span className='font-bold text-lg mr-1' style='color:${accentColor}'>${bits}</span>`;
 };
 
 export default PreviewContent;

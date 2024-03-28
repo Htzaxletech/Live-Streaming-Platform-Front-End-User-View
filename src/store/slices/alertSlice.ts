@@ -74,6 +74,7 @@ const alertSlice = createSlice({
 			alertConditionID: 0,
 			alertCondition: [],
 			variantID: 0,
+			bits: 0,
 		},
 		discardData: {},
 		variants: {
@@ -119,6 +120,7 @@ const alertSlice = createSlice({
 			alertConditionID: 0,
 			alertCondition: [],
 			variantID: 0,
+			bits: 0,
 		},
 	},
 	reducers: {

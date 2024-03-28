@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import { useSelector } from "react-redux";
 // import { RootState } from "@store/index";
-import {
-	MediaPlayer,
-	MediaProvider,
-	type MediaPlayerInstance,
-} from "@vidstack/react";
+import { MediaPlayer, MediaProvider } from "@vidstack/react";
 import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
-import { useEffect, useRef, useState } from "react";
-import React from "react";
+import { useEffect, useState } from "react";
 import { useSpeech } from "react-text-to-speech";
 import { socket } from "@socket/index";
 
+interface AlertType {
+	url?: string;
+	type?: string;
+	name?: string;
+	scale?: number;
+}
 interface AlertData {
 	alertSoundName: string;
 	alertSoundType: string;
@@ -38,80 +39,41 @@ interface AlertData {
 	s3alertSound: string;
 	animationInType: string;
 	animationOutType: string;
+	voiceMessage: string;
+	alertImage: AlertType;
+	alertSound: AlertType;
+	inAnimationTime: string;
+	isCheckedSayTextAlert: boolean;
+	bits: number;
+	variantID: number;
 	// Add other properties as needed
 }
 
 const AlertsNoti = () => {
-	const mediaPlayerRef = useRef<MediaPlayerInstance>(null);
 	const [alertQueue, setAlertQueue] = useState<AlertData[]>([]);
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [isAnimating, setIsAnimating] = useState<boolean>(false);
 	const [animateClass, setAnimateClass] = useState<any>([]);
-	const [canPlay, setCanPlay] = useState<any>(false);
 	const [layoutList] = useState<any>([
-		{
-			type: "1",
-			method: "flex-row",
-		},
-		{
-			type: "2",
-			method: "flex-row-reverse",
-		},
-		{
-			type: "3",
-			method: "flex-col",
-		},
-		{
-			type: "4",
-			method: "flex-col-reverse",
-		},
-		{
-			type: "5",
-			method: "overlay",
-		},
+		{ type: "1", method: "flex-row" },
+		{ type: "2", method: "flex-row-reverse" },
+		{ type: "3", method: "flex-col" },
+		{ type: "4", method: "flex-col-reverse" },
+		{ type: "5", method: "overlay" },
 	]);
 
-	const [formData, setFormData] = useState({
-		width: "",
-		height: "",
-		layout: "",
-		message: "",
-		username: "",
-		inAnimation: "",
-		inAnimationTime: "",
-		outAnimation: "",
-		outAnimationTime: "",
-		duration: "",
-		textColor: "",
-		accentColor: "",
-		isCheckedSayTextAlert: false,
-		alertImage: {
-			url: "",
-			type: "",
-			name: "",
-			scale: 0,
-		},
-		alertSound: {
-			url: "",
-			type: "",
-			name: "",
-		},
-	});
-
-	const [updatedMessage, setUpdatedMessage] = useState<JSX.Element | null>(
-		null
-	);
-	const [method, setMethod] = useState(null);
+	const [updatedMessage, setUpdatedMessage] = useState<string>("");
+	const [method, setMethod] = useState<string | null>(null);
+	let audio: HTMLAudioElement | null = null;
 
 	const { start } = useSpeech({
-		text: updatedMessage || "",
+		text: alertQueue?.[0]?.voiceMessage || "",
 		volume: 1, // 0 to 1
 	});
 
 	useEffect(() => {
 		socket.on("send_test_alert", onSendTestAlert);
 		socket.on("follow", onSendTestAlert);
-		
 		return () => {
 			socket.off("send_test_alert", onSendTestAlert);
 			socket.off("follow", onSendTestAlert);
@@ -122,29 +84,20 @@ const AlertsNoti = () => {
 		processNextAlert();
 	}, [alertQueue]);
 
-	const onSendTestAlert = (alertData: any) => {
-		console.log("alertData", alertData);
-		if(alertData){
-			const temp = { ...alertData[0] };
-			setAlertQueue((prevQueue) => [...prevQueue, temp]);
+	const onSendTestAlert = (socketData: any) => {
+		const alertData = socketData[0];
+		if (!alertData) return;
+
+		let voiceMsg = alertData.message;
+		if (parseInt(alertData?.variantID) !== 2) {
+			voiceMsg = voiceMsg.replace("{username}", alertData.username);
+		} else {
+			voiceMsg = voiceMsg
+				.replace("{username}", alertData.username)
+				.replace("{amount}", alertData.bits.toString());
 		}
-	};
 
-	const processNextAlert = () => {
-		if (alertQueue?.length > 0 && !isProcessing) {
-			setIsProcessing(true);
-			const nextAlert = alertQueue[0];
-			showPreview(nextAlert);
-		}
-	};
-
-	const removeProcessedAlert = () => {
-		setAlertQueue((prevQueue) => prevQueue.slice(1));
-		setIsProcessing(false);
-	};
-
-	const showPreview = (alertData: any) => {
-		const formDataUpdates = {
+		const formDataUpdates: Partial<AlertData> = {
 			width: alertData?.width,
 			height: alertData?.height,
 			layout: alertData?.layoutID?.toString(),
@@ -169,76 +122,78 @@ const AlertsNoti = () => {
 				type: alertData?.alertSoundType,
 				name: alertData?.alertSoundName,
 			},
+			bits: alertData?.bits,
+			variantID: alertData?.variantID,
+			voiceMessage: voiceMsg,
 		};
 
-		setFormData((prevState) => ({
-			...prevState,
-			...formDataUpdates,
-		}));
-
-		showAlert(formDataUpdates);
+		setAlertQueue((prevQueue) => [
+			...prevQueue,
+			formDataUpdates as AlertData,
+		]);
 	};
 
-	const showAlert = (formData: any) => {
+	const processNextAlert = () => {
+		if (alertQueue?.length > 0 && !isProcessing) {
+			setIsProcessing(true);
+			showAlert(alertQueue[0]);
+		}
+	};
+
+	const removeProcessedAlert = () => {
+		setAlertQueue((prevQueue) => prevQueue.slice(1));
+		setIsProcessing(false);
+	};
+
+	const showAlert = (formDataParams: AlertData) => {
 		if (isAnimating) return;
 
-		const { method } =
-			formData.layout &&
-			layoutList.find(
-				(item: { type: string }) => item.type === formData?.layout
-			);
+		const { method } = layoutList.find(
+			(item: { type: string }) => item.type === formDataParams.layout
+		) || { method: null };
 
 		setMethod(method);
 
-		const parts = formData?.message.split("{username}");
-
-		setUpdatedMessage(
-			<p>
-				{parts.map((part: any, index: number) => (
-					<React.Fragment key={index}>
-						{part}
-						{index !== parts.length - 1 && (
-							<span
-								className="font-bold text-lg mr-1"
-								style={{ color: formData?.accentColor }}
-							>
-								{formData?.username}
-							</span>
-						)}
-					</React.Fragment>
-				))}
-			</p>
+		let replaceMsg = formDataParams.message.replace(
+			"{username}",
+			`<span className='font-bold text-lg mr-1' style=color:${formDataParams.accentColor}>${formDataParams.username}</span>`
 		);
 
-		if (canPlay) {
-			playNotificationSound();
+		if (formDataParams.variantID === 2) {
+			replaceMsg = replaceMsg.replace(
+				"{amount}",
+				`<span className='font-bold text-lg mr-1' style=color:${formDataParams.accentColor}>${formDataParams.bits}</span>`
+			);
 		}
 
-		const inMatch = formData?.inAnimationTime.match(/duration-(\d+)/);
-		const outMatch = formData?.inAnimationTime.match(/duration-(\d+)/);
-		const durationMs = parseInt(formData?.duration) * 1000;
+		setUpdatedMessage(replaceMsg);
+		playNotificationSound(formDataParams?.alertSound?.url);
+
+		const inMatch = formDataParams?.inAnimationTime.match(/duration-(\d+)/);
+		const outMatch = formDataParams?.inAnimationTime.match(/duration-(\d+)/);
+		const durationMs = formDataParams?.duration * 1000;
 
 		if (!inMatch || !outMatch) return;
 
 		const inDuration = parseInt(inMatch[1]);
 		const outDuration = parseInt(outMatch[1]);
 
-		if (formData?.inAnimation !== "none") {
+		if (formDataParams?.inAnimation !== "none") {
 			setIsAnimating(true);
 			const classesToAdd = [
 				"animate-in",
-				formData?.inAnimation,
-				formData?.inAnimationTime,
+				formDataParams?.inAnimation,
+				formDataParams?.inAnimationTime,
 			];
 
 			setAnimateClass(classesToAdd);
 
 			setTimeout(() => {
-				if (formData?.outAnimation !== "none") {
+				if (formDataParams?.outAnimation !== "none") {
 					const outClassesToAdd = [
 						"animate-out",
-						formData?.outAnimation,
-						formData?.outAnimationTime,
+						formDataParams?.outAnimation,
+						formDataParams?.outAnimationTime,
 					];
 
 					setAnimateClass(outClassesToAdd);
@@ -249,7 +204,7 @@ const AlertsNoti = () => {
 						setTimeout(() => {
 							stopNotificationSound();
 							removeProcessedAlert();
-							formData?.isCheckedSayTextAlert && start();
+							formDataParams?.isCheckedSayTextAlert && start();
 						}, 2000);
 					}, outDuration);
 				}
@@ -257,20 +212,15 @@ const AlertsNoti = () => {
 		}
 	};
 
-	const handleMediaReady = () => {
-		setCanPlay(true);
-	};
-
-	const playNotificationSound = () => {
-		if (mediaPlayerRef.current) {
-			mediaPlayerRef.current.play();
-		}
+	const playNotificationSound = (soundUrl: string | undefined) => {
+		audio = new Audio(soundUrl);
+		audio.play();
 	};
 
 	const stopNotificationSound = () => {
-		if (mediaPlayerRef.current) {
-			mediaPlayerRef.current.pause();
-			mediaPlayerRef.current.currentTime = 0;
+		if (audio) {
+			audio.pause();
+			audio.currentTime = 0;
 		}
 	};
 
@@ -280,22 +230,11 @@ const AlertsNoti = () => {
 				isAnimating ? "visible" : "hidden"
 			}`}
 		>
-			{formData?.alertSound?.url && (
-				<MediaPlayer
-					src={formData?.alertSound?.url}
-					ref={mediaPlayerRef}
-					className="hidden"
-					// load="eager"
-				>
-					<MediaProvider onCanPlay={handleMediaReady}></MediaProvider>
-				</MediaPlayer>
-			)}
-
 			<div
 				style={{
 					// backgroundImage: `url(${editorSvg})`,
-					width: formData?.width,
-					height: formData?.height,
+					width: alertQueue?.[0]?.width,
+					height: alertQueue?.[0]?.height,
 					maxHeight: "100%",
 				}}
 				className="overflow-hidden absolute flex justify-center items-center"
@@ -315,16 +254,17 @@ const AlertsNoti = () => {
 								<div
 									style={{
 										transform: `scale(${
-											(formData?.alertImage?.scale / 100) * 2
+											alertQueue?.[0]?.alertImage?.scale &&
+											(alertQueue?.[0]?.alertImage?.scale / 100) * 2
 										})`,
 									}}
 									className={`flex grow w-1/2 self-center ${
 										method === "overlay" ? "relative" : ""
 									}`}
 								>
-									{formData?.alertImage?.type === "video" && (
+									{alertQueue?.[0]?.alertImage?.type === "video" && (
 										<MediaPlayer
-											src={formData?.alertImage?.url || ""}
+											src={alertQueue?.[0]?.alertImage?.url || ""}
 											autoplay
 											muted
 											className="w-full h-full"
@@ -333,10 +273,10 @@ const AlertsNoti = () => {
 										</MediaPlayer>
 									)}
 
-									{formData?.alertImage?.type === "image" && (
+									{alertQueue?.[0]?.alertImage?.type === "image" && (
 										<img
 											className="w-full h-full"
-											src={formData?.alertImage?.url || ""}
+											src={alertQueue?.[0]?.alertImage?.url || ""}
 											alt="Alert image"
 										/>
 									)}
@@ -348,9 +288,13 @@ const AlertsNoti = () => {
 								>
 									<div
 										className="font-bold text-lg mr-1"
-										style={{ color: formData?.textColor }}
+										style={{ color: alertQueue?.[0]?.textColor }}
 									>
-										{updatedMessage}
+										<p
+											dangerouslySetInnerHTML={{
+												__html: updatedMessage,
+											}}
+										/>
 									</div>
 								</div>
 							</div>

@@ -295,11 +295,11 @@ const StreamChatBox: React.FC<StreamChatBoxProps> = ({
 	return (
 		<>
 			<div
-				className={`invisible md:visible bg-background-base md:w-72 lg:w-80 overflow-y-auto h-full flex flex-col justify-between fixed top-0 right-0 transform ${
+				className={`invisible md:visible bg-background-base md:w-72 lg:w-80 overflow-y-auto h-full flex flex-col justify-between absolute right-0 transform ${
 					isChatOpen ? "translate-x-0" : "translate-x-full"
 				} ease-in-out z-20`}
 			>
-				<div className="flex justify-between items-center border-b-2 gap-2 p-2 mt-[50px]">
+				<div className="flex justify-between items-center border-b-2 gap-2 p-2">
 					{/* Toggle Button */}
 					<Button className="bg-transparent" onClick={handleToggleChat}>
 						<LuArrowRightFromLine className="text-xl" />

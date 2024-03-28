@@ -210,6 +210,7 @@ const Channel: React.FC = () => {
 
 	return (
 		<div
+			className="h-screen"
 			style={{
 				maxHeight: "calc(100vh - 3rem)",
 				overflowY: "auto",

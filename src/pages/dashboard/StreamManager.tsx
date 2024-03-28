@@ -261,6 +261,7 @@ const StreamManager = () => {
 
 	return (
 		<div
+			className="flex"
 			style={{
 				maxHeight: "calc(100vh - 3rem)",
 				overflowY: "auto",

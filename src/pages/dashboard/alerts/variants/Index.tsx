@@ -231,6 +231,7 @@ const Variants: React.FC<VariantsProps> = ({
 								alertConditionID: resp?.alert_conditionID,
 								width: resp?.width,
 								height: resp?.height,
+								bits: resp?.bits,
 							};
 							dispatch(changeFormData(respObj));
 							dispatch(changeDiscardData(respObj));
